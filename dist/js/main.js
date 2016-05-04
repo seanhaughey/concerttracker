@@ -19609,6 +19609,13 @@ var AppActions = {
 			actionType: AppConstants.RECEIVE_RESULTS,
 			results: results
 		});
+	},
+	searchId: function(idSearch){
+		console.log(idSearch);
+		AppDispatcher.handleViewAction({
+			actionType: AppConstants.SEARCH_ID,
+			idSearch: idSearch
+		})
 	}
 }
 
@@ -19665,14 +19672,40 @@ var AppStore = require('../stores/AppStore');
 
 var CityResult = React.createClass({displayName: "CityResult",
 
+	getInitialState: function() {
+		return {
+			value: this.props.result.metroArea.id
+		};
+	},
+
+	handleChange: function(event) {
+		this.setState({
+			value: event.target.value
+		});
+	},
+
 	render: function(){
 		return(
-			React.createElement("div", null, 
-				React.createElement("p", null, this.props.result.metroArea.displayName)
+			React.createElement("div", {className: "row"}, 
+				React.createElement("form", {onSubmit: this.handleSubmit}, 
+					React.createElement("div", {className: "col-md-1"}, 
+						React.createElement("p", null, this.props.result.metroArea.displayName), 
+						React.createElement("input", {className: "hidden", type: "text", ref: "areaId", value: this.props.result.metroArea.id, onChange: this.handleChange})
+					), 
+					React.createElement("div", {className: "col-md-1"}), 
+					React.createElement("button", {className: "btn btn-xs btn-primary"}, "Choose")
+				)
 			)
 		);
-	}
+	},
 
+	handleSubmit: function(e){
+		e.preventDefault();
+		var search = {
+			areaId: this.refs.areaId.value
+		};
+		AppActions.searchId(search);
+	}
 });
 
 module.exports = CityResult;
@@ -19685,14 +19718,14 @@ var CityResult = require('./CityResult.js')
 
 var CitySearchResults = React.createClass({displayName: "CitySearchResults",
 	render: function(){
-		// if (this.props.searchText != ''){
-		// 	var results = <h2 className="page-header">Results for {this.props.searchText}</h2>
-		// } else {
-		// 	var results = '';
-		// }
+		if (this.props.results != ''){
+			var results = React.createElement("h2", {className: "page-header"}, "Results: ")
+		} else {
+			var results = '';
+		}
 		return(
 			React.createElement("div", null, 
-				React.createElement("h2", {className: "page-header"}, "Results: "), 
+				results, 
 				
 					this.props.results.map(function(result, i){
 					return (
@@ -19716,6 +19749,7 @@ var SearchForm = React.createClass({displayName: "SearchForm",
 	render: function(){
 		return(
 			React.createElement("div", null, 
+				React.createElement("h3", null, "Search For Your City"), 
 				React.createElement("form", {onSubmit: this.handleSubmit}, 
 					React.createElement("input", {type: "text", ref: "city", className: "form-inline", placeholder: "Enter City Name"}), 
 					React.createElement("button", {type: "submit", className: "btn btn-xs btn-primary"}, "Submit")
@@ -19741,7 +19775,8 @@ module.exports = SearchForm;
 },{"../actions/AppActions":164,"../stores/AppStore":172,"react":163,"react-dom":7}],169:[function(require,module,exports){
 module.exports = {
 	SEARCH_CITY: 'SEARCH_CITY',
-	RECEIVE_RESULTS: 'RECEIVE_RESULTS'
+	RECEIVE_RESULTS: 'RECEIVE_RESULTS',
+	SEARCH_ID: 'SEARCH_ID'
 }
 
 },{}],170:[function(require,module,exports){
@@ -19791,6 +19826,12 @@ var AppStore = assign({}, EventEmitter.prototype, {
 	getSearchCity: function(){
 		return _searchCity;
 	},
+	setSearchId: function(idSearch){
+		_idSearch = idSearch;
+	},
+	getSearchId: function(){
+		return _idSearch;
+	},
 	setResults: function(results){
 		_results = results;
 	},
@@ -19821,7 +19862,13 @@ AppDispatcher.register(function(payload){
 		case AppConstants.RECEIVE_RESULTS:
 			AppStore.setResults(action.results.location);
 			AppStore.emit(CHANGE_EVENT);
-			break;		
+			break;
+
+		case AppConstants.SEARCH_ID:
+			AppAPI.searchId(action.idSearch);
+			AppStore.setSearchId(action.idSearch);
+			AppStore.emit(CHANGE_EVENT);
+			break;
 	}
 
 	return true;
@@ -19835,7 +19882,7 @@ var AppActions = require('../actions/AppActions');
 module.exports = {
 	searchCity: function(search){
 		$.ajax({
-			url: 'http://api.songkick.com/api/3.0/search/locations.json?query='+search.city+'&apikey=GiMZqLeMkXqNSFhX&jsoncallback=?',
+			url: 'http://api.songkick.com/api/3.0/search/locations.json?query='+search.city+'&apikey=fQN7zyRe4VM5w73a&jsoncallback=?',
 			dataType: 'jsonp',
 			cache: false,
 			success: function(data){
@@ -19844,6 +19891,20 @@ module.exports = {
 			error: function(xhr, status, err){
 				console.log(err);
 			}.bind(this)
+		})
+	},
+
+	searchId: function(idSearch){
+		$.ajax({
+			url: 'http://api.songkick.com/api/3.0/metro_areas/'+idSearch.areaId+'/calendar.json?apikey=fQN7zyRe4VM5w73a&jsoncallback=?',
+			dataType: 'jsonp',
+			cache: false,
+			success: function(data){
+				console.log(data);
+			},
+			error: function(xhr, status, err){
+				console.log(err);
+			}
 		})
 	}
 
@@ -19855,7 +19916,7 @@ var AppActions = require('../actions/AppActions');
 module.exports = {
 	searchCity: function(search){
 		$.ajax({
-			url: 'http://api.songkick.com/api/3.0/search/locations.json?query='+search.city+'&apikey=GiMZqLeMkXqNSFhX&jsoncallback=?',
+			url: 'http://api.songkick.com/api/3.0/search/locations.json?query='+search.city+'&apikey=fQN7zyRe4VM5w73a&jsoncallback=?',
 			dataType: 'jsonp',
 			cache: false,
 			success: function(data){
@@ -19864,6 +19925,20 @@ module.exports = {
 			error: function(xhr, status, err){
 				console.log(err);
 			}.bind(this)
+		})
+	},
+
+	searchId: function(idSearch){
+		$.ajax({
+			url: 'http://api.songkick.com/api/3.0/metro_areas/'+idSearch.areaId+'/calendar.json?apikey=fQN7zyRe4VM5w73a&jsoncallback=?',
+			dataType: 'jsonp',
+			cache: false,
+			success: function(data){
+				console.log(data);
+			},
+			error: function(xhr, status, err){
+				console.log(err);
+			}
 		})
 	}
 
