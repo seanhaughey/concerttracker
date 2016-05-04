@@ -13,6 +13,20 @@ module.exports = {
 				console.log(err);
 			}.bind(this)
 		})
+	},
+
+	searchId: function(idSearch){
+		$.ajax({
+			url: 'http://api.songkick.com/api/3.0/metro_areas/'+idSearch.areaId+'/calendar.json?apikey=fQN7zyRe4VM5w73a&jsoncallback=?',
+			dataType: 'jsonp',
+			cache: false,
+			success: function(data){
+				console.log(data);
+			},
+			error: function(xhr, status, err){
+				console.log(err);
+			}
+		})
 	}
 
 }

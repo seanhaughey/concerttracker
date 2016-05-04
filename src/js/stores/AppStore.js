@@ -16,6 +16,12 @@ var AppStore = assign({}, EventEmitter.prototype, {
 	getSearchCity: function(){
 		return _searchCity;
 	},
+	setSearchId: function(idSearch){
+		_idSearch = idSearch;
+	},
+	getSearchId: function(){
+		return _idSearch;
+	},
 	setResults: function(results){
 		_results = results;
 	},
@@ -46,7 +52,13 @@ AppDispatcher.register(function(payload){
 		case AppConstants.RECEIVE_RESULTS:
 			AppStore.setResults(action.results.location);
 			AppStore.emit(CHANGE_EVENT);
-			break;		
+			break;
+
+		case AppConstants.SEARCH_ID:
+			AppAPI.searchId(action.idSearch);
+			AppStore.setSearchId(action.idSearch);
+			AppStore.emit(CHANGE_EVENT);
+			break;
 	}
 
 	return true;

@@ -15,6 +15,13 @@ var AppActions = {
 			actionType: AppConstants.RECEIVE_RESULTS,
 			results: results
 		});
+	},
+	searchId: function(idSearch){
+		console.log(idSearch);
+		AppDispatcher.handleViewAction({
+			actionType: AppConstants.SEARCH_ID,
+			idSearch: idSearch
+		})
 	}
 }
 
