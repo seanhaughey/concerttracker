@@ -7,7 +7,7 @@ var SearchForm = React.createClass({
 		return(
 			<div>
 				<form onSubmit={this.handleSubmit}>
-					<input type="text" ref="zip" className="form-inline" placeholder="Enter Zip Code" />
+					<input type="text" ref="city" className="form-inline" placeholder="Enter City Name" />
 					<button type="submit" className="btn btn-xs btn-primary">Submit</button>
 				</form>
 			</div>
@@ -18,9 +18,9 @@ var SearchForm = React.createClass({
 		e.preventDefault();
 
 		var search = {
-			zip: this.refs.zip.value
+			city: this.refs.city.value.trim()
 		};
-		AppActions.searchZip(search);
+		AppActions.searchCity(search);
 	}
 });
 
