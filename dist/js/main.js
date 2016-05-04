@@ -19667,8 +19667,12 @@ var CityResult = React.createClass({displayName: "CityResult",
 
 	render: function(){
 		return(
-			React.createElement("div", null, 
-				React.createElement("p", null, this.props.result.metroArea.displayName)
+			React.createElement("div", {className: "row"}, 
+				React.createElement("div", {className: "col-md-1"}, 
+					React.createElement("p", null, this.props.result.metroArea.displayName)
+				), 
+				React.createElement("div", {className: "col-md-1"}), 
+				React.createElement("button", {className: "btn btn-xs btn-primary"}, "Choose")
 			)
 		);
 	}
@@ -19685,14 +19689,14 @@ var CityResult = require('./CityResult.js')
 
 var CitySearchResults = React.createClass({displayName: "CitySearchResults",
 	render: function(){
-		// if (this.props.searchText != ''){
-		// 	var results = <h2 className="page-header">Results for {this.props.searchText}</h2>
-		// } else {
-		// 	var results = '';
-		// }
+		if (this.props.results != ''){
+			var results = React.createElement("h2", {className: "page-header"}, "Results: ")
+		} else {
+			var results = '';
+		}
 		return(
 			React.createElement("div", null, 
-				React.createElement("h2", {className: "page-header"}, "Results: "), 
+				results, 
 				
 					this.props.results.map(function(result, i){
 					return (
@@ -19716,6 +19720,7 @@ var SearchForm = React.createClass({displayName: "SearchForm",
 	render: function(){
 		return(
 			React.createElement("div", null, 
+				React.createElement("h3", null, "Search For Your City"), 
 				React.createElement("form", {onSubmit: this.handleSubmit}, 
 					React.createElement("input", {type: "text", ref: "city", className: "form-inline", placeholder: "Enter City Name"}), 
 					React.createElement("button", {type: "submit", className: "btn btn-xs btn-primary"}, "Submit")
@@ -19835,7 +19840,7 @@ var AppActions = require('../actions/AppActions');
 module.exports = {
 	searchCity: function(search){
 		$.ajax({
-			url: 'http://api.songkick.com/api/3.0/search/locations.json?query='+search.city+'&apikey=GiMZqLeMkXqNSFhX&jsoncallback=?',
+			url: 'http://api.songkick.com/api/3.0/search/locations.json?query='+search.city+'&apikey=fQN7zyRe4VM5w73a&jsoncallback=?',
 			dataType: 'jsonp',
 			cache: false,
 			success: function(data){
@@ -19855,7 +19860,7 @@ var AppActions = require('../actions/AppActions');
 module.exports = {
 	searchCity: function(search){
 		$.ajax({
-			url: 'http://api.songkick.com/api/3.0/search/locations.json?query='+search.city+'&apikey=GiMZqLeMkXqNSFhX&jsoncallback=?',
+			url: 'http://api.songkick.com/api/3.0/search/locations.json?query='+search.city+'&apikey=fQN7zyRe4VM5w73a&jsoncallback=?',
 			dataType: 'jsonp',
 			cache: false,
 			success: function(data){

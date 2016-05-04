@@ -7,6 +7,7 @@ var SearchForm = React.createClass({
 	render: function(){
 		return(
 			<div>
+				<h3>Search For Your City</h3>
 				<form onSubmit={this.handleSubmit}>
 					<input type="text" ref="city" className="form-inline" placeholder="Enter City Name" />
 					<button type="submit" className="btn btn-xs btn-primary">Submit</button>
