@@ -19708,6 +19708,7 @@ module.exports = CitySearchResults;
 
 },{"../actions/AppActions":164,"../stores/AppStore":172,"./CityResult.js":166,"react":163}],168:[function(require,module,exports){
 var React = require('react');
+var ReactDOM = require('react-dom');
 var AppActions = require('../actions/AppActions');
 var AppStore = require('../stores/AppStore');
 
@@ -19730,12 +19731,14 @@ var SearchForm = React.createClass({displayName: "SearchForm",
 			city: this.refs.city.value.trim()
 		};
 		AppActions.searchCity(search);
+		ReactDOM.findDOMNode(this.refs.city).value = "";
+
 	}
 });
 
 module.exports = SearchForm;
 
-},{"../actions/AppActions":164,"../stores/AppStore":172,"react":163}],169:[function(require,module,exports){
+},{"../actions/AppActions":164,"../stores/AppStore":172,"react":163,"react-dom":7}],169:[function(require,module,exports){
 module.exports = {
 	SEARCH_CITY: 'SEARCH_CITY',
 	RECEIVE_RESULTS: 'RECEIVE_RESULTS'

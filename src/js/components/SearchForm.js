@@ -1,4 +1,5 @@
 var React = require('react');
+var ReactDOM = require('react-dom');
 var AppActions = require('../actions/AppActions');
 var AppStore = require('../stores/AppStore');
 
@@ -21,6 +22,8 @@ var SearchForm = React.createClass({
 			city: this.refs.city.value.trim()
 		};
 		AppActions.searchCity(search);
+		ReactDOM.findDOMNode(this.refs.city).value = "";
+
 	}
 });
 
