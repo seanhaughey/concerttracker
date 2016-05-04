@@ -7,16 +7,21 @@ var AppAPI = require('../utils/AppAPI.js');
 var CHANGE_EVENT = 'change';
 
 var _results = [];
-var _searchZip = '';
+var _searchCity = '';
 
 var AppStore = assign({}, EventEmitter.prototype, {
-	setSearchZip: function(search){
-		_searchZip = search.zip;
+	setSearchCity: function(search){
+		_searchCity = search.city;
 	},
-	getSearchZip: function(){
-		return _searchZip;
+	getSearchCity: function(){
+		return _searchCity;
 	},
-
+	setResults: function(results){
+		_results = results;
+	},
+	getResults: function(){
+		return _results;
+	},
 	emitChange: function(){
 		this.emit(CHANGE_EVENT);
 	},
@@ -32,7 +37,16 @@ AppDispatcher.register(function(payload){
 	var action = payload.action;
 
 	switch(action.actionType){
-		
+		case AppConstants.SEARCH_CITY:
+			AppAPI.searchCity(action.search);
+			AppStore.setSearchCity(action.search);
+			AppStore.emit(CHANGE_EVENT);
+			break;
+
+		case AppConstants.RECEIVE_RESULTS:
+			AppStore.setResults(action.results.location);
+			AppStore.emit(CHANGE_EVENT);
+			break;		
 	}
 
 	return true;

@@ -19597,26 +19597,33 @@ var AppConstants = require('../constants/AppConstants');
 
 
 var AppActions = {
-	searchZip: function(search){
-		console.log(search);
+	searchCity: function(search){
 		AppDispatcher.handleViewAction({
-			actionType: AppConstants.SEARCH_ZIP,
+			actionType: AppConstants.SEARCH_CITY,
 			search: search
+		});
+	},
+
+	receiveResults: function(results){
+		AppDispatcher.handleViewAction({
+			actionType: AppConstants.RECEIVE_RESULTS,
+			results: results
 		});
 	}
 }
 
 module.exports = AppActions;
 
-},{"../constants/AppConstants":167,"../dispatcher/AppDispatcher":168}],165:[function(require,module,exports){
+},{"../constants/AppConstants":169,"../dispatcher/AppDispatcher":170}],165:[function(require,module,exports){
 var React = require('react');
 var AppActions = require('../actions/AppActions');
 var AppStore = require('../stores/AppStore');
-var SearchForm = require('./SearchForm.js')
+var SearchForm = require('./SearchForm.js');
+var CitySearchResults = require('./CitySearchResults.js');
 
 function getAppState(){
 	return {
-
+		results: AppStore.getResults(),
 	}
 }
 
@@ -19636,7 +19643,8 @@ var App = React.createClass({displayName: "App",
 	render: function(){
 		return(
 			React.createElement("div", null, 
-				React.createElement(SearchForm, null)
+				React.createElement(SearchForm, null), 
+				React.createElement(CitySearchResults, {searchText: this.state.searchCity, results: this.state.results})
 			)
 		);
 	},
@@ -19649,7 +19657,56 @@ var App = React.createClass({displayName: "App",
 
 module.exports = App;
 
-},{"../actions/AppActions":164,"../stores/AppStore":170,"./SearchForm.js":166,"react":163}],166:[function(require,module,exports){
+},{"../actions/AppActions":164,"../stores/AppStore":172,"./CitySearchResults.js":167,"./SearchForm.js":168,"react":163}],166:[function(require,module,exports){
+var React = require('react');
+var AppActions = require('../actions/AppActions');
+var AppStore = require('../stores/AppStore');
+
+
+var CityResult = React.createClass({displayName: "CityResult",
+
+	render: function(){
+		return(
+			React.createElement("div", null, 
+				React.createElement("p", null, this.props.result.metroArea.displayName)
+			)
+		);
+	}
+
+});
+
+module.exports = CityResult;
+
+},{"../actions/AppActions":164,"../stores/AppStore":172,"react":163}],167:[function(require,module,exports){
+var React = require('react');
+var AppActions = require('../actions/AppActions');
+var AppStore = require('../stores/AppStore');
+var CityResult = require('./CityResult.js')
+
+var CitySearchResults = React.createClass({displayName: "CitySearchResults",
+	render: function(){
+		// if (this.props.searchText != ''){
+		// 	var results = <h2 className="page-header">Results for {this.props.searchText}</h2>
+		// } else {
+		// 	var results = '';
+		// }
+		return(
+			React.createElement("div", null, 
+				React.createElement("h2", {className: "page-header"}, "Results: "), 
+				
+					this.props.results.map(function(result, i){
+					return (
+						React.createElement(CityResult, {result: result, key: i})
+					)
+					})
+				
+			)
+		);
+	}
+})
+module.exports = CitySearchResults;
+
+},{"../actions/AppActions":164,"../stores/AppStore":172,"./CityResult.js":166,"react":163}],168:[function(require,module,exports){
 var React = require('react');
 var AppActions = require('../actions/AppActions');
 var AppStore = require('../stores/AppStore');
@@ -19659,7 +19716,7 @@ var SearchForm = React.createClass({displayName: "SearchForm",
 		return(
 			React.createElement("div", null, 
 				React.createElement("form", {onSubmit: this.handleSubmit}, 
-					React.createElement("input", {type: "text", ref: "zip", className: "form-inline", placeholder: "Enter Zip Code"}), 
+					React.createElement("input", {type: "text", ref: "city", className: "form-inline", placeholder: "Enter City Name"}), 
 					React.createElement("button", {type: "submit", className: "btn btn-xs btn-primary"}, "Submit")
 				)
 			)
@@ -19670,20 +19727,21 @@ var SearchForm = React.createClass({displayName: "SearchForm",
 		e.preventDefault();
 
 		var search = {
-			zip: this.refs.zip.value
+			city: this.refs.city.value.trim()
 		};
-		AppActions.searchZip(search);
+		AppActions.searchCity(search);
 	}
 });
 
 module.exports = SearchForm;
 
-},{"../actions/AppActions":164,"../stores/AppStore":170,"react":163}],167:[function(require,module,exports){
+},{"../actions/AppActions":164,"../stores/AppStore":172,"react":163}],169:[function(require,module,exports){
 module.exports = {
-	SEARCH_ZIP: 'SEARCH_ZIP'
+	SEARCH_CITY: 'SEARCH_CITY',
+	RECEIVE_RESULTS: 'RECEIVE_RESULTS'
 }
 
-},{}],168:[function(require,module,exports){
+},{}],170:[function(require,module,exports){
 var Dispatcher = require('flux').Dispatcher;
 var assign = require('object-assign');
 
@@ -19699,7 +19757,7 @@ var AppDispatcher = assign(new Dispatcher(),{
 
 module.exports = AppDispatcher;
 
-},{"flux":3,"object-assign":6}],169:[function(require,module,exports){
+},{"flux":3,"object-assign":6}],171:[function(require,module,exports){
 var App = require('./components/App');
 var React = require('react');
 var ReactDOM = require('react-dom');
@@ -19711,7 +19769,7 @@ ReactDOM.render(
 	document.getElementById('app')
 );
 
-},{"./components/App":165,"./utils/appAPI.js":172,"react":163,"react-dom":7}],170:[function(require,module,exports){
+},{"./components/App":165,"./utils/appAPI.js":174,"react":163,"react-dom":7}],172:[function(require,module,exports){
 var AppDispatcher = require('../dispatcher/AppDispatcher');
 var AppConstants = require('../constants/AppConstants');
 var EventEmitter = require('events').EventEmitter;
@@ -19721,16 +19779,21 @@ var AppAPI = require('../utils/AppAPI.js');
 var CHANGE_EVENT = 'change';
 
 var _results = [];
-var _searchZip = '';
+var _searchCity = '';
 
 var AppStore = assign({}, EventEmitter.prototype, {
-	setSearchZip: function(search){
-		_searchZip = search.zip;
+	setSearchCity: function(search){
+		_searchCity = search.city;
 	},
-	getSearchZip: function(){
-		return _searchZip;
+	getSearchCity: function(){
+		return _searchCity;
 	},
-
+	setResults: function(results){
+		_results = results;
+	},
+	getResults: function(){
+		return _results;
+	},
 	emitChange: function(){
 		this.emit(CHANGE_EVENT);
 	},
@@ -19746,7 +19809,16 @@ AppDispatcher.register(function(payload){
 	var action = payload.action;
 
 	switch(action.actionType){
-		
+		case AppConstants.SEARCH_CITY:
+			AppAPI.searchCity(action.search);
+			AppStore.setSearchCity(action.search);
+			AppStore.emit(CHANGE_EVENT);
+			break;
+
+		case AppConstants.RECEIVE_RESULTS:
+			AppStore.setResults(action.results.location);
+			AppStore.emit(CHANGE_EVENT);
+			break;		
 	}
 
 	return true;
@@ -19754,18 +19826,44 @@ AppDispatcher.register(function(payload){
 
 module.exports = AppStore;
 
-},{"../constants/AppConstants":167,"../dispatcher/AppDispatcher":168,"../utils/AppAPI.js":171,"events":1,"object-assign":6}],171:[function(require,module,exports){
+},{"../constants/AppConstants":169,"../dispatcher/AppDispatcher":170,"../utils/AppAPI.js":173,"events":1,"object-assign":6}],173:[function(require,module,exports){
 var AppActions = require('../actions/AppActions');
 
 module.exports = {
-	
+	searchCity: function(search){
+		$.ajax({
+			url: 'http://api.songkick.com/api/3.0/search/locations.json?query='+search.city+'&apikey=GiMZqLeMkXqNSFhX&jsoncallback=?',
+			dataType: 'jsonp',
+			cache: false,
+			success: function(data){
+				AppActions.receiveResults(data.resultsPage.results);
+			}.bind(this),
+			error: function(xhr, status, err){
+				console.log(err);
+			}.bind(this)
+		})
+	}
+
 }
 
-},{"../actions/AppActions":164}],172:[function(require,module,exports){
+},{"../actions/AppActions":164}],174:[function(require,module,exports){
 var AppActions = require('../actions/AppActions');
 
 module.exports = {
-	
+	searchCity: function(search){
+		$.ajax({
+			url: 'http://api.songkick.com/api/3.0/search/locations.json?query='+search.city+'&apikey=GiMZqLeMkXqNSFhX&jsoncallback=?',
+			dataType: 'jsonp',
+			cache: false,
+			success: function(data){
+				AppActions.receiveResults(data.resultsPage.results);
+			}.bind(this),
+			error: function(xhr, status, err){
+				console.log(err);
+			}.bind(this)
+		})
+	}
+
 }
 
-},{"../actions/AppActions":164}]},{},[169]);
+},{"../actions/AppActions":164}]},{},[171]);

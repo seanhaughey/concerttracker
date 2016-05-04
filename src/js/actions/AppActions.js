@@ -3,11 +3,17 @@ var AppConstants = require('../constants/AppConstants');
 
 
 var AppActions = {
-	searchZip: function(search){
-		console.log(search);
+	searchCity: function(search){
 		AppDispatcher.handleViewAction({
-			actionType: AppConstants.SEARCH_ZIP,
+			actionType: AppConstants.SEARCH_CITY,
 			search: search
+		});
+	},
+
+	receiveResults: function(results){
+		AppDispatcher.handleViewAction({
+			actionType: AppConstants.RECEIVE_RESULTS,
+			results: results
 		});
 	}
 }
