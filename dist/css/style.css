@@ -13,3 +13,27 @@ body {
 #sk-link {
 	height: 35%;
 }
+
+#date-header {
+	width: 100px;
+}
+
+#date {
+	width: 100px;
+}
+
+#artist-header {
+	width: 300px;
+}
+
+#artist {
+	width: 300px;
+}
+
+#venue-header {
+	width: 300px;
+}
+
+#venue {
+	width: 300px;
+}

@@ -12,7 +12,9 @@ var Calendar = React.createClass({
 				<table>
 					<thead>
 						<tr>
-							<th>Event</th>
+							<th id="date-header">Date</th>
+							<th id="artist-header">Artist</th>
+							<th id="venue-header">Venue</th>
 							<th>Songkick Event Page</th>
 						</tr>
 					</thead>

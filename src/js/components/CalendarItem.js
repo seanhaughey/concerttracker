@@ -8,7 +8,7 @@ var CalendarItem = React.createClass({
 		var results = '';
 		return(
 			<tr>
-				<td>{this.props.calendar.displayName} </td><td id="songkick-link"><a href={this.props.calendar.uri}target="_blank"><img id="sk-link" src="./images/sk-link.jpg"/></a></td>
+				<td id="date">{this.props.calendar.start.date} </td><td id="artist"> {this.props.calendar.performance[0].artist.displayName} </td><td id="venue">{this.props.calendar.venue.displayName} </td><td id="songkick-link"><a href={this.props.calendar.uri}target="_blank"><img id="sk-link" src="./images/sk-link.jpg"/></a></td>
 			</tr>
 		);
 	},

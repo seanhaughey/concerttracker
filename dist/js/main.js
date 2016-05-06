@@ -19689,7 +19689,9 @@ var Calendar = React.createClass({displayName: "Calendar",
 				React.createElement("table", null, 
 					React.createElement("thead", null, 
 						React.createElement("tr", null, 
-							React.createElement("th", null, "Event"), 
+							React.createElement("th", {id: "date-header"}, "Date"), 
+							React.createElement("th", {id: "artist-header"}, "Artist"), 
+							React.createElement("th", {id: "venue-header"}, "Venue"), 
 							React.createElement("th", null, "Songkick Event Page")
 						)
 					), 
@@ -19721,7 +19723,7 @@ var CalendarItem = React.createClass({displayName: "CalendarItem",
 		var results = '';
 		return(
 			React.createElement("tr", null, 
-				React.createElement("td", null, this.props.calendar.displayName, " "), React.createElement("td", {id: "songkick-link"}, React.createElement("a", {href: this.props.calendar.uri, target: "_blank"}, React.createElement("img", {id: "sk-link", src: "./images/sk-link.jpg"})))
+				React.createElement("td", {id: "date"}, this.props.calendar.start.date, " "), React.createElement("td", {id: "artist"}, " ", this.props.calendar.performance[0].artist.displayName, " "), React.createElement("td", {id: "venue"}, this.props.calendar.venue.displayName, " "), React.createElement("td", {id: "songkick-link"}, React.createElement("a", {href: this.props.calendar.uri, target: "_blank"}, React.createElement("img", {id: "sk-link", src: "./images/sk-link.jpg"})))
 			)
 		);
 	},
