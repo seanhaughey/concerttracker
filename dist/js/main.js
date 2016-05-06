@@ -19610,29 +19610,38 @@ var AppActions = {
 			results: results
 		});
 	},
+
 	searchId: function(idSearch){
-		console.log(idSearch);
 		AppDispatcher.handleViewAction({
 			actionType: AppConstants.SEARCH_ID,
 			idSearch: idSearch
+		})
+	},
+
+	receiveCalendars: function(calendars){
+		AppDispatcher.handleViewAction({
+			actionType: AppConstants.RECEIVE_CALENDARS,
+			calendars: calendars
 		})
 	}
 }
 
 module.exports = AppActions;
 
-},{"../constants/AppConstants":169,"../dispatcher/AppDispatcher":170}],165:[function(require,module,exports){
+},{"../constants/AppConstants":171,"../dispatcher/AppDispatcher":172}],165:[function(require,module,exports){
 var React = require('react');
 var AppActions = require('../actions/AppActions');
 var AppStore = require('../stores/AppStore');
 var SearchForm = require('./SearchForm.js');
 var CitySearchResults = require('./CitySearchResults.js');
+var Calendar = require('./Calendar.js')
 
 function getAppState(){
 	return {
 		results: AppStore.getResults(),
+		calendars: AppStore.getCalendars()
 	}
-}
+};
 
 var App = React.createClass({displayName: "App",
 	getInitialState: function(){
@@ -19651,7 +19660,8 @@ var App = React.createClass({displayName: "App",
 		return(
 			React.createElement("div", null, 
 				React.createElement(SearchForm, null), 
-				React.createElement(CitySearchResults, {searchText: this.state.searchCity, results: this.state.results})
+				React.createElement(CitySearchResults, {searchText: this.state.searchCity, results: this.state.results}), 
+				React.createElement(Calendar, {calendars: this.state.calendars})
 			)
 		);
 	},
@@ -19664,7 +19674,66 @@ var App = React.createClass({displayName: "App",
 
 module.exports = App;
 
-},{"../actions/AppActions":164,"../stores/AppStore":172,"./CitySearchResults.js":167,"./SearchForm.js":168,"react":163}],166:[function(require,module,exports){
+},{"../actions/AppActions":164,"../stores/AppStore":174,"./Calendar.js":166,"./CitySearchResults.js":169,"./SearchForm.js":170,"react":163}],166:[function(require,module,exports){
+var React = require('react');
+var AppActions = require('../actions/AppActions');
+var AppStore = require('../stores/AppStore');
+var CalendarItem = require('./CalendarItem.js')
+
+
+var Calendar = React.createClass({displayName: "Calendar",
+
+	render: function(){
+		return(
+			React.createElement("div", null, 
+				React.createElement("table", null, 
+					React.createElement("thead", null, 
+						React.createElement("tr", null, 
+							React.createElement("th", null, "Event"), 
+							React.createElement("th", null, "Songkick Event Page")
+						)
+					), 
+					React.createElement("tbody", null, 
+					
+						this.props.calendars.map(function(calendar, i){
+						return (
+							React.createElement(CalendarItem, {calendar: calendar, key: i})
+						)
+						})
+					
+					)
+				)
+			)
+		);
+	}
+});
+
+module.exports = Calendar;
+
+},{"../actions/AppActions":164,"../stores/AppStore":174,"./CalendarItem.js":167,"react":163}],167:[function(require,module,exports){
+var React = require('react');
+var AppActions = require('../actions/AppActions');
+var AppStore = require('../stores/AppStore');
+
+var CalendarItem = React.createClass({displayName: "CalendarItem",
+
+	render: function(){
+		var results = '';
+		return(
+			React.createElement("tr", null, 
+				React.createElement("td", null, this.props.calendar.displayName, " "), React.createElement("td", {id: "songkick-link"}, React.createElement("a", {href: this.props.calendar.uri, target: "_blank"}, React.createElement("img", {id: "sk-link", src: "./images/sk-link.jpg"})))
+			)
+		);
+	},
+
+	handleSubmit: function(e){
+		e.preventDefault();
+	}
+});
+
+module.exports = CalendarItem;
+
+},{"../actions/AppActions":164,"../stores/AppStore":174,"react":163}],168:[function(require,module,exports){
 var React = require('react');
 var AppActions = require('../actions/AppActions');
 var AppStore = require('../stores/AppStore');
@@ -19685,11 +19754,16 @@ var CityResult = React.createClass({displayName: "CityResult",
 	},
 
 	render: function(){
+		if(this.props.result.metroArea.country.displayName == "US"){
+			var display = React.createElement("p", null, this.props.result.metroArea.displayName, ", ", this.props.result.metroArea.state.displayName)
+		} else{
+			var display = React.createElement("p", null, this.props.result.metroArea.displayName, ", ", this.props.result.metroArea.country.displayName)
+		}
 		return(
 			React.createElement("div", {className: "row"}, 
 				React.createElement("form", {onSubmit: this.handleSubmit}, 
-					React.createElement("div", {className: "col-md-1"}, 
-						React.createElement("p", null, this.props.result.metroArea.displayName), 
+					React.createElement("div", {className: "col-md-2"}, 
+						display, 
 						React.createElement("input", {className: "hidden", type: "text", ref: "areaId", value: this.props.result.metroArea.id, onChange: this.handleChange})
 					), 
 					React.createElement("div", {className: "col-md-1"}), 
@@ -19710,7 +19784,7 @@ var CityResult = React.createClass({displayName: "CityResult",
 
 module.exports = CityResult;
 
-},{"../actions/AppActions":164,"../stores/AppStore":172,"react":163}],167:[function(require,module,exports){
+},{"../actions/AppActions":164,"../stores/AppStore":174,"react":163}],169:[function(require,module,exports){
 var React = require('react');
 var AppActions = require('../actions/AppActions');
 var AppStore = require('../stores/AppStore');
@@ -19739,7 +19813,7 @@ var CitySearchResults = React.createClass({displayName: "CitySearchResults",
 })
 module.exports = CitySearchResults;
 
-},{"../actions/AppActions":164,"../stores/AppStore":172,"./CityResult.js":166,"react":163}],168:[function(require,module,exports){
+},{"../actions/AppActions":164,"../stores/AppStore":174,"./CityResult.js":168,"react":163}],170:[function(require,module,exports){
 var React = require('react');
 var ReactDOM = require('react-dom');
 var AppActions = require('../actions/AppActions');
@@ -19772,14 +19846,15 @@ var SearchForm = React.createClass({displayName: "SearchForm",
 
 module.exports = SearchForm;
 
-},{"../actions/AppActions":164,"../stores/AppStore":172,"react":163,"react-dom":7}],169:[function(require,module,exports){
+},{"../actions/AppActions":164,"../stores/AppStore":174,"react":163,"react-dom":7}],171:[function(require,module,exports){
 module.exports = {
 	SEARCH_CITY: 'SEARCH_CITY',
 	RECEIVE_RESULTS: 'RECEIVE_RESULTS',
-	SEARCH_ID: 'SEARCH_ID'
+	SEARCH_ID: 'SEARCH_ID',
+	RECEIVE_CALENDARS: 'RECEIVE_CALENDARS'
 }
 
-},{}],170:[function(require,module,exports){
+},{}],172:[function(require,module,exports){
 var Dispatcher = require('flux').Dispatcher;
 var assign = require('object-assign');
 
@@ -19795,7 +19870,7 @@ var AppDispatcher = assign(new Dispatcher(),{
 
 module.exports = AppDispatcher;
 
-},{"flux":3,"object-assign":6}],171:[function(require,module,exports){
+},{"flux":3,"object-assign":6}],173:[function(require,module,exports){
 var App = require('./components/App');
 var React = require('react');
 var ReactDOM = require('react-dom');
@@ -19807,7 +19882,7 @@ ReactDOM.render(
 	document.getElementById('app')
 );
 
-},{"./components/App":165,"./utils/appAPI.js":174,"react":163,"react-dom":7}],172:[function(require,module,exports){
+},{"./components/App":165,"./utils/appAPI.js":176,"react":163,"react-dom":7}],174:[function(require,module,exports){
 var AppDispatcher = require('../dispatcher/AppDispatcher');
 var AppConstants = require('../constants/AppConstants');
 var EventEmitter = require('events').EventEmitter;
@@ -19818,6 +19893,7 @@ var CHANGE_EVENT = 'change';
 
 var _results = [];
 var _searchCity = '';
+var _calendars = [];
 
 var AppStore = assign({}, EventEmitter.prototype, {
 	setSearchCity: function(search){
@@ -19837,6 +19913,12 @@ var AppStore = assign({}, EventEmitter.prototype, {
 	},
 	getResults: function(){
 		return _results;
+	},
+	setCalendars: function(calendars){
+		_calendars = calendars;
+	},
+	getCalendars: function(){
+		return _calendars;
 	},
 	emitChange: function(){
 		this.emit(CHANGE_EVENT);
@@ -19869,6 +19951,11 @@ AppDispatcher.register(function(payload){
 			AppStore.setSearchId(action.idSearch);
 			AppStore.emit(CHANGE_EVENT);
 			break;
+
+		case AppConstants.RECEIVE_CALENDARS:
+			AppStore.setCalendars(action.calendars);
+			AppStore.emit(CHANGE_EVENT);
+			break;
 	}
 
 	return true;
@@ -19876,7 +19963,7 @@ AppDispatcher.register(function(payload){
 
 module.exports = AppStore;
 
-},{"../constants/AppConstants":169,"../dispatcher/AppDispatcher":170,"../utils/AppAPI.js":173,"events":1,"object-assign":6}],173:[function(require,module,exports){
+},{"../constants/AppConstants":171,"../dispatcher/AppDispatcher":172,"../utils/AppAPI.js":175,"events":1,"object-assign":6}],175:[function(require,module,exports){
 var AppActions = require('../actions/AppActions');
 
 module.exports = {
@@ -19900,17 +19987,17 @@ module.exports = {
 			dataType: 'jsonp',
 			cache: false,
 			success: function(data){
-				console.log(data);
-			},
+				AppActions.receiveCalendars(data.resultsPage.results.event);
+			}.bind(this),
 			error: function(xhr, status, err){
 				console.log(err);
-			}
+			}.bind(this)
 		})
 	}
 
 }
 
-},{"../actions/AppActions":164}],174:[function(require,module,exports){
+},{"../actions/AppActions":164}],176:[function(require,module,exports){
 var AppActions = require('../actions/AppActions');
 
 module.exports = {
@@ -19934,14 +20021,14 @@ module.exports = {
 			dataType: 'jsonp',
 			cache: false,
 			success: function(data){
-				console.log(data);
-			},
+				AppActions.receiveCalendars(data.resultsPage.results.event);
+			}.bind(this),
 			error: function(xhr, status, err){
 				console.log(err);
-			}
+			}.bind(this)
 		})
 	}
 
 }
 
-},{"../actions/AppActions":164}]},{},[171]);
+},{"../actions/AppActions":164}]},{},[173]);

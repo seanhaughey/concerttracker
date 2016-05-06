@@ -18,11 +18,16 @@ var CityResult = React.createClass({
 	},
 
 	render: function(){
+		if(this.props.result.metroArea.country.displayName == "US"){
+			var display = <p>{this.props.result.metroArea.displayName}, {this.props.result.metroArea.state.displayName}</p>
+		} else{
+			var display = <p>{this.props.result.metroArea.displayName}, {this.props.result.metroArea.country.displayName}</p>
+		}
 		return(
 			<div className="row">
 				<form onSubmit={this.handleSubmit}>
-					<div className="col-md-1">
-						<p>{this.props.result.metroArea.displayName}</p>
+					<div className="col-md-2">
+						{display}
 						<input className="hidden" type="text" ref="areaId" value={this.props.result.metroArea.id} onChange={this.handleChange}/>
 					</div>
 					<div className="col-md-1"></div>
