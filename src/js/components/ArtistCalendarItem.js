@@ -2,7 +2,7 @@ var React = require('react');
 var AppActions = require('../actions/AppActions');
 var AppStore = require('../stores/AppStore');
 
-var CalendarItem = React.createClass({
+var ArtistCalendarItem = React.createClass({
 
 	render: function(){
 		var results = '';
@@ -30,4 +30,4 @@ var CalendarItem = React.createClass({
 	}
 });
 
-module.exports = CalendarItem;
+module.exports = ArtistCalendarItem;

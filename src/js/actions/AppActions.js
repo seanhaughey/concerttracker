@@ -17,11 +17,32 @@ var AppActions = {
 		});
 	},
 
+	searchArtist: function(artistSearch){
+		AppDispatcher.handleViewAction({
+			actionType: AppConstants.SEARCH_ARTIST,
+			artistSearch: artistSearch
+		});
+	},
+
+	receiveArtistResults: function(artistResults){
+		AppDispatcher.handleViewAction({
+			actionType: AppConstants.RECEIVE_ARTIST_RESULTS,
+			artistResults: artistResults
+		});
+	},
+
 	searchId: function(idSearch){
 		AppDispatcher.handleViewAction({
 			actionType: AppConstants.SEARCH_ID,
 			idSearch: idSearch
-		})
+		});
+	},
+
+	searchArtistId: function(artistIdSearch){
+		AppDispatcher.handleViewAction({
+			actionType: AppConstants.SEARCH_ARTIST_ID,
+			artistIdSearch: artistIdSearch
+		});
 	},
 
 	receiveCalendars: function(calendars){

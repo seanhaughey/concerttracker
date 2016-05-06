@@ -2,8 +2,14 @@ body {
 	margin-top: 30px;
 }
 
+#sk-link-header {
+	text-align: center;
+	width: 300px;
+}
+
 #songkick-link {
 	text-align: center;
+	width: 300px;
 }
 
 #songkick {

@@ -7,7 +7,9 @@ var AppAPI = require('../utils/AppAPI.js');
 var CHANGE_EVENT = 'change';
 
 var _results = [];
+var _artistResults = [];
 var _searchCity = '';
+var artistSearch = '';
 var _calendars = [];
 
 var AppStore = assign({}, EventEmitter.prototype, {
@@ -16,6 +18,12 @@ var AppStore = assign({}, EventEmitter.prototype, {
 	},
 	getSearchCity: function(){
 		return _searchCity;
+	},
+	setSearchArtist: function(artistSearch){
+		_artistSearch = artistSearch;
+	},
+	getSearchArtist: function(){
+		return _artistSearch;
 	},
 	setSearchId: function(idSearch){
 		_idSearch = idSearch;
@@ -28,6 +36,12 @@ var AppStore = assign({}, EventEmitter.prototype, {
 	},
 	getResults: function(){
 		return _results;
+	},
+	setArtistResults: function(artistResults){
+		_artistResults = artistResults
+	},
+	getArtistResults: function(){
+		return _artistResults;
 	},
 	setCalendars: function(calendars){
 		_calendars = calendars;
@@ -58,6 +72,17 @@ AppDispatcher.register(function(payload){
 
 		case AppConstants.RECEIVE_RESULTS:
 			AppStore.setResults(action.results.location);
+			AppStore.emit(CHANGE_EVENT);
+			break;
+
+		case AppConstants.RECEIVE_ARTIST_RESULTS:
+			AppStore.setArtistResults(action.artistResults.artist);
+			AppStore.emit(CHANGE_EVENT);
+			break;
+
+		case AppConstants.SEARCH_ARTIST:
+			AppAPI.searchArtist(action.artistSearch);
+			AppStore.setSearchArtist(action.artistSearch);
 			AppStore.emit(CHANGE_EVENT);
 			break;
 

@@ -22,7 +22,7 @@ var CityResult = React.createClass({
 			var display = <p>{this.props.result.metroArea.displayName}, {this.props.result.metroArea.state.displayName}</p>
 		} else{
 			var display = <p>{this.props.result.metroArea.displayName}, {this.props.result.metroArea.country.displayName}</p>
-		}
+		};
 		return(
 			<div className="row">
 				<form onSubmit={this.handleSubmit}>
