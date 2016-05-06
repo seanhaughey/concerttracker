@@ -19686,13 +19686,23 @@ var Calendar = React.createClass({displayName: "Calendar",
 	render: function(){
 		return(
 			React.createElement("div", null, 
-				
-					this.props.calendars.map(function(calendar, i){
-					return (
-						React.createElement(CalendarItem, {calendar: calendar, key: i})
+				React.createElement("table", null, 
+					React.createElement("thead", null, 
+						React.createElement("tr", null, 
+							React.createElement("th", null, "Event"), 
+							React.createElement("th", null, "Songkick Event Page")
+						)
+					), 
+					React.createElement("tbody", null, 
+					
+						this.props.calendars.map(function(calendar, i){
+						return (
+							React.createElement(CalendarItem, {calendar: calendar, key: i})
+						)
+						})
+					
 					)
-					})
-				
+				)
 			)
 		);
 	}
@@ -19710,8 +19720,8 @@ var CalendarItem = React.createClass({displayName: "CalendarItem",
 	render: function(){
 		var results = '';
 		return(
-			React.createElement("div", null, 
-				this.props.calendar.displayName, " ", React.createElement("a", {href: this.props.calendar.uri, target: "_blank"}, "Songkick Event Page")
+			React.createElement("tr", null, 
+				React.createElement("td", null, this.props.calendar.displayName, " "), React.createElement("td", {id: "songkick-link"}, React.createElement("a", {href: this.props.calendar.uri, target: "_blank"}, React.createElement("img", {id: "sk-link", src: "./images/sk-link.jpg"})))
 			)
 		);
 	},

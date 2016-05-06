@@ -9,13 +9,23 @@ var Calendar = React.createClass({
 	render: function(){
 		return(
 			<div>
-				{
-					this.props.calendars.map(function(calendar, i){
-					return (
-						<CalendarItem calendar={calendar} key={i} />
-					)
-					})
-				}
+				<table>
+					<thead>
+						<tr>
+							<th>Event</th>
+							<th>Songkick Event Page</th>
+						</tr>
+					</thead>
+					<tbody>
+					{
+						this.props.calendars.map(function(calendar, i){
+						return (
+							<CalendarItem calendar={calendar} key={i} />
+						)
+						})
+					}
+					</tbody>
+				</table>
 			</div>
 		);
 	}
