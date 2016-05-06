@@ -3,12 +3,14 @@ var AppActions = require('../actions/AppActions');
 var AppStore = require('../stores/AppStore');
 var SearchForm = require('./SearchForm.js');
 var CitySearchResults = require('./CitySearchResults.js');
+var ArtistSearchResults = require('./ArtistSearchResults.js')
 var Calendar = require('./Calendar.js')
 
 function getAppState(){
 	return {
 		results: AppStore.getResults(),
-		calendars: AppStore.getCalendars()
+		calendars: AppStore.getCalendars(),
+		artistResults: AppStore.getArtistResults()
 	}
 };
 
@@ -30,6 +32,7 @@ var App = React.createClass({
 			<div>
 				<SearchForm />
 				<CitySearchResults searchText={this.state.searchCity} results={this.state.results} />
+				<ArtistSearchResults artistSearch={this.state.searchArtist} artistResults={this.state.artistResults} />
 				<Calendar calendars={this.state.calendars} />
 			</div>
 		);
