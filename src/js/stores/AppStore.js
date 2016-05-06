@@ -8,6 +8,7 @@ var CHANGE_EVENT = 'change';
 
 var _results = [];
 var _searchCity = '';
+var _calendars = [];
 
 var AppStore = assign({}, EventEmitter.prototype, {
 	setSearchCity: function(search){
@@ -27,6 +28,12 @@ var AppStore = assign({}, EventEmitter.prototype, {
 	},
 	getResults: function(){
 		return _results;
+	},
+	setCalendars: function(calendars){
+		_calendars = calendars;
+	},
+	getCalendars: function(){
+		return _calendars;
 	},
 	emitChange: function(){
 		this.emit(CHANGE_EVENT);
@@ -57,6 +64,11 @@ AppDispatcher.register(function(payload){
 		case AppConstants.SEARCH_ID:
 			AppAPI.searchId(action.idSearch);
 			AppStore.setSearchId(action.idSearch);
+			AppStore.emit(CHANGE_EVENT);
+			break;
+
+		case AppConstants.RECEIVE_CALENDARS:
+			AppStore.setCalendars(action.calendars);
 			AppStore.emit(CHANGE_EVENT);
 			break;
 	}

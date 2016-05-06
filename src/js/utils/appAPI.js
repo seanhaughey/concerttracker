@@ -21,11 +21,11 @@ module.exports = {
 			dataType: 'jsonp',
 			cache: false,
 			success: function(data){
-				console.log(data);
-			},
+				AppActions.receiveCalendars(data.resultsPage.results.event);
+			}.bind(this),
 			error: function(xhr, status, err){
 				console.log(err);
-			}
+			}.bind(this)
 		})
 	}
 
