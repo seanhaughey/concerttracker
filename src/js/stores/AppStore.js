@@ -9,8 +9,10 @@ var CHANGE_EVENT = 'change';
 var _results = [];
 var _artistResults = [];
 var _searchCity = '';
-var artistSearch = '';
+var _artistSearch = '';
+var artistIdSearch = [];
 var _calendars = [];
+var _artistCalendars = [];
 
 var AppStore = assign({}, EventEmitter.prototype, {
 	setSearchCity: function(search){
@@ -31,23 +33,41 @@ var AppStore = assign({}, EventEmitter.prototype, {
 	getSearchId: function(){
 		return _idSearch;
 	},
+	setArtistSearchId: function(aritstIdSearch){
+		_aritstIdSearch = artistIdSearch;
+	},
+	getArtistSearchId: function(){
+		return _aritstIdSearch;
+	},
 	setResults: function(results){
 		_results = results;
+		_artistResults = [];
+		_artistCalendars = [];
 	},
 	getResults: function(){
 		return _results;
 	},
 	setArtistResults: function(artistResults){
-		_artistResults = artistResults
+		_artistResults = artistResults;
+		_results = [];
+		_calendars = [];
 	},
 	getArtistResults: function(){
 		return _artistResults;
 	},
 	setCalendars: function(calendars){
 		_calendars = calendars;
+		_results = [];
 	},
 	getCalendars: function(){
 		return _calendars;
+	},
+	setArtistCalendars: function(artistCalendars){
+		_artistCalendars = artistCalendars;
+		_artistResults = [];
+	},
+	getArtistCalendars: function(){
+		return _artistCalendars;
 	},
 	emitChange: function(){
 		this.emit(CHANGE_EVENT);
@@ -92,10 +112,22 @@ AppDispatcher.register(function(payload){
 			AppStore.emit(CHANGE_EVENT);
 			break;
 
+		case AppConstants.SEARCH_ARTIST_ID:
+			AppAPI.searchArtistId(action.artistIdSearch);
+			AppStore.setArtistSearchId(action.artistIdSearch);
+			AppStore.emit(CHANGE_EVENT);
+			break;
+
 		case AppConstants.RECEIVE_CALENDARS:
 			AppStore.setCalendars(action.calendars);
 			AppStore.emit(CHANGE_EVENT);
 			break;
+
+		case AppConstants.RECEIVE_ARTIST_CALENDARS:
+			AppStore.setArtistCalendars(action.artistCalendars);
+			AppStore.emit(CHANGE_EVENT);
+			break;
+
 	}
 
 	return true;

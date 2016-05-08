@@ -12,10 +12,11 @@ var Calendar = React.createClass({
 				<table>
 					<thead>
 						<tr>
-							<th id="date-header">Date</th>
-							<th id="artist-header">Artist</th>
-							<th id="venue-header">Venue</th>
-							<th id="sk-link-header">Songkick Event Page</th>
+							<th className="date-header">Date</th>
+							<th className="artist-header">Headliner</th>
+							<th className="venue-header">Venue</th>
+							<th className="location-header">Location</th>
+							<th className="sk-link-header">Songkick Event Page</th>
 						</tr>
 					</thead>
 						<tbody>

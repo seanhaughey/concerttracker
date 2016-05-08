@@ -39,6 +39,24 @@ module.exports = {
 					alert('No results!')
 				} else{
 					AppActions.receiveCalendars(data.resultsPage.results.event);
+				};
+			}.bind(this),
+			error: function(xhr, status, err){
+				console.log(err);
+			}.bind(this)
+		})
+	},
+
+	searchArtistId: function(artistIdSearch){
+		$.ajax({
+			url: 'http://api.songkick.com/api/3.0/artists/'+artistIdSearch.artistId+'/calendar.json?apikey=fQN7zyRe4VM5w73a&jsoncallback=?',
+			dataType: 'jsonp',
+			cache: false,
+			success: function(data){
+				if(data.resultsPage.results.event === undefined){
+					alert('This artist is not currently on tour.');
+				} else{
+					AppActions.receiveArtistCalendars(data.resultsPage.results.event);
 				}
 			}.bind(this),
 			error: function(xhr, status, err){
@@ -46,5 +64,7 @@ module.exports = {
 			}.bind(this)
 		})
 	}
+
+
 
 }

@@ -7,33 +7,34 @@ var ArtistCalendarItem = require('./ArtistCalendarItem.js')
 var ArtistCalendar = React.createClass({
 
 	render: function(){
-		if(this.props.calendars != ''){
-			var table = 
+		if(this.props.artistCalendars != ''){
+			var artistTable = 
 				<table>
 					<thead>
 						<tr>
-							<th id="date-header">Date</th>
-							<th id="artist-header">Artist</th>
-							<th id="venue-header">Venue</th>
-							<th id="sk-link-header">Songkick Event Page</th>
+							<th className="date-header">Date</th>
+							<th className="artist-header">Headliner</th>
+							<th className="venue-header">Venue</th>
+							<th className="location-header">Location</th>
+							<th className="sk-link-header">Songkick Event Page</th>
 						</tr>
 					</thead>
 						<tbody>
 						{
-							this.props.calendars.map(function(calendar, i){
+							this.props.artistCalendars.map(function(artistCalendar, i){
 							return (
-								<CalendarItem calendar={calendar} key={i} />
+								<ArtistCalendarItem artistCalendar={artistCalendar} key={i} />
 							)
 							})
 						}
 						</tbody>
 					</table>
 		} else{
-			var table = '';
+			var artistTable = '';
 		}
 		return(
 			<div>				
-					{table}
+					{artistTable}
 			</div>
 		);
 	}

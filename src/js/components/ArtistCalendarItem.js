@@ -8,19 +8,25 @@ var ArtistCalendarItem = React.createClass({
 		var results = '';
 		var artist = '';
 		var venue = '';
-		if(this.props.calendar.performance[0] === undefined){
+		var location= '';
+		if(this.props.artistCalendar.performance[0] === undefined){
 			var artist = "Unknown";
 		} else{
-			var artist = this.props.calendar.performance[0].artist.displayName;
+			var artist = this.props.artistCalendar.performance[0].artist.displayName;
 		};
-		if(this.props.calendar.venue === undefined){
+		if(this.props.artistCalendar.venue === undefined){
 			var venue = 'Unknown venue';
 		} else{
-			var venue = this.props.calendar.venue.displayName;
-		}
+			var venue = this.props.artistCalendar.venue.displayName;
+		};
+		if(this.props.artistCalendar.location.city === undefined){
+			var location = 'Unknown';
+		} else{
+			var location = this.props.artistCalendar.location.city;
+		};
 		return(
 			<tr>
-				<td id="date">{this.props.calendar.start.date} </td><td id="artist"> {artist} </td><td id="venue">{venue} </td><td id="songkick-link"><a href={this.props.calendar.uri}target="_blank"><img id="sk-link" src="./images/sk-link.jpg"/></a></td><td><a href="#" className="btn btn-xs btn-info">I'm Interested</a></td>
+				<td className="date">{this.props.artistCalendar.start.date} </td><td className="artist"> {artist} </td><td className="venue">{venue} </td><td className="location">{location}</td><td className="songkick-link"><a href={this.props.artistCalendar.uri}target="_blank"><img className="sk-link" src="./images/sk-link.jpg"/></a></td><td><a href="#" className="btn btn-xs btn-info">I'm Interested</a></td>
 			</tr>
 		);
 	},

@@ -5,7 +5,9 @@ var CityResult = require('./CityResult.js')
 
 var CitySearchResults = React.createClass({
 	render: function(){
-		if (this.props.results != ''){
+		if (this.props.results === undefined){
+			alert('No results!');
+		} else if (this.props.results != ''){
 			var results = <h2 className="page-header">Results: </h2>
 		} else {
 			var results = '';

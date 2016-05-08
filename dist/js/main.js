@@ -19643,26 +19643,35 @@ var AppActions = {
 		AppDispatcher.handleViewAction({
 			actionType: AppConstants.RECEIVE_CALENDARS,
 			calendars: calendars
+		});
+	},
+
+	receiveArtistCalendars: function(artistCalendars){
+		AppDispatcher.handleViewAction({
+			actionType: AppConstants.RECEIVE_ARTIST_CALENDARS,
+			artistCalendars: artistCalendars
 		})
 	}
 }
 
 module.exports = AppActions;
 
-},{"../constants/AppConstants":173,"../dispatcher/AppDispatcher":174}],165:[function(require,module,exports){
+},{"../constants/AppConstants":175,"../dispatcher/AppDispatcher":176}],165:[function(require,module,exports){
 var React = require('react');
 var AppActions = require('../actions/AppActions');
 var AppStore = require('../stores/AppStore');
 var SearchForm = require('./SearchForm.js');
 var CitySearchResults = require('./CitySearchResults.js');
-var ArtistSearchResults = require('./ArtistSearchResults.js')
-var Calendar = require('./Calendar.js')
+var ArtistSearchResults = require('./ArtistSearchResults.js');
+var Calendar = require('./Calendar.js');
+var ArtistCalendar = require('./ArtistCalendar.js');
 
 function getAppState(){
 	return {
 		results: AppStore.getResults(),
 		calendars: AppStore.getCalendars(),
-		artistResults: AppStore.getArtistResults()
+		artistResults: AppStore.getArtistResults(),
+		artistCalendars: AppStore.getArtistCalendars()
 	}
 };
 
@@ -19685,7 +19694,8 @@ var App = React.createClass({displayName: "App",
 				React.createElement(SearchForm, null), 
 				React.createElement(CitySearchResults, {searchText: this.state.searchCity, results: this.state.results}), 
 				React.createElement(ArtistSearchResults, {artistSearch: this.state.searchArtist, artistResults: this.state.artistResults}), 
-				React.createElement(Calendar, {calendars: this.state.calendars})
+				React.createElement(Calendar, {calendars: this.state.calendars}), 
+				React.createElement(ArtistCalendar, {artistCalendars: this.state.artistCalendars})
 			)
 		);
 	},
@@ -19698,7 +19708,93 @@ var App = React.createClass({displayName: "App",
 
 module.exports = App;
 
-},{"../actions/AppActions":164,"../stores/AppStore":176,"./ArtistSearchResults.js":167,"./Calendar.js":168,"./CitySearchResults.js":171,"./SearchForm.js":172,"react":163}],166:[function(require,module,exports){
+},{"../actions/AppActions":164,"../stores/AppStore":178,"./ArtistCalendar.js":166,"./ArtistSearchResults.js":169,"./Calendar.js":170,"./CitySearchResults.js":173,"./SearchForm.js":174,"react":163}],166:[function(require,module,exports){
+var React = require('react');
+var AppActions = require('../actions/AppActions');
+var AppStore = require('../stores/AppStore');
+var ArtistCalendarItem = require('./ArtistCalendarItem.js')
+
+
+var ArtistCalendar = React.createClass({displayName: "ArtistCalendar",
+
+	render: function(){
+		if(this.props.artistCalendars != ''){
+			var artistTable = 
+				React.createElement("table", null, 
+					React.createElement("thead", null, 
+						React.createElement("tr", null, 
+							React.createElement("th", {className: "date-header"}, "Date"), 
+							React.createElement("th", {className: "artist-header"}, "Headliner"), 
+							React.createElement("th", {className: "venue-header"}, "Venue"), 
+							React.createElement("th", {className: "location-header"}, "Location"), 
+							React.createElement("th", {className: "sk-link-header"}, "Songkick Event Page")
+						)
+					), 
+						React.createElement("tbody", null, 
+						
+							this.props.artistCalendars.map(function(artistCalendar, i){
+							return (
+								React.createElement(ArtistCalendarItem, {artistCalendar: artistCalendar, key: i})
+							)
+							})
+						
+						)
+					)
+		} else{
+			var artistTable = '';
+		}
+		return(
+			React.createElement("div", null, 				
+					artistTable
+			)
+		);
+	}
+});
+
+module.exports = ArtistCalendar;
+
+},{"../actions/AppActions":164,"../stores/AppStore":178,"./ArtistCalendarItem.js":167,"react":163}],167:[function(require,module,exports){
+var React = require('react');
+var AppActions = require('../actions/AppActions');
+var AppStore = require('../stores/AppStore');
+
+var ArtistCalendarItem = React.createClass({displayName: "ArtistCalendarItem",
+
+	render: function(){
+		var results = '';
+		var artist = '';
+		var venue = '';
+		var location= '';
+		if(this.props.artistCalendar.performance[0] === undefined){
+			var artist = "Unknown";
+		} else{
+			var artist = this.props.artistCalendar.performance[0].artist.displayName;
+		};
+		if(this.props.artistCalendar.venue === undefined){
+			var venue = 'Unknown venue';
+		} else{
+			var venue = this.props.artistCalendar.venue.displayName;
+		};
+		if(this.props.artistCalendar.location.city === undefined){
+			var location = 'Unknown';
+		} else{
+			var location = this.props.artistCalendar.location.city;
+		};
+		return(
+			React.createElement("tr", null, 
+				React.createElement("td", {className: "date"}, this.props.artistCalendar.start.date, " "), React.createElement("td", {className: "artist"}, " ", artist, " "), React.createElement("td", {className: "venue"}, venue, " "), React.createElement("td", {className: "location"}, location), React.createElement("td", {className: "songkick-link"}, React.createElement("a", {href: this.props.artistCalendar.uri, target: "_blank"}, React.createElement("img", {className: "sk-link", src: "./images/sk-link.jpg"}))), React.createElement("td", null, React.createElement("a", {href: "#", className: "btn btn-xs btn-info"}, "I'm Interested"))
+			)
+		);
+	},
+
+	handleSubmit: function(e){
+		e.preventDefault();
+	}
+});
+
+module.exports = ArtistCalendarItem;
+
+},{"../actions/AppActions":164,"../stores/AppStore":178,"react":163}],168:[function(require,module,exports){
 var React = require('react');
 var AppActions = require('../actions/AppActions');
 var AppStore = require('../stores/AppStore');
@@ -19739,13 +19835,12 @@ var ArtistResult = React.createClass({displayName: "ArtistResult",
 			artistId: this.refs.artistId.value
 		};
 		AppActions.searchArtistId(artistIdSearch);
-		console.log(artistIdSearch);
 	}
 });
 
 module.exports = ArtistResult;
 
-},{"../actions/AppActions":164,"../stores/AppStore":176,"react":163}],167:[function(require,module,exports){
+},{"../actions/AppActions":164,"../stores/AppStore":178,"react":163}],169:[function(require,module,exports){
 var React = require('react');
 var AppActions = require('../actions/AppActions');
 var AppStore = require('../stores/AppStore');
@@ -19753,7 +19848,9 @@ var ArtistResult = require('./ArtistResult.js')
 
 var ArtistSearchResults = React.createClass({displayName: "ArtistSearchResults",
 	render: function(){
-		if (this.props.artistResults != ''){
+		if (this.props.artistResults === undefined){
+			alert('No results!');
+		} else if (this.props.artistResults != ''){
 			var artistResults = React.createElement("h2", {className: "page-header"}, "Results: ")
 		} else {
 			var artistResults = '';
@@ -19774,7 +19871,7 @@ var ArtistSearchResults = React.createClass({displayName: "ArtistSearchResults",
 })
 module.exports = ArtistSearchResults;
 
-},{"../actions/AppActions":164,"../stores/AppStore":176,"./ArtistResult.js":166,"react":163}],168:[function(require,module,exports){
+},{"../actions/AppActions":164,"../stores/AppStore":178,"./ArtistResult.js":168,"react":163}],170:[function(require,module,exports){
 var React = require('react');
 var AppActions = require('../actions/AppActions');
 var AppStore = require('../stores/AppStore');
@@ -19789,10 +19886,11 @@ var Calendar = React.createClass({displayName: "Calendar",
 				React.createElement("table", null, 
 					React.createElement("thead", null, 
 						React.createElement("tr", null, 
-							React.createElement("th", {id: "date-header"}, "Date"), 
-							React.createElement("th", {id: "artist-header"}, "Artist"), 
-							React.createElement("th", {id: "venue-header"}, "Venue"), 
-							React.createElement("th", {id: "sk-link-header"}, "Songkick Event Page")
+							React.createElement("th", {className: "date-header"}, "Date"), 
+							React.createElement("th", {className: "artist-header"}, "Headliner"), 
+							React.createElement("th", {className: "venue-header"}, "Venue"), 
+							React.createElement("th", {className: "location-header"}, "Location"), 
+							React.createElement("th", {className: "sk-link-header"}, "Songkick Event Page")
 						)
 					), 
 						React.createElement("tbody", null, 
@@ -19818,7 +19916,7 @@ var Calendar = React.createClass({displayName: "Calendar",
 
 module.exports = Calendar;
 
-},{"../actions/AppActions":164,"../stores/AppStore":176,"./CalendarItem.js":169,"react":163}],169:[function(require,module,exports){
+},{"../actions/AppActions":164,"../stores/AppStore":178,"./CalendarItem.js":171,"react":163}],171:[function(require,module,exports){
 var React = require('react');
 var AppActions = require('../actions/AppActions');
 var AppStore = require('../stores/AppStore');
@@ -19838,10 +19936,15 @@ var CalendarItem = React.createClass({displayName: "CalendarItem",
 			var venue = 'Unknown venue';
 		} else{
 			var venue = this.props.calendar.venue.displayName;
-		}
+		};
+		if(this.props.calendar.location.city === undefined){
+			var location = 'Unknown';
+		} else{
+			var location = this.props.calendar.location.city;
+		};
 		return(
 			React.createElement("tr", null, 
-				React.createElement("td", {id: "date"}, this.props.calendar.start.date, " "), React.createElement("td", {id: "artist"}, " ", artist, " "), React.createElement("td", {id: "venue"}, venue, " "), React.createElement("td", {id: "songkick-link"}, React.createElement("a", {href: this.props.calendar.uri, target: "_blank"}, React.createElement("img", {id: "sk-link", src: "./images/sk-link.jpg"}))), React.createElement("td", null, React.createElement("a", {href: "#", className: "btn btn-xs btn-info"}, "I'm Interested"))
+				React.createElement("td", {className: "date"}, this.props.calendar.start.date), React.createElement("td", {className: "artist"}, artist), React.createElement("td", {className: "venue"}, venue), React.createElement("td", {className: "location"}, location), React.createElement("td", {className: "songkick-link"}, React.createElement("a", {href: this.props.calendar.uri, target: "_blank"}, React.createElement("img", {className: "sk-link", src: "./images/sk-link.jpg"}))), React.createElement("td", null, React.createElement("a", {href: "#", className: "btn btn-xs btn-info"}, "I'm Interested"))
 			)
 		);
 	},
@@ -19853,8 +19956,9 @@ var CalendarItem = React.createClass({displayName: "CalendarItem",
 
 module.exports = CalendarItem;
 
-},{"../actions/AppActions":164,"../stores/AppStore":176,"react":163}],170:[function(require,module,exports){
+},{"../actions/AppActions":164,"../stores/AppStore":178,"react":163}],172:[function(require,module,exports){
 var React = require('react');
+var ReactDOM = require('react-dom');
 var AppActions = require('../actions/AppActions');
 var AppStore = require('../stores/AppStore');
 
@@ -19904,7 +20008,7 @@ var CityResult = React.createClass({displayName: "CityResult",
 
 module.exports = CityResult;
 
-},{"../actions/AppActions":164,"../stores/AppStore":176,"react":163}],171:[function(require,module,exports){
+},{"../actions/AppActions":164,"../stores/AppStore":178,"react":163,"react-dom":7}],173:[function(require,module,exports){
 var React = require('react');
 var AppActions = require('../actions/AppActions');
 var AppStore = require('../stores/AppStore');
@@ -19912,7 +20016,9 @@ var CityResult = require('./CityResult.js')
 
 var CitySearchResults = React.createClass({displayName: "CitySearchResults",
 	render: function(){
-		if (this.props.results != ''){
+		if (this.props.results === undefined){
+			alert('No results!');
+		} else if (this.props.results != ''){
 			var results = React.createElement("h2", {className: "page-header"}, "Results: ")
 		} else {
 			var results = '';
@@ -19933,7 +20039,7 @@ var CitySearchResults = React.createClass({displayName: "CitySearchResults",
 })
 module.exports = CitySearchResults;
 
-},{"../actions/AppActions":164,"../stores/AppStore":176,"./CityResult.js":170,"react":163}],172:[function(require,module,exports){
+},{"../actions/AppActions":164,"../stores/AppStore":178,"./CityResult.js":172,"react":163}],174:[function(require,module,exports){
 var React = require('react');
 var ReactDOM = require('react-dom');
 var AppActions = require('../actions/AppActions');
@@ -19980,7 +20086,7 @@ var SearchForm = React.createClass({displayName: "SearchForm",
 
 module.exports = SearchForm;
 
-},{"../actions/AppActions":164,"../stores/AppStore":176,"react":163,"react-dom":7}],173:[function(require,module,exports){
+},{"../actions/AppActions":164,"../stores/AppStore":178,"react":163,"react-dom":7}],175:[function(require,module,exports){
 module.exports = {
 	SEARCH_CITY: 'SEARCH_CITY',
 	SEARCH_ARTIST: 'SEARCH_ARTIST',
@@ -19988,10 +20094,11 @@ module.exports = {
 	RECEIVE_ARTIST_RESULTS: 'RECEIVE_ARTIST_RESULTS',
 	SEARCH_ID: 'SEARCH_ID',
 	SEARCH_ARTIST_ID: 'SEARCH_ARTIST_ID',
-	RECEIVE_CALENDARS: 'RECEIVE_CALENDARS'
+	RECEIVE_CALENDARS: 'RECEIVE_CALENDARS',
+	RECEIVE_ARTIST_CALENDARS: 'RECEIVE_ARTIST_CALENDARS'
 }
 
-},{}],174:[function(require,module,exports){
+},{}],176:[function(require,module,exports){
 var Dispatcher = require('flux').Dispatcher;
 var assign = require('object-assign');
 
@@ -20007,7 +20114,7 @@ var AppDispatcher = assign(new Dispatcher(),{
 
 module.exports = AppDispatcher;
 
-},{"flux":3,"object-assign":6}],175:[function(require,module,exports){
+},{"flux":3,"object-assign":6}],177:[function(require,module,exports){
 var App = require('./components/App');
 var React = require('react');
 var ReactDOM = require('react-dom');
@@ -20019,7 +20126,7 @@ ReactDOM.render(
 	document.getElementById('app')
 );
 
-},{"./components/App":165,"./utils/appAPI.js":178,"react":163,"react-dom":7}],176:[function(require,module,exports){
+},{"./components/App":165,"./utils/appAPI.js":180,"react":163,"react-dom":7}],178:[function(require,module,exports){
 var AppDispatcher = require('../dispatcher/AppDispatcher');
 var AppConstants = require('../constants/AppConstants');
 var EventEmitter = require('events').EventEmitter;
@@ -20031,8 +20138,10 @@ var CHANGE_EVENT = 'change';
 var _results = [];
 var _artistResults = [];
 var _searchCity = '';
-var artistSearch = '';
+var _artistSearch = '';
+var artistIdSearch = [];
 var _calendars = [];
+var _artistCalendars = [];
 
 var AppStore = assign({}, EventEmitter.prototype, {
 	setSearchCity: function(search){
@@ -20053,23 +20162,41 @@ var AppStore = assign({}, EventEmitter.prototype, {
 	getSearchId: function(){
 		return _idSearch;
 	},
+	setArtistSearchId: function(aritstIdSearch){
+		_aritstIdSearch = artistIdSearch;
+	},
+	getArtistSearchId: function(){
+		return _aritstIdSearch;
+	},
 	setResults: function(results){
 		_results = results;
+		_artistResults = [];
+		_artistCalendars = [];
 	},
 	getResults: function(){
 		return _results;
 	},
 	setArtistResults: function(artistResults){
-		_artistResults = artistResults
+		_artistResults = artistResults;
+		_results = [];
+		_calendars = [];
 	},
 	getArtistResults: function(){
 		return _artistResults;
 	},
 	setCalendars: function(calendars){
 		_calendars = calendars;
+		_results = [];
 	},
 	getCalendars: function(){
 		return _calendars;
+	},
+	setArtistCalendars: function(artistCalendars){
+		_artistCalendars = artistCalendars;
+		_artistResults = [];
+	},
+	getArtistCalendars: function(){
+		return _artistCalendars;
 	},
 	emitChange: function(){
 		this.emit(CHANGE_EVENT);
@@ -20114,10 +20241,22 @@ AppDispatcher.register(function(payload){
 			AppStore.emit(CHANGE_EVENT);
 			break;
 
+		case AppConstants.SEARCH_ARTIST_ID:
+			AppAPI.searchArtistId(action.artistIdSearch);
+			AppStore.setArtistSearchId(action.artistIdSearch);
+			AppStore.emit(CHANGE_EVENT);
+			break;
+
 		case AppConstants.RECEIVE_CALENDARS:
 			AppStore.setCalendars(action.calendars);
 			AppStore.emit(CHANGE_EVENT);
 			break;
+
+		case AppConstants.RECEIVE_ARTIST_CALENDARS:
+			AppStore.setArtistCalendars(action.artistCalendars);
+			AppStore.emit(CHANGE_EVENT);
+			break;
+
 	}
 
 	return true;
@@ -20125,7 +20264,7 @@ AppDispatcher.register(function(payload){
 
 module.exports = AppStore;
 
-},{"../constants/AppConstants":173,"../dispatcher/AppDispatcher":174,"../utils/AppAPI.js":177,"events":1,"object-assign":6}],177:[function(require,module,exports){
+},{"../constants/AppConstants":175,"../dispatcher/AppDispatcher":176,"../utils/AppAPI.js":179,"events":1,"object-assign":6}],179:[function(require,module,exports){
 var AppActions = require('../actions/AppActions');
 
 module.exports = {
@@ -20167,6 +20306,24 @@ module.exports = {
 					alert('No results!')
 				} else{
 					AppActions.receiveCalendars(data.resultsPage.results.event);
+				};
+			}.bind(this),
+			error: function(xhr, status, err){
+				console.log(err);
+			}.bind(this)
+		})
+	},
+
+	searchArtistId: function(artistIdSearch){
+		$.ajax({
+			url: 'http://api.songkick.com/api/3.0/artists/'+artistIdSearch.artistId+'/calendar.json?apikey=fQN7zyRe4VM5w73a&jsoncallback=?',
+			dataType: 'jsonp',
+			cache: false,
+			success: function(data){
+				if(data.resultsPage.results.event === undefined){
+					alert('This artist is not currently on tour.');
+				} else{
+					AppActions.receiveArtistCalendars(data.resultsPage.results.event);
 				}
 			}.bind(this),
 			error: function(xhr, status, err){
@@ -20175,9 +20332,11 @@ module.exports = {
 		})
 	}
 
+
+
 }
 
-},{"../actions/AppActions":164}],178:[function(require,module,exports){
+},{"../actions/AppActions":164}],180:[function(require,module,exports){
 var AppActions = require('../actions/AppActions');
 
 module.exports = {
@@ -20219,6 +20378,24 @@ module.exports = {
 					alert('No results!')
 				} else{
 					AppActions.receiveCalendars(data.resultsPage.results.event);
+				};
+			}.bind(this),
+			error: function(xhr, status, err){
+				console.log(err);
+			}.bind(this)
+		})
+	},
+
+	searchArtistId: function(artistIdSearch){
+		$.ajax({
+			url: 'http://api.songkick.com/api/3.0/artists/'+artistIdSearch.artistId+'/calendar.json?apikey=fQN7zyRe4VM5w73a&jsoncallback=?',
+			dataType: 'jsonp',
+			cache: false,
+			success: function(data){
+				if(data.resultsPage.results.event === undefined){
+					alert('This artist is not currently on tour.');
+				} else{
+					AppActions.receiveArtistCalendars(data.resultsPage.results.event);
 				}
 			}.bind(this),
 			error: function(xhr, status, err){
@@ -20227,6 +20404,8 @@ module.exports = {
 		})
 	}
 
+
+
 }
 
-},{"../actions/AppActions":164}]},{},[175]);
+},{"../actions/AppActions":164}]},{},[177]);
