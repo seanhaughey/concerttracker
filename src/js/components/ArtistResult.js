@@ -38,7 +38,6 @@ var ArtistResult = React.createClass({
 			artistId: this.refs.artistId.value
 		};
 		AppActions.searchArtistId(artistIdSearch);
-		console.log(artistIdSearch);
 	}
 });
 

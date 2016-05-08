@@ -2,44 +2,52 @@ body {
 	margin-top: 30px;
 }
 
-#sk-link-header {
+.sk-link-header {
 	text-align: center;
 	width: 300px;
 }
 
-#songkick-link {
+.songkick-link {
 	text-align: center;
 	width: 300px;
 }
 
-#songkick {
+.songkick {
 	text-align: center;
 }
 
-#sk-link {
+.sk-link {
 	height: 35%;
 }
 
-#date-header {
+.date-header {
 	width: 100px;
 }
 
-#date {
+.date {
 	width: 100px;
 }
 
-#artist-header {
+.artist-header {
+	width: 200px;
+}
+
+.artist {
+	width: 200px;
+}
+
+.venue-header {
 	width: 300px;
 }
 
-#artist {
+.venue {
 	width: 300px;
 }
 
-#venue-header {
-	width: 300px;
+.location-header {
+	width: 150px;
 }
 
-#venue {
-	width: 300px;
+.location {
+	width: 150px;
 }

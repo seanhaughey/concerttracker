@@ -5,7 +5,9 @@ var ArtistResult = require('./ArtistResult.js')
 
 var ArtistSearchResults = React.createClass({
 	render: function(){
-		if (this.props.artistResults != ''){
+		if (this.props.artistResults === undefined){
+			alert('No results!');
+		} else if (this.props.artistResults != ''){
 			var artistResults = <h2 className="page-header">Results: </h2>
 		} else {
 			var artistResults = '';
