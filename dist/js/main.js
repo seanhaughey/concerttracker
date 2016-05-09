@@ -19822,6 +19822,9 @@ var ArtistResult = React.createClass({displayName: "ArtistResult",
 						React.createElement("p", null, this.props.artistResult.displayName), 
 						React.createElement("input", {className: "hidden", type: "text", ref: "artistId", value: this.props.artistResult.id, onChange: this.handleChange})
 					), 
+					React.createElement("div", {className: "col-md-2"}, 
+						React.createElement("a", {href: this.props.artistResult.uri, target: "_blank"}, React.createElement("img", {id: "sk-artist-link", src: "./images/sk-link.jpg"}))
+					), 
 					React.createElement("div", {className: "col-md-1"}), 
 					React.createElement("button", {className: "btn btn-xs btn-primary"}, "Choose")
 				)
@@ -19851,7 +19854,15 @@ var ArtistSearchResults = React.createClass({displayName: "ArtistSearchResults",
 		if (this.props.artistResults === undefined){
 			alert('No results!');
 		} else if (this.props.artistResults != ''){
-			var artistResults = React.createElement("h2", {className: "page-header"}, "Results: ")
+			var artistResults = 
+				React.createElement("div", {className: "row"}, 
+					React.createElement("div", {className: "col-md-2"}, 
+						React.createElement("h5", {className: "page-header"}, React.createElement("strong", null, "Artist"))
+					), 
+					React.createElement("div", {className: "col-md-2"}, 
+						React.createElement("h5", {className: "page-header"}, React.createElement("strong", null, "Songkick Artist Page"))
+					)
+				)
 		} else {
 			var artistResults = '';
 		};
@@ -20019,7 +20030,7 @@ var CitySearchResults = React.createClass({displayName: "CitySearchResults",
 		if (this.props.results === undefined){
 			alert('No results!');
 		} else if (this.props.results != ''){
-			var results = React.createElement("h2", {className: "page-header"}, "Results: ")
+			var results = React.createElement("h5", {className: "page-header"}, React.createElement("strong", null, "Results:"))
 		} else {
 			var results = '';
 		}

@@ -25,6 +25,9 @@ var ArtistResult = React.createClass({
 						<p>{this.props.artistResult.displayName}</p>
 						<input className="hidden" type="text" ref="artistId" value={this.props.artistResult.id} onChange={this.handleChange}/>
 					</div>
+					<div className="col-md-2">
+						<a href={this.props.artistResult.uri} target="_blank"><img id="sk-artist-link" src="./images/sk-link.jpg"/></a>
+					</div>
 					<div className="col-md-1"></div>
 					<button className="btn btn-xs btn-primary">Choose</button>
 				</form>

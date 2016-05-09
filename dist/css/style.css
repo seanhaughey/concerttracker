@@ -51,3 +51,7 @@ body {
 .location {
 	width: 150px;
 }
+
+#sk-artist-link {
+	width: 80%;
+}

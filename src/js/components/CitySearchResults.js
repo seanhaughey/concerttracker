@@ -8,7 +8,7 @@ var CitySearchResults = React.createClass({
 		if (this.props.results === undefined){
 			alert('No results!');
 		} else if (this.props.results != ''){
-			var results = <h2 className="page-header">Results: </h2>
+			var results = <h5 className="page-header"><strong>Results:</strong></h5>
 		} else {
 			var results = '';
 		}
