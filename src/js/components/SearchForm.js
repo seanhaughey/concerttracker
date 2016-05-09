@@ -33,7 +33,7 @@ var SearchForm = React.createClass({
 
 	handleArtistSubmit: function(e){
 		e.preventDefault();
-
+		
 		var artistSearch = {
 			artist: this.refs.artist.value.trim()
 		};

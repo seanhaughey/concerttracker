@@ -16,12 +16,14 @@ var _artistCalendars = [];
 
 var AppStore = assign({}, EventEmitter.prototype, {
 	setSearchCity: function(search){
+		_calendars = [];
 		_searchCity = search.city;
 	},
 	getSearchCity: function(){
 		return _searchCity;
 	},
 	setSearchArtist: function(artistSearch){
+		_artistCalendars = [];
 		_artistSearch = artistSearch;
 	},
 	getSearchArtist: function(){

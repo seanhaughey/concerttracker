@@ -20075,7 +20075,7 @@ var SearchForm = React.createClass({displayName: "SearchForm",
 
 	handleArtistSubmit: function(e){
 		e.preventDefault();
-
+		
 		var artistSearch = {
 			artist: this.refs.artist.value.trim()
 		};
@@ -20145,12 +20145,14 @@ var _artistCalendars = [];
 
 var AppStore = assign({}, EventEmitter.prototype, {
 	setSearchCity: function(search){
+		_calendars = [];
 		_searchCity = search.city;
 	},
 	getSearchCity: function(){
 		return _searchCity;
 	},
 	setSearchArtist: function(artistSearch){
+		_artistCalendars = [];
 		_artistSearch = artistSearch;
 	},
 	getSearchArtist: function(){
