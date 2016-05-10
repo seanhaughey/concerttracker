@@ -4,6 +4,7 @@ var ReactDOM = require('react-dom');
 var AppAPI = require('./utils/appAPI.js');
 
 AppAPI.getConcerts();
+AppAPI.getVaultConcerts();
 
 ReactDOM.render(
 	<App />,

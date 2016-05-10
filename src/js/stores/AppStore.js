@@ -14,6 +14,7 @@ var artistIdSearch = [];
 var _calendars = [];
 var _artistCalendars = [];
 var _concerts = [];
+var _vaultConcerts = [];
 
 
 var AppStore = assign({}, EventEmitter.prototype, {
@@ -79,6 +80,12 @@ var AppStore = assign({}, EventEmitter.prototype, {
 	getConcerts: function(){
 		return _concerts;
 	},
+	setVaultConcerts: function(vaultConcerts){
+		_vaultConcerts = vaultConcerts;
+	},
+	getVaultConcerts: function(){
+		return _vaultConcerts;
+	},
 	emitChange: function(){
 		this.emit(CHANGE_EVENT);
 	},
@@ -89,12 +96,19 @@ var AppStore = assign({}, EventEmitter.prototype, {
 		this.removeListener('change', callback);
 	},
 	saveConcertToCalendar: function(concert){
-	_concerts.push(concert);
+		_concerts.push(concert);
 	},
 	removeConcert: function(concertId){
 		var index = _concerts.findIndex(x => x.id === concertId);
 		_concerts.splice(index, 1);
 	},
+	saveConcertToVault: function(vaultConcert){
+		_vaultConcerts.push(vaultConcert);
+	},
+	removeVaultConcert: function(vaultConcertId){
+		var index = _vaultConcerts.findIndex(x => x.id === vaultConcertId);
+		_vaultConcerts.splice(index, 1);
+	}
 });
 
 AppDispatcher.register(function(payload){
@@ -156,11 +170,29 @@ AppDispatcher.register(function(payload){
 			AppStore.emit(CHANGE_EVENT);
 			break;
 
+		case AppConstants.RECEIVE_VAULT_CONCERTS:
+			AppStore.setVaultConcerts(action.vaultConcerts);
+			AppStore.emit(CHANGE_EVENT);
+			break;
+
 		case AppConstants.REMOVE_CONCERT:
 			AppStore.removeConcert(action.concertId);
 			AppAPI.removeConcert(action.concertId);
 			AppStore.emit(CHANGE_EVENT);
 			break;
+
+		case AppConstants.SAVE_CONCERT_TO_VAULT:
+			AppStore.saveConcertToVault(action.vaultConcert);
+			AppAPI.saveConcertToVault(action.vaultConcert);
+			AppStore.emit(CHANGE_EVENT);
+			break;
+
+		case AppConstants.REMOVE_VAULT_CONCERT:
+			AppStore.removeVaultConcert(action.vaultConcertId);
+			AppAPI.removeVaultConcert(action.vaultConcertId);
+			AppStore.emit(CHANGE_EVENT);
+			break;
+
 	}
 
 	return true;
