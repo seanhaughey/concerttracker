@@ -9,7 +9,7 @@ var ArtistCalendar = React.createClass({
 	render: function(){
 		if(this.props.artistCalendars != ''){
 			var artistTable = 
-				<table>
+				<table className="table-striped">
 					<thead>
 						<tr>
 							<th className="date-header">Date</th>

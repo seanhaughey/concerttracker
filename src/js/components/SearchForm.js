@@ -9,12 +9,12 @@ var SearchForm = React.createClass({
 			<div className="row">
 				<h3>Search By City</h3>
 				<form onSubmit={this.handleSubmit}>
-					<input type="text" ref="city" className="form-inline" placeholder="Enter City Name" />
+					<input type="text" ref="city" placeholder="Enter City Name" />
 					<button type="submit" className="btn btn-xs btn-primary">Submit</button>
 				</form>
 				<h3>Search Artist</h3>
 				<form onSubmit={this.handleArtistSubmit}>
-					<input type="text" ref="artist" className="form-inline" placeholder="Enter Artist Name" />
+					<input type="text" ref="artist" placeholder="Enter Artist Name" />
 					<button type="submit" className="btn btn-xs btn-primary">Submit</button>
 				</form>
 			</div>

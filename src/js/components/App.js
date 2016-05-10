@@ -34,12 +34,12 @@ var App = React.createClass({
 	render: function(){
 		return(
 			<div>
+				<ConcertList concerts={this.state.concerts} />
 				<SearchForm />
 				<CitySearchResults searchText={this.state.searchCity} results={this.state.results} />
 				<ArtistSearchResults artistSearch={this.state.searchArtist} artistResults={this.state.artistResults} />
 				<Calendar calendars={this.state.calendars} />
 				<ArtistCalendar artistCalendars={this.state.artistCalendars} />
-				<ConcertList concerts={this.state.concerts} />
 			</div>
 		);
 	},

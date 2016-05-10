@@ -19997,12 +19997,12 @@ var App = React.createClass({displayName: "App",
 	render: function(){
 		return(
 			React.createElement("div", null, 
+				React.createElement(ConcertList, {concerts: this.state.concerts}), 
 				React.createElement(SearchForm, null), 
 				React.createElement(CitySearchResults, {searchText: this.state.searchCity, results: this.state.results}), 
 				React.createElement(ArtistSearchResults, {artistSearch: this.state.searchArtist, artistResults: this.state.artistResults}), 
 				React.createElement(Calendar, {calendars: this.state.calendars}), 
-				React.createElement(ArtistCalendar, {artistCalendars: this.state.artistCalendars}), 
-				React.createElement(ConcertList, {concerts: this.state.concerts})
+				React.createElement(ArtistCalendar, {artistCalendars: this.state.artistCalendars})
 			)
 		);
 	},
@@ -20027,7 +20027,7 @@ var ArtistCalendar = React.createClass({displayName: "ArtistCalendar",
 	render: function(){
 		if(this.props.artistCalendars != ''){
 			var artistTable = 
-				React.createElement("table", null, 
+				React.createElement("table", {className: "table-striped"}, 
 					React.createElement("thead", null, 
 						React.createElement("tr", null, 
 							React.createElement("th", {className: "date-header"}, "Date"), 
@@ -20207,7 +20207,7 @@ var Calendar = React.createClass({displayName: "Calendar",
 	render: function(){
 		if(this.props.calendars != ''){
 			var table = 
-				React.createElement("table", null, 
+				React.createElement("table", {className: "table-striped"}, 
 					React.createElement("thead", null, 
 						React.createElement("tr", null, 
 							React.createElement("th", {className: "date-header"}, "Date"), 
@@ -20451,12 +20451,12 @@ var SearchForm = React.createClass({displayName: "SearchForm",
 			React.createElement("div", {className: "row"}, 
 				React.createElement("h3", null, "Search By City"), 
 				React.createElement("form", {onSubmit: this.handleSubmit}, 
-					React.createElement("input", {type: "text", ref: "city", className: "form-inline", placeholder: "Enter City Name"}), 
+					React.createElement("input", {type: "text", ref: "city", placeholder: "Enter City Name"}), 
 					React.createElement("button", {type: "submit", className: "btn btn-xs btn-primary"}, "Submit")
 				), 
 				React.createElement("h3", null, "Search Artist"), 
 				React.createElement("form", {onSubmit: this.handleArtistSubmit}, 
-					React.createElement("input", {type: "text", ref: "artist", className: "form-inline", placeholder: "Enter Artist Name"}), 
+					React.createElement("input", {type: "text", ref: "artist", placeholder: "Enter Artist Name"}), 
 					React.createElement("button", {type: "submit", className: "btn btn-xs btn-primary"}, "Submit")
 				)
 			)

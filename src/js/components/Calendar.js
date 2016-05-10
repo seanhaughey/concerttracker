@@ -9,7 +9,7 @@ var Calendar = React.createClass({
 	render: function(){
 		if(this.props.calendars != ''){
 			var table = 
-				<table>
+				<table className="table-striped">
 					<thead>
 						<tr>
 							<th className="date-header">Date</th>
