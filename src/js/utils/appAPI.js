@@ -95,6 +95,36 @@ module.exports = {
 	removeConcert: function(concertId){
 		this.firebaseRef = new Firebase('https://concerttracker.firebaseio.com/calendar/'+concertId);
 		this.firebaseRef.remove();
+	},
+
+	saveConcertToVault: function(vaultConcert){
+		this.firebaseRef = new Firebase("https://concerttracker.firebaseio.com/vault");
+		this.firebaseRef.push({
+			vaultConcert: vaultConcert
+		});		
+	},
+
+	getVaultConcerts: function(){
+		this.firebaseRef = new Firebase('https://concerttracker.firebaseio.com/vault');
+		this.firebaseRef.once("value", function(snapshot){
+			var vaultConcerts = [];
+			snapshot.forEach(function(childSnapshot){
+				var vaultConcert = {
+					id: childSnapshot.key(),
+					date: childSnapshot.val().vaultConcert.date,
+					artist: childSnapshot.val().vaultConcert.artist,
+					venue: childSnapshot.val().vaultConcert.venue,
+					location: childSnapshot.val().vaultConcert.location,
+				}
+				vaultConcerts.push(vaultConcert);
+				AppActions.receiveVaultConcerts(vaultConcerts);
+			});
+		});		
+	},
+
+	removeVaultConcert: function(vaultConcertId){
+		this.firebaseRef = new Firebase('https://concerttracker.firebaseio.com/vault/'+vaultConcertId);
+		this.firebaseRef.remove();
 	}
 
 }

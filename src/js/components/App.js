@@ -7,6 +7,7 @@ var ArtistSearchResults = require('./ArtistSearchResults.js');
 var Calendar = require('./Calendar.js');
 var ArtistCalendar = require('./ArtistCalendar.js');
 var ConcertList = require('./ConcertList.js');
+var VaultConcertList = require('./VaultConcertList.js');
 
 function getAppState(){
 	return {
@@ -14,7 +15,8 @@ function getAppState(){
 		calendars: AppStore.getCalendars(),
 		artistResults: AppStore.getArtistResults(),
 		artistCalendars: AppStore.getArtistCalendars(),
-		concerts: AppStore.getConcerts()
+		concerts: AppStore.getConcerts(),
+		vaultConcerts: AppStore.getVaultConcerts()
 	}
 };
 
@@ -34,12 +36,13 @@ var App = React.createClass({
 	render: function(){
 		return(
 			<div>
-				<ConcertList concerts={this.state.concerts} />
 				<SearchForm />
 				<CitySearchResults searchText={this.state.searchCity} results={this.state.results} />
 				<ArtistSearchResults artistSearch={this.state.searchArtist} artistResults={this.state.artistResults} />
 				<Calendar calendars={this.state.calendars} />
 				<ArtistCalendar artistCalendars={this.state.artistCalendars} />
+				<VaultConcertList vaultConcerts={this.state.vaultConcerts} />
+				<ConcertList concerts={this.state.concerts} />
 			</div>
 		);
 	},

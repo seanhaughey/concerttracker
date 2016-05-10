@@ -70,7 +70,15 @@ var AppActions = {
 		AppDispatcher.handleViewAction({
 			actionType: AppConstants.RECEIVE_CONCERTS,
 			concerts: concerts
-		})
+		});
+
+	},
+
+	receiveVaultConcerts: function(vaultConcerts){
+		AppDispatcher.handleViewAction({
+			actionType: AppConstants.RECEIVE_VAULT_CONCERTS,
+			vaultConcerts: vaultConcerts
+		});
 
 	},
 
@@ -80,6 +88,20 @@ var AppActions = {
 			concertId: concertId
 		});
 	},
+
+	saveConcertToVault: function(vaultConcert){
+		AppDispatcher.handleViewAction({
+			actionType: AppConstants.SAVE_CONCERT_TO_VAULT,
+			vaultConcert: vaultConcert
+		})
+	},
+
+	removeVaultConcert: function(vaultConcertId){
+		AppDispatcher.handleViewAction({
+			actionType: AppConstants.REMOVE_VAULT_CONCERT,
+			vaultConcertId: vaultConcertId
+		})
+	}
 }
 
 module.exports = AppActions;

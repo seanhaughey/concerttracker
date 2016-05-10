@@ -11,7 +11,7 @@ var Concert = React.createClass({
 				<td>{this.props.concert.venue}</td>
 				<td>{this.props.concert.location}</td>
 				<td><a href={this.props.concert.link} target="_blank"><img className="sk-link" src="./images/sk-link.jpg"/></a></td>
-				<td><a href="#" className="btn btn-default" onClick={this.handleEdit.bind(this, this.props.concert)}>Attended</a> <a href="#" className="btn btn-danger" onClick={this.handleRemove.bind(this, this.props.concert.id)}>Remove</a></td>
+				<td><a href="#" className="btn btn-default" onClick={this.handleSubmit.bind(this, this.props.concert, this.props.concert.id)}>Attended</a> <a href="#" className="btn btn-danger" onClick={this.handleRemove.bind(this, this.props.concert.id)}>Remove</a></td>
 			</tr>
 		);
 	},
@@ -21,8 +21,9 @@ var Concert = React.createClass({
 		AppActions.removeConcert(i);
 	},
 
-	handleEdit: function(i, j){
-		// AppActions.editContact(i);
+	handleSubmit: function(i, j, k){
+		AppActions.saveConcertToVault(i);
+		AppActions.removeConcert(j);
 	}
 });
 
