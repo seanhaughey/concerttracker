@@ -36,11 +36,9 @@ var CalendarItem = React.createClass({
 			artist: this.props.calendar.performance[0].artist.displayName,
 			venue: this.props.calendar.venue.displayName,
 			location: this.props.calendar.location.city,
-			link: this.props.calendar.start.date
+			link: this.props.calendar.uri
 		};
 		AppActions.saveConcertToCalendar(concert);
-		console.log(concert);
-
 	}
 });
 

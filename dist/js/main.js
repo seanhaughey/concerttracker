@@ -20071,15 +20071,21 @@ var ArtistCalendarItem = React.createClass({displayName: "ArtistCalendarItem",
 		};
 		return(
 			React.createElement("tr", null, 
-				React.createElement("td", {className: "date"}, this.props.artistCalendar.start.date, " "), React.createElement("td", {className: "artist"}, " ", artist, " "), React.createElement("td", {className: "venue"}, venue, " "), React.createElement("td", {className: "location"}, location), React.createElement("td", {className: "songkick-link"}, React.createElement("a", {href: this.props.artistCalendar.uri, target: "_blank"}, React.createElement("img", {className: "sk-link", src: "./images/sk-link.jpg"}))), React.createElement("td", null, React.createElement("a", {href: "#", className: "btn btn-xs btn-info"}, "I'm Interested"))
+				React.createElement("td", {className: "date"}, this.props.artistCalendar.start.date, " "), React.createElement("td", {className: "artist"}, " ", artist, " "), React.createElement("td", {className: "venue"}, venue, " "), React.createElement("td", {className: "location"}, location), React.createElement("td", {className: "songkick-link"}, React.createElement("a", {href: this.props.artistCalendar.uri, target: "_blank"}, React.createElement("img", {className: "sk-link", src: "./images/sk-link.jpg"}))), React.createElement("td", null, React.createElement("a", {href: "#", className: "btn btn-xs btn-info", onClick: this.handleSubmit.bind(this, this.props.artistCalendar)}, "I'm Interested"))
 			)
 		);
 	},
 
-	handleSubmit: function(e){
-		e.preventDefault();
-	}
-});
+	handleSubmit: function(){
+		var concert = {
+			date: this.props.artistCalendar.start.date,
+			artist: this.props.artistCalendar.performance[0].artist.displayName,
+			venue: this.props.artistCalendar.venue.displayName,
+			location: this.props.artistCalendar.location.city,
+			link: this.props.artistCalendar.uri
+		};
+		AppActions.saveConcertToCalendar(concert);
+	}});
 
 module.exports = ArtistCalendarItem;
 
@@ -20255,11 +20261,9 @@ var CalendarItem = React.createClass({displayName: "CalendarItem",
 			artist: this.props.calendar.performance[0].artist.displayName,
 			venue: this.props.calendar.venue.displayName,
 			location: this.props.calendar.location.city,
-			link: this.props.calendar.start.date
+			link: this.props.calendar.uri
 		};
 		AppActions.saveConcertToCalendar(concert);
-		console.log(concert);
-
 	}
 });
 
