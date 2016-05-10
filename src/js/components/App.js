@@ -6,13 +6,15 @@ var CitySearchResults = require('./CitySearchResults.js');
 var ArtistSearchResults = require('./ArtistSearchResults.js');
 var Calendar = require('./Calendar.js');
 var ArtistCalendar = require('./ArtistCalendar.js');
+var ConcertList = require('./ConcertList.js');
 
 function getAppState(){
 	return {
 		results: AppStore.getResults(),
 		calendars: AppStore.getCalendars(),
 		artistResults: AppStore.getArtistResults(),
-		artistCalendars: AppStore.getArtistCalendars()
+		artistCalendars: AppStore.getArtistCalendars(),
+		concerts: AppStore.getConcerts()
 	}
 };
 
@@ -37,6 +39,7 @@ var App = React.createClass({
 				<ArtistSearchResults artistSearch={this.state.searchArtist} artistResults={this.state.artistResults} />
 				<Calendar calendars={this.state.calendars} />
 				<ArtistCalendar artistCalendars={this.state.artistCalendars} />
+				<ConcertList concerts={this.state.concerts} />
 			</div>
 		);
 	},

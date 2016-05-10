@@ -30,7 +30,7 @@ var CalendarItem = React.createClass({
 		);
 	},
 
-	handleSubmit: function(e){
+	handleSubmit: function(){
 		var concert = {
 			date: this.props.calendar.start.date,
 			artist: this.props.calendar.performance[0].artist.displayName,

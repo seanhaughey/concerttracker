@@ -67,9 +67,34 @@ module.exports = {
 	},
 
 	saveConcertToCalendar: function(concert){
-		console.log('API called...');
 		this.firebaseRef = new Firebase("https://concerttracker.firebaseio.com/calendar");
-		this.firebaseRef.push(concert);
+		this.firebaseRef.push({
+			concert: concert
+		});
+	},
+
+	getConcerts: function(){
+		this.firebaseRef = new Firebase('https://concerttracker.firebaseio.com/calendar');
+		this.firebaseRef.once("value", function(snapshot){
+			var concerts = [];
+			snapshot.forEach(function(childSnapshot){
+				var concert = {
+					id: childSnapshot.key(),
+					date: childSnapshot.val().concert.date,
+					artist: childSnapshot.val().concert.artist,
+					venue: childSnapshot.val().concert.venue,
+					location: childSnapshot.val().concert.location,
+					link: childSnapshot.val().concert.link,
+				}
+				concerts.push(concert);
+				AppActions.receiveConcerts(concerts);
+			});
+		});
+	},
+
+	removeConcert: function(concertId){
+		this.firebaseRef = new Firebase('https://concerttracker.firebaseio.com/calendar/'+concertId);
+		this.firebaseRef.remove();
 	}
 
 }

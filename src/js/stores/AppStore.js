@@ -73,6 +73,12 @@ var AppStore = assign({}, EventEmitter.prototype, {
 	getArtistCalendars: function(){
 		return _artistCalendars;
 	},
+	setConcerts: function(concerts){
+		_concerts = concerts;
+	},
+	getConcerts: function(){
+		return _concerts;
+	},
 	emitChange: function(){
 		this.emit(CHANGE_EVENT);
 	},
@@ -84,6 +90,10 @@ var AppStore = assign({}, EventEmitter.prototype, {
 	},
 	saveConcertToCalendar: function(concert){
 	_concerts.push(concert);
+	},
+	removeConcert: function(concertId){
+		var index = _concerts.findIndex(x => x.id === concertId);
+		_concerts.splice(index, 1);
 	},
 });
 
@@ -141,6 +151,16 @@ AppDispatcher.register(function(payload){
 			AppStore.emit(CHANGE_EVENT);
 			break;
 
+		case AppConstants.RECEIVE_CONCERTS:
+			AppStore.setConcerts(action.concerts);
+			AppStore.emit(CHANGE_EVENT);
+			break;
+
+		case AppConstants.REMOVE_CONCERT:
+			AppStore.removeConcert(action.concertId);
+			AppAPI.removeConcert(action.concertId);
+			AppStore.emit(CHANGE_EVENT);
+			break;
 	}
 
 	return true;

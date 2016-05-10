@@ -64,7 +64,22 @@ var AppActions = {
 			actionType: AppConstants.SAVE_CONCERT_TO_CALENDAR,
 			concert: concert
 		});
-	}
+	},
+
+	receiveConcerts: function(concerts){
+		AppDispatcher.handleViewAction({
+			actionType: AppConstants.RECEIVE_CONCERTS,
+			concerts: concerts
+		})
+
+	},
+
+	removeConcert: function(concertId){
+		AppDispatcher.handleViewAction({
+			actionType: AppConstants.REMOVE_CONCERT,
+			concertId: concertId
+		});
+	},
 }
 
 module.exports = AppActions;
