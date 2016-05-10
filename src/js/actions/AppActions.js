@@ -56,7 +56,14 @@ var AppActions = {
 		AppDispatcher.handleViewAction({
 			actionType: AppConstants.RECEIVE_ARTIST_CALENDARS,
 			artistCalendars: artistCalendars
-		})
+		});
+	},
+
+	saveConcertToCalendar: function(concert){
+		AppDispatcher.handleViewAction({
+			actionType: AppConstants.SAVE_CONCERT_TO_CALENDAR,
+			concert: concert
+		});
 	}
 }
 

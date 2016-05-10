@@ -13,6 +13,8 @@ var _artistSearch = '';
 var artistIdSearch = [];
 var _calendars = [];
 var _artistCalendars = [];
+var _concerts = [];
+
 
 var AppStore = assign({}, EventEmitter.prototype, {
 	setSearchCity: function(search){
@@ -79,7 +81,10 @@ var AppStore = assign({}, EventEmitter.prototype, {
 	},
 	removeChangeListener: function(callback){
 		this.removeListener('change', callback);
-	}
+	},
+	saveConcertToCalendar: function(concert){
+	_concerts.push(concert);
+	},
 });
 
 AppDispatcher.register(function(payload){
@@ -127,6 +132,12 @@ AppDispatcher.register(function(payload){
 
 		case AppConstants.RECEIVE_ARTIST_CALENDARS:
 			AppStore.setArtistCalendars(action.artistCalendars);
+			AppStore.emit(CHANGE_EVENT);
+			break;
+
+		case AppConstants.SAVE_CONCERT_TO_CALENDAR:
+			AppStore.saveConcertToCalendar(action.concert);
+			AppAPI.saveConcertToCalendar(action.concert);
 			AppStore.emit(CHANGE_EVENT);
 			break;
 

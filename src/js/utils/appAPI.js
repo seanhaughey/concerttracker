@@ -1,3 +1,4 @@
+var Firebase = require('firebase');
 var AppActions = require('../actions/AppActions');
 
 module.exports = {
@@ -63,8 +64,12 @@ module.exports = {
 				console.log(err);
 			}.bind(this)
 		})
+	},
+
+	saveConcertToCalendar: function(concert){
+		console.log('API called...');
+		this.firebaseRef = new Firebase("https://concerttracker.firebaseio.com/calendar");
+		this.firebaseRef.push(concert);
 	}
-
-
 
 }

@@ -25,13 +25,22 @@ var CalendarItem = React.createClass({
 		};
 		return(
 			<tr>
-				<td className="date">{this.props.calendar.start.date}</td><td className="artist">{artist}</td><td className="venue">{venue}</td><td className="location">{location}</td><td className="songkick-link"><a href={this.props.calendar.uri} target="_blank"><img className="sk-link" src="./images/sk-link.jpg"/></a></td><td><a href="#" className="btn btn-xs btn-info">I'm Interested</a></td>
+				<td className="date">{this.props.calendar.start.date}</td><td className="artist">{artist}</td><td className="venue">{venue}</td><td className="location">{location}</td><td className="songkick-link"><a href={this.props.calendar.uri} target="_blank"><img className="sk-link" src="./images/sk-link.jpg"/></a></td><td><a href="#" className="btn btn-xs btn-info" onClick={this.handleSubmit.bind(this, this.props.calendar)}>I'm Interested</a></td>
 			</tr>
 		);
 	},
 
 	handleSubmit: function(e){
-		e.preventDefault();
+		var concert = {
+			date: this.props.calendar.start.date,
+			artist: this.props.calendar.performance[0].artist.displayName,
+			venue: this.props.calendar.venue.displayName,
+			location: this.props.calendar.location.city,
+			link: this.props.calendar.start.date
+		};
+		AppActions.saveConcertToCalendar(concert);
+		console.log(concert);
+
 	}
 });
 
