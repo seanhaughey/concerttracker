@@ -20245,9 +20245,9 @@ var Calendar = React.createClass({displayName: "Calendar",
 						React.createElement("tbody", null, 
 						
 							this.props.calendars.map(function(calendar, i){
-							return (
-								React.createElement(CalendarItem, {calendar: calendar, key: i})
-							)
+								return (
+									React.createElement(CalendarItem, {calendar: calendar, key: i})
+								)
 							})
 						
 						)
@@ -20257,7 +20257,7 @@ var Calendar = React.createClass({displayName: "Calendar",
 		}
 		return(
 			React.createElement("div", null, 				
-					table
+				table
 			)
 		);
 	}
@@ -20454,6 +20454,14 @@ var ConcertList = React.createClass({displayName: "ConcertList",
 								return(
 									React.createElement(Concert, {concert: concert, key: index})
 								)
+							}).sort(function(a, b){
+								if(a.props.concert.date > b.props.concert.date){
+									return 1;
+								}
+								if(a.props.concert.date < b.props.concert.date){
+									return -1;
+								}
+								return 0;
 							})
 						
 					)
@@ -20564,6 +20572,14 @@ var VaultConcertList = React.createClass({displayName: "VaultConcertList",
 								return(
 									React.createElement(VaultConcert, {vaultConcert: vaultConcert, key: index})
 								)
+							}).sort(function(a, b){
+								if(a.props.vaultConcert.date > b.props.vaultConcert.date){
+									return 1;
+								}
+								if(a.props.vaultConcert.date < b.props.vaultConcert.date){
+									return -1;
+								}
+								return 0;
 							})
 						
 					)

@@ -24,6 +24,14 @@ var ConcertList = React.createClass({
 								return(
 									<Concert concert={concert} key={index} />
 								)
+							}).sort(function(a, b){
+								if(a.props.concert.date > b.props.concert.date){
+									return 1;
+								}
+								if(a.props.concert.date < b.props.concert.date){
+									return -1;
+								}
+								return 0;
 							})
 						}
 					</tbody>

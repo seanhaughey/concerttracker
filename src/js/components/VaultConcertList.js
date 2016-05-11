@@ -23,6 +23,14 @@ var VaultConcertList = React.createClass({
 								return(
 									<VaultConcert vaultConcert={vaultConcert} key={index} />
 								)
+							}).sort(function(a, b){
+								if(a.props.vaultConcert.date > b.props.vaultConcert.date){
+									return 1;
+								}
+								if(a.props.vaultConcert.date < b.props.vaultConcert.date){
+									return -1;
+								}
+								return 0;
 							})
 						}
 					</tbody>

@@ -22,9 +22,9 @@ var Calendar = React.createClass({
 						<tbody>
 						{
 							this.props.calendars.map(function(calendar, i){
-							return (
-								<CalendarItem calendar={calendar} key={i} />
-							)
+								return (
+									<CalendarItem calendar={calendar} key={i} />
+								)
 							})
 						}
 						</tbody>
@@ -34,7 +34,7 @@ var Calendar = React.createClass({
 		}
 		return(
 			<div>				
-					{table}
+				{table}
 			</div>
 		);
 	}
