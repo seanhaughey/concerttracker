@@ -48,7 +48,21 @@ var AppActions = {
 	receiveCalendars: function(calendars){
 		AppDispatcher.handleViewAction({
 			actionType: AppConstants.RECEIVE_CALENDARS,
-			calendars: calendars
+			calendars: calendars,
+		});
+	},
+
+	receiveAreaId: function(areaId){
+		AppDispatcher.handleViewAction({
+			actionType: AppConstants.RECEIVE_AREA_ID,
+			areaId: areaId
+		});
+	},
+
+	receivePage: function(page){
+		AppDispatcher.handleViewAction({
+			actionType: AppConstants.RECEIVE_PAGE,
+			page: page
 		});
 	},
 

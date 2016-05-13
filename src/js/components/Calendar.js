@@ -1,34 +1,46 @@
 var React = require('react');
 var AppActions = require('../actions/AppActions');
 var AppStore = require('../stores/AppStore');
-var CalendarItem = require('./CalendarItem.js')
+var CalendarItem = require('./CalendarItem.js');
+
+function getAppState(){
+	return {
+		results: AppStore.getResults(),
+		calendars: AppStore.getCalendars(),
+		areaId: AppStore.getAreaId(),
+		page: AppStore.getPage()
+	}
+};
 
 
 var Calendar = React.createClass({
 
 	render: function(){
 		if(this.props.calendars != ''){
-			var table = 
-				<table className="table-striped">
-					<thead>
-						<tr>
-							<th className="date-header">Date</th>
-							<th className="artist-header">Headliner</th>
-							<th className="venue-header">Venue</th>
-							<th className="location-header">Location</th>
-							<th className="sk-link-header">Songkick Event Page</th>
-						</tr>
-					</thead>
-						<tbody>
-						{
-							this.props.calendars.map(function(calendar, i){
-								return (
-									<CalendarItem calendar={calendar} key={i} />
-								)
-							})
-						}
-						</tbody>
-					</table>
+			var table =
+				<div>
+					<table className="table-striped">
+						<thead>
+							<tr>
+								<th className="date-header">Date</th>
+								<th className="artist-header">Headliner</th>
+								<th className="venue-header">Venue</th>
+								<th className="location-header">Location</th>
+								<th className="sk-link-header">Songkick Event Page</th>
+							</tr>
+						</thead>
+							<tbody>
+							{
+								this.props.calendars.map(function(calendar, i){
+									return (
+										<CalendarItem calendar={calendar} key={i} />
+									)
+								})
+							}
+							</tbody>
+						</table>
+					<a href="#" className="btn btn-sx btn-default" onClick={this.handleSubmit}>Next Page</a>
+					</div>
 		} else{
 			var table = '';
 		}
@@ -37,6 +49,17 @@ var Calendar = React.createClass({
 				{table}
 			</div>
 		);
+	},
+
+	handleSubmit: function(){
+		var page = this.props.page;
+		page++
+		var search = {
+			areaId: this.props.areaId,
+			page: page
+		};
+		console.log(search);
+		AppActions.searchId(search);
 	}
 });
 

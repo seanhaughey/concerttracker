@@ -32,7 +32,7 @@ module.exports = {
 
 	searchId: function(idSearch){
 		$.ajax({
-			url: 'http://api.songkick.com/api/3.0/metro_areas/'+idSearch.areaId+'/calendar.json?apikey=fQN7zyRe4VM5w73a&jsoncallback=?',
+			url: 'http://api.songkick.com/api/3.0/metro_areas/'+idSearch.areaId+'/calendar.json?apikey=fQN7zyRe4VM5w73a&page='+idSearch.page+'&jsoncallback=?',
 			dataType: 'jsonp',
 			cache: false,
 			success: function(data){
@@ -40,6 +40,8 @@ module.exports = {
 					alert('No results!')
 				} else{
 					AppActions.receiveCalendars(data.resultsPage.results.event);
+					AppActions.receiveAreaId(idSearch.areaId);
+					AppActions.receivePage(idSearch.page);
 				};
 			}.bind(this),
 			error: function(xhr, status, err){

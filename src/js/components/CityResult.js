@@ -41,7 +41,8 @@ var CityResult = React.createClass({
 	handleSubmit: function(e){
 		e.preventDefault();
 		var search = {
-			areaId: this.refs.areaId.value
+			areaId: this.refs.areaId.value,
+			page: 1
 		};
 		AppActions.searchId(search);
 	}
