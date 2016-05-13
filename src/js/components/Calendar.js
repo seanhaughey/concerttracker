@@ -18,12 +18,12 @@ var Calendar = React.createClass({
 
 	render: function(){
 		if(this.props.page === Math.ceil(this.props.resultsPage.totalEntries/50)){
-			var buttonClass = 'btn btn-xs btn-default hidden';
+			var buttonClass = 'btn btn-xs btn-default disabled';
 		} else{
 			var buttonClass = 'btn btn-xs btn-default';
 		};
 		if(this.props.page === 1){
-			var prevButtonClass = 'btn btn-xs btn-default hidden';
+			var prevButtonClass = 'btn btn-xs btn-default disabled';
 		} else{
 			var prevButtonClass = 'btn btn-xs btn-default';
 		};
