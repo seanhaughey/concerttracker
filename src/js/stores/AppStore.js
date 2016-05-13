@@ -12,6 +12,7 @@ var _searchCity = '';
 var _artistSearch = '';
 var artistIdSearch = [];
 var _calendars = [];
+var _resultsPage = [];
 var _areaId = '';
 var _page = '';
 var _artistCalendars = [];
@@ -68,6 +69,12 @@ var AppStore = assign({}, EventEmitter.prototype, {
 	},
 	getCalendars: function(){
 		return (_calendars);
+	},
+	setResultsPage: function(resultsPage){
+		_resultsPage = resultsPage;
+	},
+	getResultsPage: function(){
+		return _resultsPage;
 	},
 	setAreaId: function(areaId){
 		_areaId = areaId;
@@ -165,6 +172,11 @@ AppDispatcher.register(function(payload){
 
 		case AppConstants.RECEIVE_CALENDARS:
 			AppStore.setCalendars(action.calendars);
+			AppStore.emit(CHANGE_EVENT);
+			break;
+
+		case AppConstants.RECEIVE_RESULTS_PAGE:
+			AppStore.setResultsPage(action.resultsPage);
 			AppStore.emit(CHANGE_EVENT);
 			break;
 

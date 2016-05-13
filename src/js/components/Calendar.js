@@ -7,6 +7,7 @@ function getAppState(){
 	return {
 		results: AppStore.getResults(),
 		calendars: AppStore.getCalendars(),
+		resultsPage: AppStore.getResultsPage(),
 		areaId: AppStore.getAreaId(),
 		page: AppStore.getPage()
 	}
@@ -16,9 +17,21 @@ function getAppState(){
 var Calendar = React.createClass({
 
 	render: function(){
+		if(this.props.page === Math.ceil(this.props.resultsPage.totalEntries/50)){
+			var buttonClass = 'btn btn-xs btn-default hidden';
+		} else{
+			var buttonClass = 'btn btn-xs btn-default';
+		};
+		if(this.props.page === 1){
+			var prevButtonClass = 'btn btn-xs btn-default hidden';
+		} else{
+			var prevButtonClass = 'btn btn-xs btn-default';
+		};
 		if(this.props.calendars != ''){
 			var table =
 				<div>
+					<a href="#" className={prevButtonClass} onClick={this.handlePrevious}>Prev Page</a>
+					<a href="#" className={buttonClass} onClick={this.handleSubmit}>Next Page</a>
 					<table className="table-striped">
 						<thead>
 							<tr>
@@ -29,7 +42,7 @@ var Calendar = React.createClass({
 								<th className="sk-link-header">Songkick Event Page</th>
 							</tr>
 						</thead>
-							<tbody>
+						<tbody>
 							{
 								this.props.calendars.map(function(calendar, i){
 									return (
@@ -37,10 +50,11 @@ var Calendar = React.createClass({
 									)
 								})
 							}
-							</tbody>
-						</table>
-					<a href="#" className="btn btn-sx btn-default" onClick={this.handleSubmit}>Next Page</a>
-					</div>
+						</tbody>
+					</table>
+					<a href="#" className={prevButtonClass} onClick={this.handlePrevious}>Prev Page</a>
+					<a href="#" className={buttonClass} onClick={this.handleSubmit}>Next Page</a>
+				</div>
 		} else{
 			var table = '';
 		}
@@ -54,6 +68,17 @@ var Calendar = React.createClass({
 	handleSubmit: function(){
 		var page = this.props.page;
 		page++
+		var search = {
+			areaId: this.props.areaId,
+			page: page
+		};
+		console.log(search);
+		AppActions.searchId(search);
+	},
+
+	handlePrevious: function(){
+		var page = this.props.page;
+		page--;
 		var search = {
 			areaId: this.props.areaId,
 			page: page

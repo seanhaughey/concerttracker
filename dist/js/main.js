@@ -19928,6 +19928,13 @@ var AppActions = {
 		});
 	},
 
+	receiveResultsPage: function(resultsPage){
+		AppDispatcher.handleViewAction({
+			actionType: AppConstants.RECEIVE_RESULTS_PAGE,
+			resultsPage: resultsPage
+		})
+	},
+
 	receiveAreaId: function(areaId){
 		AppDispatcher.handleViewAction({
 			actionType: AppConstants.RECEIVE_AREA_ID,
@@ -20012,6 +20019,7 @@ function getAppState(){
 	return {
 		results: AppStore.getResults(),
 		calendars: AppStore.getCalendars(),
+		resultsPage: AppStore.getResultsPage(),
 		areaId: AppStore.getAreaId(),
 		page: AppStore.getPage(),
 		artistResults: AppStore.getArtistResults(),
@@ -20040,7 +20048,7 @@ var App = React.createClass({displayName: "App",
 				React.createElement(SearchForm, null), 
 				React.createElement(CitySearchResults, {searchText: this.state.searchCity, results: this.state.results}), 
 				React.createElement(ArtistSearchResults, {artistSearch: this.state.searchArtist, artistResults: this.state.artistResults}), 
-				React.createElement(Calendar, {calendars: this.state.calendars, areaId: this.state.areaId, page: this.state.page}), 
+				React.createElement(Calendar, {calendars: this.state.calendars, areaId: this.state.areaId, page: this.state.page, resultsPage: this.state.resultsPage}), 
 				React.createElement(ArtistCalendar, {artistCalendars: this.state.artistCalendars}), 
 				React.createElement(VaultConcertList, {vaultConcerts: this.state.vaultConcerts}), 
 				React.createElement(ConcertList, {concerts: this.state.concerts})
@@ -20246,6 +20254,7 @@ function getAppState(){
 	return {
 		results: AppStore.getResults(),
 		calendars: AppStore.getCalendars(),
+		resultsPage: AppStore.getResultsPage(),
 		areaId: AppStore.getAreaId(),
 		page: AppStore.getPage()
 	}
@@ -20255,9 +20264,21 @@ function getAppState(){
 var Calendar = React.createClass({displayName: "Calendar",
 
 	render: function(){
+		if(this.props.page === Math.ceil(this.props.resultsPage.totalEntries/50)){
+			var buttonClass = 'btn btn-xs btn-default hidden';
+		} else{
+			var buttonClass = 'btn btn-xs btn-default';
+		};
+		if(this.props.page === 1){
+			var prevButtonClass = 'btn btn-xs btn-default hidden';
+		} else{
+			var prevButtonClass = 'btn btn-xs btn-default';
+		};
 		if(this.props.calendars != ''){
 			var table =
 				React.createElement("div", null, 
+					React.createElement("a", {href: "#", className: prevButtonClass, onClick: this.handlePrevious}, "Prev Page"), 
+					React.createElement("a", {href: "#", className: buttonClass, onClick: this.handleSubmit}, "Next Page"), 
 					React.createElement("table", {className: "table-striped"}, 
 						React.createElement("thead", null, 
 							React.createElement("tr", null, 
@@ -20268,7 +20289,7 @@ var Calendar = React.createClass({displayName: "Calendar",
 								React.createElement("th", {className: "sk-link-header"}, "Songkick Event Page")
 							)
 						), 
-							React.createElement("tbody", null, 
+						React.createElement("tbody", null, 
 							
 								this.props.calendars.map(function(calendar, i){
 									return (
@@ -20276,10 +20297,11 @@ var Calendar = React.createClass({displayName: "Calendar",
 									)
 								})
 							
-							)
-						), 
-					React.createElement("a", {href: "#", className: "btn btn-sx btn-default", onClick: this.handleSubmit}, "Next Page")
-					)
+						)
+					), 
+					React.createElement("a", {href: "#", className: prevButtonClass, onClick: this.handlePrevious}, "Prev Page"), 
+					React.createElement("a", {href: "#", className: buttonClass, onClick: this.handleSubmit}, "Next Page")
+				)
 		} else{
 			var table = '';
 		}
@@ -20293,6 +20315,17 @@ var Calendar = React.createClass({displayName: "Calendar",
 	handleSubmit: function(){
 		var page = this.props.page;
 		page++
+		var search = {
+			areaId: this.props.areaId,
+			page: page
+		};
+		console.log(search);
+		AppActions.searchId(search);
+	},
+
+	handlePrevious: function(){
+		var page = this.props.page;
+		page--;
 		var search = {
 			areaId: this.props.areaId,
 			page: page
@@ -20640,6 +20673,7 @@ module.exports = {
 	SEARCH_ID: 'SEARCH_ID',
 	SEARCH_ARTIST_ID: 'SEARCH_ARTIST_ID',
 	RECEIVE_CALENDARS: 'RECEIVE_CALENDARS',
+	RECEIVE_RESULTS_PAGE:'RECEIVE_RESULTS_PAGE',
 	RECEIVE_AREA_ID: 'RECEIVE_AREA_ID',
 	RECEIVE_PAGE: 'RECEIVE_PAGE',
 	RECEIVE_ARTIST_CALENDARS: 'RECEIVE_ARTIST_CALENDARS',
@@ -20696,6 +20730,7 @@ var _searchCity = '';
 var _artistSearch = '';
 var artistIdSearch = [];
 var _calendars = [];
+var _resultsPage = [];
 var _areaId = '';
 var _page = '';
 var _artistCalendars = [];
@@ -20752,6 +20787,12 @@ var AppStore = assign({}, EventEmitter.prototype, {
 	},
 	getCalendars: function(){
 		return (_calendars);
+	},
+	setResultsPage: function(resultsPage){
+		_resultsPage = resultsPage;
+	},
+	getResultsPage: function(){
+		return _resultsPage;
 	},
 	setAreaId: function(areaId){
 		_areaId = areaId;
@@ -20849,6 +20890,11 @@ AppDispatcher.register(function(payload){
 
 		case AppConstants.RECEIVE_CALENDARS:
 			AppStore.setCalendars(action.calendars);
+			AppStore.emit(CHANGE_EVENT);
+			break;
+
+		case AppConstants.RECEIVE_RESULTS_PAGE:
+			AppStore.setResultsPage(action.resultsPage);
 			AppStore.emit(CHANGE_EVENT);
 			break;
 
@@ -20951,6 +20997,7 @@ module.exports = {
 					alert('No results!')
 				} else{
 					AppActions.receiveCalendars(data.resultsPage.results.event);
+					AppActions.receiveResultsPage(data.resultsPage);
 					AppActions.receiveAreaId(idSearch.areaId);
 					AppActions.receivePage(idSearch.page);
 				};
@@ -21085,6 +21132,7 @@ module.exports = {
 					alert('No results!')
 				} else{
 					AppActions.receiveCalendars(data.resultsPage.results.event);
+					AppActions.receiveResultsPage(data.resultsPage);
 					AppActions.receiveAreaId(idSearch.areaId);
 					AppActions.receivePage(idSearch.page);
 				};
