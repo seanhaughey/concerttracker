@@ -12,6 +12,8 @@ var _searchCity = '';
 var _artistSearch = '';
 var artistIdSearch = [];
 var _calendars = [];
+var _areaId = '';
+var _page = '';
 var _artistCalendars = [];
 var _concerts = [];
 var _vaultConcerts = [];
@@ -65,7 +67,19 @@ var AppStore = assign({}, EventEmitter.prototype, {
 		_results = [];
 	},
 	getCalendars: function(){
-		return _calendars;
+		return (_calendars);
+	},
+	setAreaId: function(areaId){
+		_areaId = areaId;
+	},
+	getAreaId: function(){
+		return _areaId;
+	},
+	setPage: function(page){
+		_page = page;
+	},
+	getPage: function(){
+		return _page;
 	},
 	setArtistCalendars: function(artistCalendars){
 		_artistCalendars = artistCalendars;
@@ -151,6 +165,16 @@ AppDispatcher.register(function(payload){
 
 		case AppConstants.RECEIVE_CALENDARS:
 			AppStore.setCalendars(action.calendars);
+			AppStore.emit(CHANGE_EVENT);
+			break;
+
+		case AppConstants.RECEIVE_AREA_ID:
+			AppStore.setAreaId(action.areaId);
+			AppStore.emit(CHANGE_EVENT);
+			break;
+
+		case AppConstants.RECEIVE_PAGE:
+			AppStore.setPage(action.page);
 			AppStore.emit(CHANGE_EVENT);
 			break;
 
