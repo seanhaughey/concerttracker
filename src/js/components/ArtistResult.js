@@ -38,7 +38,8 @@ var ArtistResult = React.createClass({
 	handleSubmit: function(e){
 		e.preventDefault();
 		var artistIdSearch = {
-			artistId: this.refs.artistId.value
+			artistId: this.refs.artistId.value,
+			page: 1
 		};
 		AppActions.searchArtistId(artistIdSearch);
 	}
