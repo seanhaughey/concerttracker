@@ -56,7 +56,14 @@ var AppActions = {
 		AppDispatcher.handleViewAction({
 			actionType: AppConstants.RECEIVE_RESULTS_PAGE,
 			resultsPage: resultsPage
-		})
+		});
+	},
+
+	receiveArtistResultsPage: function(artistResultsPage){
+		AppDispatcher.handleViewAction({
+			actionType: AppConstants.RECEIVE_ARTIST_RESULTS_PAGE,
+			artistResultsPage: artistResultsPage
+		});
 	},
 
 	receiveAreaId: function(areaId){
@@ -66,11 +73,25 @@ var AppActions = {
 		});
 	},
 
+	receiveArtistId: function(artistId){
+		AppDispatcher.handleViewAction({
+			actionType: AppConstants.RECEIVE_ARTIST_ID,
+			artistId: artistId
+		});
+	},
+
 	receivePage: function(page){
 		AppDispatcher.handleViewAction({
 			actionType: AppConstants.RECEIVE_PAGE,
 			page: page
 		});
+	},
+
+	receiveArtistPage: function(artistPage){
+		AppDispatcher.handleViewAction({
+			actionType: AppConstants.RECEIVE_ARTIST_PAGE,
+			artistPage: artistPage
+		})
 	},
 
 	receiveArtistCalendars: function(artistCalendars){

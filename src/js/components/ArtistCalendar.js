@@ -1,14 +1,46 @@
 var React = require('react');
 var AppActions = require('../actions/AppActions');
 var AppStore = require('../stores/AppStore');
-var ArtistCalendarItem = require('./ArtistCalendarItem.js')
+var ArtistCalendarItem = require('./ArtistCalendarItem.js');
+
+function getAppState(){
+	return {
+		artistResults: AppStore.getArtistResults(),
+		artistCalendars: AppStore.getArtistCalendars(),
+		artistResultsPage: AppStore.getArtistResultsPage(),
+		artistId: AppStore.getArtistId(),
+		artistPage: AppStore.getArtistPage()
+	}
+};
 
 
 var ArtistCalendar = React.createClass({
-
 	render: function(){
+		if(this.props.artistPage === Math.ceil((this.props.artistResultsPage.totalEntries)/50)){
+			var buttonClass = 'btn btn-sm btn-default disabled';
+		} else{
+			var buttonClass = 'btn btn-sm btn-default';
+		};
+		if(this.props.artistPage === 1){
+			var prevButtonClass = 'btn btn-sm btn-default disabled';
+		} else{
+			var prevButtonClass = 'btn btn-sm btn-default';
+		};
+
 		if(this.props.artistCalendars != ''){
-			var artistTable = 
+			var artistTable =
+				<div>
+					<div className="row nav-buttons">
+						<div className="col-md-4">
+							<a href="#" className={prevButtonClass} onClick={this.handleFirst}>&#60;&#60; First Page</a>
+							<a href="#" className={prevButtonClass} onClick={this.handlePrevious}>&#60; Prev Page</a>
+						</div>
+						<div className="col-md-4"></div>
+						<div className="col-md-4">
+							<a href="#" className={buttonClass} onClick={this.handleSubmit}>Next Page &#62;</a>
+							<a href="#" className={buttonClass} onClick={this.handleLast}>Last Page &#62;&#62;</a>
+						</div>
+					</div> 
 				<table className="table-striped">
 					<thead>
 						<tr>
@@ -29,6 +61,18 @@ var ArtistCalendar = React.createClass({
 						}
 						</tbody>
 					</table>
+					<div className="row nav-buttons">
+						<div className="col-md-4">
+							<a href="#" className={prevButtonClass} onClick={this.handleFirst}>&#60;&#60; First Page</a>
+							<a href="#" className={prevButtonClass} onClick={this.handlePrevious}>&#60; Prev Page</a>
+						</div>
+						<div className="col-md-4"></div>
+						<div className="col-md-4">
+							<a href="#" className={buttonClass} onClick={this.handleSubmit}>Next Page &#62;</a>
+							<a href="#" className={buttonClass} onClick={this.handleLast}>Last Page &#62;&#62;</a>
+						</div>
+					</div>
+				</div>
 		} else{
 			var artistTable = '';
 		}
@@ -37,6 +81,46 @@ var ArtistCalendar = React.createClass({
 					{artistTable}
 			</div>
 		);
+	},
+
+	handleSubmit: function(){
+		var page = this.props.artistPage;
+		page++
+		var search = {
+			artistId: this.props.artistId,
+			page: page
+		};
+		console.log(search);
+		AppActions.searchArtistId(search);
+	},
+
+	handleLast: function(){
+		var page = Math.ceil(this.props.artistResultsPage.totalEntries/50);
+		var search = {
+			artistId: this.props.artistId,
+			page: page
+		};
+		AppActions.searchArtistId(search);
+	},
+
+	handleFirst: function(){
+		var page = 1;
+		var search = {
+			artistId: this.props.artistId,
+			page: page
+		};
+		AppActions.searchArtistId(search);
+	},
+
+	handlePrevious: function(){
+		var page = this.props.artistPage;
+		page--;
+		var search = {
+			artistId: this.props.artistId,
+			page: page
+		};
+		console.log(search);
+		AppActions.searchArtistId(search);
 	}
 });
 

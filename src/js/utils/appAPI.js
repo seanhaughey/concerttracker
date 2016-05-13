@@ -53,7 +53,7 @@ module.exports = {
 
 	searchArtistId: function(artistIdSearch){
 		$.ajax({
-			url: 'http://api.songkick.com/api/3.0/artists/'+artistIdSearch.artistId+'/calendar.json?apikey=fQN7zyRe4VM5w73a&jsoncallback=?',
+			url: 'http://api.songkick.com/api/3.0/artists/'+artistIdSearch.artistId+'/calendar.json?apikey=fQN7zyRe4VM5w73a&page='+artistIdSearch.page+'&jsoncallback=?',
 			dataType: 'jsonp',
 			cache: false,
 			success: function(data){
@@ -61,6 +61,9 @@ module.exports = {
 					alert('This artist is not currently on tour.');
 				} else{
 					AppActions.receiveArtistCalendars(data.resultsPage.results.event);
+					AppActions.receiveArtistResultsPage(data.resultsPage);
+					AppActions.receiveArtistId(artistIdSearch.artistId);
+					AppActions.receiveArtistPage(artistIdSearch.page);
 				}
 			}.bind(this),
 			error: function(xhr, status, err){

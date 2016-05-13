@@ -13,8 +13,11 @@ var _artistSearch = '';
 var artistIdSearch = [];
 var _calendars = [];
 var _resultsPage = [];
+var _artistResultsPage = [];
 var _areaId = '';
+var _artistId = '';
 var _page = '';
+var _artistPage = '';
 var _artistCalendars = [];
 var _concerts = [];
 var _vaultConcerts = [];
@@ -76,17 +79,35 @@ var AppStore = assign({}, EventEmitter.prototype, {
 	getResultsPage: function(){
 		return _resultsPage;
 	},
+	setArtistResultsPage: function(artistResultsPage){
+		_artistResultsPage = artistResultsPage;
+	},
+	getArtistResultsPage: function(){
+		return _artistResultsPage;
+	},
 	setAreaId: function(areaId){
 		_areaId = areaId;
 	},
 	getAreaId: function(){
 		return _areaId;
 	},
+	setArtistId: function(artistId){
+		_artistId = artistId;
+	},
+	getArtistId: function(){
+		return _artistId;
+	},
 	setPage: function(page){
 		_page = page;
 	},
 	getPage: function(){
 		return _page;
+	},
+	setArtistPage: function(artistPage){
+		_artistPage = artistPage
+	},
+	getArtistPage: function(){
+		return _artistPage;
 	},
 	setArtistCalendars: function(artistCalendars){
 		_artistCalendars = artistCalendars;
@@ -180,13 +201,28 @@ AppDispatcher.register(function(payload){
 			AppStore.emit(CHANGE_EVENT);
 			break;
 
+		case AppConstants.RECEIVE_ARTIST_RESULTS_PAGE:
+			AppStore.setArtistResultsPage(action.artistResultsPage);
+			AppStore.emit(CHANGE_EVENT);
+			break;
+
 		case AppConstants.RECEIVE_AREA_ID:
 			AppStore.setAreaId(action.areaId);
 			AppStore.emit(CHANGE_EVENT);
 			break;
 
+		case AppConstants.RECEIVE_ARTIST_ID:
+			AppStore.setArtistId(action.artistId);
+			AppStore.emit(CHANGE_EVENT);
+			break;
+
 		case AppConstants.RECEIVE_PAGE:
 			AppStore.setPage(action.page);
+			AppStore.emit(CHANGE_EVENT);
+			break;
+
+		case AppConstants.RECEIVE_ARTIST_PAGE:
+			AppStore.setArtistPage(action.artistPage);
 			AppStore.emit(CHANGE_EVENT);
 			break;
 
