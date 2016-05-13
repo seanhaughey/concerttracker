@@ -52,6 +52,13 @@ var AppActions = {
 		});
 	},
 
+	receiveResultsPage: function(resultsPage){
+		AppDispatcher.handleViewAction({
+			actionType: AppConstants.RECEIVE_RESULTS_PAGE,
+			resultsPage: resultsPage
+		})
+	},
+
 	receiveAreaId: function(areaId){
 		AppDispatcher.handleViewAction({
 			actionType: AppConstants.RECEIVE_AREA_ID,

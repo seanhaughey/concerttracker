@@ -40,6 +40,7 @@ module.exports = {
 					alert('No results!')
 				} else{
 					AppActions.receiveCalendars(data.resultsPage.results.event);
+					AppActions.receiveResultsPage(data.resultsPage);
 					AppActions.receiveAreaId(idSearch.areaId);
 					AppActions.receivePage(idSearch.page);
 				};
