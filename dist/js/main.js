@@ -20277,8 +20277,10 @@ var Calendar = React.createClass({displayName: "Calendar",
 		if(this.props.calendars != ''){
 			var table =
 				React.createElement("div", null, 
-					React.createElement("a", {href: "#", className: prevButtonClass, onClick: this.handlePrevious}, "Prev Page"), 
-					React.createElement("a", {href: "#", className: buttonClass, onClick: this.handleSubmit}, "Next Page"), 
+					React.createElement("a", {href: "#", className: prevButtonClass, onClick: this.handleFirst}, "<< First Page"), 
+					React.createElement("a", {href: "#", className: prevButtonClass, onClick: this.handlePrevious}, "< Prev Page"), 
+					React.createElement("a", {href: "#", className: buttonClass, onClick: this.handleSubmit}, "Next Page >"), 
+					React.createElement("a", {href: "#", className: buttonClass, onClick: this.handleLast}, "Last Page >>"), 
 					React.createElement("table", {className: "table-striped"}, 
 						React.createElement("thead", null, 
 							React.createElement("tr", null, 
@@ -20299,8 +20301,10 @@ var Calendar = React.createClass({displayName: "Calendar",
 							
 						)
 					), 
-					React.createElement("a", {href: "#", className: prevButtonClass, onClick: this.handlePrevious}, "Prev Page"), 
-					React.createElement("a", {href: "#", className: buttonClass, onClick: this.handleSubmit}, "Next Page")
+					React.createElement("a", {href: "#", className: prevButtonClass, onClick: this.handleFirst}, "<< First Page"), 
+					React.createElement("a", {href: "#", className: prevButtonClass, onClick: this.handlePrevious}, "< Prev Page"), 
+					React.createElement("a", {href: "#", className: buttonClass, onClick: this.handleSubmit}, "Next Page >"), 
+					React.createElement("a", {href: "#", className: buttonClass, onClick: this.handleLast}, "Last Page >>")
 				)
 		} else{
 			var table = '';
@@ -20320,6 +20324,24 @@ var Calendar = React.createClass({displayName: "Calendar",
 			page: page
 		};
 		console.log(search);
+		AppActions.searchId(search);
+	},
+
+	handleLast: function(){
+		var page = Math.ceil(this.props.resultsPage.totalEntries/50);
+		var search = {
+			areaId: this.props.areaId,
+			page: page
+		};
+		AppActions.searchId(search);
+	},
+
+	handleFirst: function(){
+		var page = 1;
+		var search = {
+			areaId: this.props.areaId,
+			page: page
+		};
 		AppActions.searchId(search);
 	},
 

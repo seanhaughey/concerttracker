@@ -30,8 +30,10 @@ var Calendar = React.createClass({
 		if(this.props.calendars != ''){
 			var table =
 				<div>
-					<a href="#" className={prevButtonClass} onClick={this.handlePrevious}>Prev Page</a>
-					<a href="#" className={buttonClass} onClick={this.handleSubmit}>Next Page</a>
+					<a href="#" className={prevButtonClass} onClick={this.handleFirst}>&#60;&#60; First Page</a>
+					<a href="#" className={prevButtonClass} onClick={this.handlePrevious}>&#60; Prev Page</a>
+					<a href="#" className={buttonClass} onClick={this.handleSubmit}>Next Page &#62;</a>
+					<a href="#" className={buttonClass} onClick={this.handleLast}>Last Page &#62;&#62;</a>
 					<table className="table-striped">
 						<thead>
 							<tr>
@@ -52,8 +54,10 @@ var Calendar = React.createClass({
 							}
 						</tbody>
 					</table>
-					<a href="#" className={prevButtonClass} onClick={this.handlePrevious}>Prev Page</a>
-					<a href="#" className={buttonClass} onClick={this.handleSubmit}>Next Page</a>
+					<a href="#" className={prevButtonClass} onClick={this.handleFirst}>&#60;&#60; First Page</a>
+					<a href="#" className={prevButtonClass} onClick={this.handlePrevious}>&#60; Prev Page</a>
+					<a href="#" className={buttonClass} onClick={this.handleSubmit}>Next Page &#62;</a>
+					<a href="#" className={buttonClass} onClick={this.handleLast}>Last Page &#62;&#62;</a>
 				</div>
 		} else{
 			var table = '';
@@ -73,6 +77,24 @@ var Calendar = React.createClass({
 			page: page
 		};
 		console.log(search);
+		AppActions.searchId(search);
+	},
+
+	handleLast: function(){
+		var page = Math.ceil(this.props.resultsPage.totalEntries/50);
+		var search = {
+			areaId: this.props.areaId,
+			page: page
+		};
+		AppActions.searchId(search);
+	},
+
+	handleFirst: function(){
+		var page = 1;
+		var search = {
+			areaId: this.props.areaId,
+			page: page
+		};
 		AppActions.searchId(search);
 	},
 
