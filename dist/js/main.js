@@ -20265,22 +20265,29 @@ var Calendar = React.createClass({displayName: "Calendar",
 
 	render: function(){
 		if(this.props.page === Math.ceil(this.props.resultsPage.totalEntries/50)){
-			var buttonClass = 'btn btn-xs btn-default disabled';
+			var buttonClass = 'btn btn-sm btn-default disabled';
 		} else{
-			var buttonClass = 'btn btn-xs btn-default';
+			var buttonClass = 'btn btn-sm btn-default';
 		};
 		if(this.props.page === 1){
-			var prevButtonClass = 'btn btn-xs btn-default disabled';
+			var prevButtonClass = 'btn btn-sm btn-default disabled';
 		} else{
-			var prevButtonClass = 'btn btn-xs btn-default';
+			var prevButtonClass = 'btn btn-sm btn-default';
 		};
 		if(this.props.calendars != ''){
 			var table =
 				React.createElement("div", null, 
-					React.createElement("a", {href: "#", className: prevButtonClass, onClick: this.handleFirst}, "<< First Page"), 
-					React.createElement("a", {href: "#", className: prevButtonClass, onClick: this.handlePrevious}, "< Prev Page"), 
-					React.createElement("a", {href: "#", className: buttonClass, onClick: this.handleSubmit}, "Next Page >"), 
-					React.createElement("a", {href: "#", className: buttonClass, onClick: this.handleLast}, "Last Page >>"), 
+					React.createElement("div", {className: "row nav-buttons"}, 
+						React.createElement("div", {className: "col-md-4"}, 
+							React.createElement("a", {href: "#", className: prevButtonClass, onClick: this.handleFirst}, "<< First Page"), 
+							React.createElement("a", {href: "#", className: prevButtonClass, onClick: this.handlePrevious}, "< Prev Page")
+						), 
+						React.createElement("div", {className: "col-md-4"}), 
+						React.createElement("div", {className: "col-md-4"}, 
+							React.createElement("a", {href: "#", className: buttonClass, onClick: this.handleSubmit}, "Next Page >"), 
+							React.createElement("a", {href: "#", className: buttonClass, onClick: this.handleLast}, "Last Page >>")
+						)
+					), 
 					React.createElement("table", {className: "table-striped"}, 
 						React.createElement("thead", null, 
 							React.createElement("tr", null, 
@@ -20301,10 +20308,17 @@ var Calendar = React.createClass({displayName: "Calendar",
 							
 						)
 					), 
-					React.createElement("a", {href: "#", className: prevButtonClass, onClick: this.handleFirst}, "<< First Page"), 
-					React.createElement("a", {href: "#", className: prevButtonClass, onClick: this.handlePrevious}, "< Prev Page"), 
-					React.createElement("a", {href: "#", className: buttonClass, onClick: this.handleSubmit}, "Next Page >"), 
-					React.createElement("a", {href: "#", className: buttonClass, onClick: this.handleLast}, "Last Page >>")
+					React.createElement("div", {className: "row nav-buttons"}, 
+						React.createElement("div", {className: "col-md-4"}, 
+							React.createElement("a", {href: "#", className: prevButtonClass, onClick: this.handleFirst}, "<< First Page"), 
+							React.createElement("a", {href: "#", className: prevButtonClass, onClick: this.handlePrevious}, "< Prev Page")
+						), 
+						React.createElement("div", {className: "col-md-4"}), 
+						React.createElement("div", {className: "col-md-4"}, 
+							React.createElement("a", {href: "#", className: buttonClass, onClick: this.handleSubmit}, "Next Page >"), 
+							React.createElement("a", {href: "#", className: buttonClass, onClick: this.handleLast}, "Last Page >>")
+						)
+					)
 				)
 		} else{
 			var table = '';

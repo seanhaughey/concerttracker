@@ -18,22 +18,29 @@ var Calendar = React.createClass({
 
 	render: function(){
 		if(this.props.page === Math.ceil(this.props.resultsPage.totalEntries/50)){
-			var buttonClass = 'btn btn-xs btn-default disabled';
+			var buttonClass = 'btn btn-sm btn-default disabled';
 		} else{
-			var buttonClass = 'btn btn-xs btn-default';
+			var buttonClass = 'btn btn-sm btn-default';
 		};
 		if(this.props.page === 1){
-			var prevButtonClass = 'btn btn-xs btn-default disabled';
+			var prevButtonClass = 'btn btn-sm btn-default disabled';
 		} else{
-			var prevButtonClass = 'btn btn-xs btn-default';
+			var prevButtonClass = 'btn btn-sm btn-default';
 		};
 		if(this.props.calendars != ''){
 			var table =
 				<div>
-					<a href="#" className={prevButtonClass} onClick={this.handleFirst}>&#60;&#60; First Page</a>
-					<a href="#" className={prevButtonClass} onClick={this.handlePrevious}>&#60; Prev Page</a>
-					<a href="#" className={buttonClass} onClick={this.handleSubmit}>Next Page &#62;</a>
-					<a href="#" className={buttonClass} onClick={this.handleLast}>Last Page &#62;&#62;</a>
+					<div className="row nav-buttons">
+						<div className="col-md-4">
+							<a href="#" className={prevButtonClass} onClick={this.handleFirst}>&#60;&#60; First Page</a>
+							<a href="#" className={prevButtonClass} onClick={this.handlePrevious}>&#60; Prev Page</a>
+						</div>
+						<div className="col-md-4"></div>
+						<div className="col-md-4">
+							<a href="#" className={buttonClass} onClick={this.handleSubmit}>Next Page &#62;</a>
+							<a href="#" className={buttonClass} onClick={this.handleLast}>Last Page &#62;&#62;</a>
+						</div>
+					</div>
 					<table className="table-striped">
 						<thead>
 							<tr>
@@ -54,10 +61,17 @@ var Calendar = React.createClass({
 							}
 						</tbody>
 					</table>
-					<a href="#" className={prevButtonClass} onClick={this.handleFirst}>&#60;&#60; First Page</a>
-					<a href="#" className={prevButtonClass} onClick={this.handlePrevious}>&#60; Prev Page</a>
-					<a href="#" className={buttonClass} onClick={this.handleSubmit}>Next Page &#62;</a>
-					<a href="#" className={buttonClass} onClick={this.handleLast}>Last Page &#62;&#62;</a>
+					<div className="row nav-buttons">
+						<div className="col-md-4">
+							<a href="#" className={prevButtonClass} onClick={this.handleFirst}>&#60;&#60; First Page</a>
+							<a href="#" className={prevButtonClass} onClick={this.handlePrevious}>&#60; Prev Page</a>
+						</div>
+						<div className="col-md-4"></div>
+						<div className="col-md-4">
+							<a href="#" className={buttonClass} onClick={this.handleSubmit}>Next Page &#62;</a>
+							<a href="#" className={buttonClass} onClick={this.handleLast}>Last Page &#62;&#62;</a>
+						</div>
+					</div>
 				</div>
 		} else{
 			var table = '';
