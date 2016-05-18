@@ -8,6 +8,7 @@ var CalendarItem = React.createClass({
 		var results = '';
 		var artist = '';
 		var venue = '';
+
 		if(this.props.calendar.performance[0] === undefined){
 			var artist = "Unknown";
 		} else{

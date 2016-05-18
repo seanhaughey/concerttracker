@@ -20074,8 +20074,8 @@ var App = React.createClass({displayName: "App",
 				React.createElement(ArtistSearchResults, {artistSearch: this.state.searchArtist, artistResults: this.state.artistResults}), 
 				React.createElement(Calendar, {calendars: this.state.calendars, areaId: this.state.areaId, page: this.state.page, resultsPage: this.state.resultsPage}), 
 				React.createElement(ArtistCalendar, {artistCalendars: this.state.artistCalendars, artistId: this.state.artistId, artistPage: this.state.artistPage, artistResultsPage: this.state.artistResultsPage}), 
-				React.createElement(VaultConcertList, {vaultConcerts: this.state.vaultConcerts}), 
-				React.createElement(ConcertList, {concerts: this.state.concerts})
+				React.createElement(ConcertList, {concerts: this.state.concerts}), 
+				React.createElement(VaultConcertList, {vaultConcerts: this.state.vaultConcerts})
 			)
 		);
 	},
@@ -20365,7 +20365,7 @@ function getAppState(){
 		calendars: AppStore.getCalendars(),
 		resultsPage: AppStore.getResultsPage(),
 		areaId: AppStore.getAreaId(),
-		page: AppStore.getPage()
+		page: AppStore.getPage(),
 	}
 };
 
@@ -20493,6 +20493,7 @@ var CalendarItem = React.createClass({displayName: "CalendarItem",
 		var results = '';
 		var artist = '';
 		var venue = '';
+
 		if(this.props.calendar.performance[0] === undefined){
 			var artist = "Unknown";
 		} else{
@@ -20622,12 +20623,12 @@ var Concert = React.createClass({displayName: "Concert",
 	render: function(){
 		return (
 			React.createElement("tr", null, 
-				React.createElement("td", null, this.props.concert.date), 
-				React.createElement("td", null, this.props.concert.artist), 
-				React.createElement("td", null, this.props.concert.venue), 
-				React.createElement("td", null, this.props.concert.location), 
-				React.createElement("td", null, React.createElement("a", {href: this.props.concert.link, target: "_blank"}, React.createElement("img", {className: "sk-link", src: "./images/sk-link.jpg"}))), 
-				React.createElement("td", null, React.createElement("a", {href: "#", className: "btn btn-default", onClick: this.handleSubmit.bind(this, this.props.concert, this.props.concert.id)}, "Attended"), " ", React.createElement("a", {href: "#", className: "btn btn-danger", onClick: this.handleRemove.bind(this, this.props.concert.id)}, "Remove"))
+				React.createElement("td", {className: "date"}, this.props.concert.date), 
+				React.createElement("td", {className: "artist"}, this.props.concert.artist), 
+				React.createElement("td", {className: "venue"}, this.props.concert.venue), 
+				React.createElement("td", {className: "location"}, this.props.concert.location), 
+				React.createElement("td", {className: "songkick-link"}, React.createElement("a", {href: this.props.concert.link, target: "_blank"}, React.createElement("img", {className: "sk-link", src: "./images/sk-link.jpg"}))), 
+				React.createElement("td", {className: "buttons"}, React.createElement("a", {href: "#", className: "btn btn-sm btn-default", onClick: this.handleSubmit.bind(this, this.props.concert, this.props.concert.id)}, "Saw it!"), " ", React.createElement("a", {href: "#", className: "btn btn-sm btn-danger", onClick: this.handleRemove.bind(this, this.props.concert.id)}, "Missed it!"))
 			)
 		);
 	},
@@ -20655,15 +20656,15 @@ var ConcertList = React.createClass({displayName: "ConcertList",
 	render: function(){
 		return (
 			React.createElement("div", null, 
-				React.createElement("h3", null, "My Calendar"), 
+				React.createElement("h3", null, "My Upcoming Shows"), 
 				React.createElement("table", {className: "table table-striped"}, 
 					React.createElement("thead", null, 
 						React.createElement("tr", null, 
-							React.createElement("th", null, "Date"), 
-							React.createElement("th", null, "Headliner"), 
-							React.createElement("th", null, "Venue"), 
-							React.createElement("th", null, "Location"), 
-							React.createElement("th", null, "Songkick Event Link")
+							React.createElement("th", {className: "date-header"}, "Date"), 
+							React.createElement("th", {className: "artist-header"}, "Headliner"), 
+							React.createElement("th", {className: "venue-header"}, "Venue"), 
+							React.createElement("th", {className: "location-header"}, "Location"), 
+							React.createElement("th", {className: "sk-link-header"}, "Songkick Event Page")
 						)
 					), 
 					React.createElement("tbody", null, 

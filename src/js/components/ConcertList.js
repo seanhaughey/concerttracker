@@ -7,15 +7,15 @@ var ConcertList = React.createClass({
 	render: function(){
 		return (
 			<div>
-				<h3>My Calendar</h3>
+				<h3>My Upcoming Shows</h3>
 				<table className="table table-striped">
 					<thead>
 						<tr>
-							<th>Date</th>
-							<th>Headliner</th>
-							<th>Venue</th>
-							<th>Location</th>
-							<th>Songkick Event Link</th>
+							<th className="date-header">Date</th>
+							<th className="artist-header">Headliner</th>
+							<th className="venue-header">Venue</th>
+							<th className="location-header">Location</th>
+							<th className="sk-link-header">Songkick Event Page</th>
 						</tr>
 					</thead>
 					<tbody>

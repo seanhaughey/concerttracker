@@ -6,12 +6,12 @@ var Concert = React.createClass({
 	render: function(){
 		return (
 			<tr>
-				<td>{this.props.concert.date}</td>
-				<td>{this.props.concert.artist}</td>
-				<td>{this.props.concert.venue}</td>
-				<td>{this.props.concert.location}</td>
-				<td><a href={this.props.concert.link} target="_blank"><img className="sk-link" src="./images/sk-link.jpg"/></a></td>
-				<td><a href="#" className="btn btn-default" onClick={this.handleSubmit.bind(this, this.props.concert, this.props.concert.id)}>Attended</a> <a href="#" className="btn btn-danger" onClick={this.handleRemove.bind(this, this.props.concert.id)}>Remove</a></td>
+				<td className="date">{this.props.concert.date}</td>
+				<td className="artist">{this.props.concert.artist}</td>
+				<td className="venue">{this.props.concert.venue}</td>
+				<td className="location">{this.props.concert.location}</td>
+				<td className="songkick-link"><a href={this.props.concert.link} target="_blank"><img className="sk-link" src="./images/sk-link.jpg"/></a></td>
+				<td className="buttons"><a href="#" className="btn btn-sm btn-default" onClick={this.handleSubmit.bind(this, this.props.concert, this.props.concert.id)}>Saw it!</a> <a href="#" className="btn btn-sm btn-danger" onClick={this.handleRemove.bind(this, this.props.concert.id)}>Missed it!</a></td>
 			</tr>
 		);
 	},

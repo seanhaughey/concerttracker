@@ -9,7 +9,7 @@ function getAppState(){
 		calendars: AppStore.getCalendars(),
 		resultsPage: AppStore.getResultsPage(),
 		areaId: AppStore.getAreaId(),
-		page: AppStore.getPage()
+		page: AppStore.getPage(),
 	}
 };
 
