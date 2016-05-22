@@ -38,6 +38,12 @@ var AppStore = assign({}, EventEmitter.prototype, {
 	getSearchArtist: function(){
 		return _artistSearch;
 	},
+	setGeoSearch: function(geoSearch){
+		_geoSearch = geoSearch;
+	},
+	getGeoSearch: function(){
+		return _geoSearch;
+	},
 	setSearchId: function(idSearch){
 		_idSearch = idSearch;
 	},
@@ -176,6 +182,12 @@ AppDispatcher.register(function(payload){
 		case AppConstants.SEARCH_ARTIST:
 			AppAPI.searchArtist(action.artistSearch);
 			AppStore.setSearchArtist(action.artistSearch);
+			AppStore.emit(CHANGE_EVENT);
+			break;
+
+		case AppConstants.SEARCH_GEO:
+			AppAPI.searchGeo(action.geoSearch);
+			AppStore.setSearchCity(action.search);
 			AppStore.emit(CHANGE_EVENT);
 			break;
 
