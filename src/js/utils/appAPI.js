@@ -30,6 +30,21 @@ module.exports = {
 		})
 	},
 
+	searchGeo: function(geoSearch){
+		$.ajax({
+			url:'http://api.songkick.com/api/3.0/search/locations.json?location=geo:'+geoSearch.lat+','+geoSearch.lng+'&apikey=fQN7zyRe4VM5w73a&per_page=1&jsoncallback=?',
+			dataType: 'jsonp',
+			cache: false,
+			success: function(data){
+				console.log(data);
+				AppActions.receiveResults(data.resultsPage.results);
+			}.bind(this),
+			error: function(xhr, status, err){
+				console.log(err);
+			}.bind(this)
+		})
+	},
+
 	searchId: function(idSearch){
 		$.ajax({
 			url: 'http://api.songkick.com/api/3.0/metro_areas/'+idSearch.areaId+'/calendar.json?apikey=fQN7zyRe4VM5w73a&page='+idSearch.page+'&jsoncallback=?',

@@ -19907,6 +19907,20 @@ var AppActions = {
 		});
 	},
 
+	searchGeo: function(geoSearch){
+		AppDispatcher.handleViewAction({
+			actionType: AppConstants.SEARCH_GEO,
+			geoSearch: geoSearch
+		})
+	},
+
+	receiveGeoResults: function(geoResults){
+		AppDispatcher.handleViewAction({
+			actionType: AppConstants.RECEIVE_GEO_RESULTS,
+			geoResults: geoResults
+		})
+	},
+
 	searchId: function(idSearch){
 		AppDispatcher.handleViewAction({
 			actionType: AppConstants.SEARCH_ID,
@@ -20699,6 +20713,26 @@ var AppActions = require('../actions/AppActions');
 var AppStore = require('../stores/AppStore');
 
 var SearchForm = React.createClass({displayName: "SearchForm",
+
+	getInitialState: function(){
+		var geo = [];
+		function getLocation() {
+			if (navigator.geolocation) {
+    			navigator.geolocation.getCurrentPosition(showPosition);
+
+			} else { 
+    			alert("Geolocation is not supported by this browser.");
+			}
+		};
+		function showPosition(position) {
+			geo.push(position);
+		};
+		getLocation();
+		return {
+			position: geo
+		}
+	},
+
 	render: function(){
 		return(
 			React.createElement("div", {className: "row"}, 
@@ -20711,7 +20745,8 @@ var SearchForm = React.createClass({displayName: "SearchForm",
 				React.createElement("form", {onSubmit: this.handleArtistSubmit}, 
 					React.createElement("input", {type: "text", ref: "artist", placeholder: "Enter Artist Name"}), 
 					React.createElement("button", {type: "submit", className: "btn btn-xs btn-primary"}, "Submit")
-				)
+				), 
+				React.createElement("button", {onClick: this.handleClick, type: "submit", className: "btn btn-sm btn-primary"}, "Use Current Location")
 			)
 		);
 	},
@@ -20734,6 +20769,17 @@ var SearchForm = React.createClass({displayName: "SearchForm",
 		};
 		AppActions.searchArtist(artistSearch);
 		ReactDOM.findDOMNode(this.refs.artist).value = ""
+	},
+	handleClick: function(e){
+		e.preventDefault();
+		console.log(this.state.position);
+
+		var geoSearch = {
+			lat: this.state.position[0].coords.latitude,
+			lng: this.state.position[0].coords.longitude
+		};
+		console.log(geoSearch);
+		AppActions.searchGeo(geoSearch);
 	}
 });
 
@@ -20814,8 +20860,10 @@ module.exports= VaultConcertList;
 module.exports = {
 	SEARCH_CITY: 'SEARCH_CITY',
 	SEARCH_ARTIST: 'SEARCH_ARTIST',
+	SEARCH_GEO: 'SEARCH_GEO',
 	RECEIVE_RESULTS: 'RECEIVE_RESULTS',
 	RECEIVE_ARTIST_RESULTS: 'RECEIVE_ARTIST_RESULTS',
+	RECEIVE_GEO_RESULTS: 'RECEIVE_GEO_RESULTS',
 	SEARCH_ID: 'SEARCH_ID',
 	SEARCH_ARTIST_ID: 'SEARCH_ARTIST_ID',
 	RECEIVE_CALENDARS: 'RECEIVE_CALENDARS',
@@ -20904,6 +20952,12 @@ var AppStore = assign({}, EventEmitter.prototype, {
 	},
 	getSearchArtist: function(){
 		return _artistSearch;
+	},
+	setGeoSearch: function(geoSearch){
+		_geoSearch = geoSearch;
+	},
+	getGeoSearch: function(){
+		return _geoSearch;
 	},
 	setSearchId: function(idSearch){
 		_idSearch = idSearch;
@@ -21046,6 +21100,12 @@ AppDispatcher.register(function(payload){
 			AppStore.emit(CHANGE_EVENT);
 			break;
 
+		case AppConstants.SEARCH_GEO:
+			AppAPI.searchGeo(action.geoSearch);
+			AppStore.setSearchCity(action.search);
+			AppStore.emit(CHANGE_EVENT);
+			break;
+
 		case AppConstants.SEARCH_ID:
 			AppAPI.searchId(action.idSearch);
 			AppStore.setSearchId(action.idSearch);
@@ -21165,6 +21225,21 @@ module.exports = {
 			cache: false,
 			success: function(data){
 				AppActions.receiveArtistResults(data.resultsPage.results);
+			}.bind(this),
+			error: function(xhr, status, err){
+				console.log(err);
+			}.bind(this)
+		})
+	},
+
+	searchGeo: function(geoSearch){
+		$.ajax({
+			url:'http://api.songkick.com/api/3.0/search/locations.json?location=geo:'+geoSearch.lat+','+geoSearch.lng+'&apikey=fQN7zyRe4VM5w73a&per_page=1&jsoncallback=?',
+			dataType: 'jsonp',
+			cache: false,
+			success: function(data){
+				console.log(data);
+				AppActions.receiveResults(data.resultsPage.results);
 			}.bind(this),
 			error: function(xhr, status, err){
 				console.log(err);
@@ -21303,6 +21378,21 @@ module.exports = {
 			cache: false,
 			success: function(data){
 				AppActions.receiveArtistResults(data.resultsPage.results);
+			}.bind(this),
+			error: function(xhr, status, err){
+				console.log(err);
+			}.bind(this)
+		})
+	},
+
+	searchGeo: function(geoSearch){
+		$.ajax({
+			url:'http://api.songkick.com/api/3.0/search/locations.json?location=geo:'+geoSearch.lat+','+geoSearch.lng+'&apikey=fQN7zyRe4VM5w73a&per_page=1&jsoncallback=?',
+			dataType: 'jsonp',
+			cache: false,
+			success: function(data){
+				console.log(data);
+				AppActions.receiveResults(data.resultsPage.results);
 			}.bind(this),
 			error: function(xhr, status, err){
 				console.log(err);

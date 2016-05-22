@@ -4,6 +4,26 @@ var AppActions = require('../actions/AppActions');
 var AppStore = require('../stores/AppStore');
 
 var SearchForm = React.createClass({
+
+	getInitialState: function(){
+		var geo = [];
+		function getLocation() {
+			if (navigator.geolocation) {
+    			navigator.geolocation.getCurrentPosition(showPosition);
+
+			} else { 
+    			alert("Geolocation is not supported by this browser.");
+			}
+		};
+		function showPosition(position) {
+			geo.push(position);
+		};
+		getLocation();
+		return {
+			position: geo
+		}
+	},
+
 	render: function(){
 		return(
 			<div className="row">
@@ -17,6 +37,7 @@ var SearchForm = React.createClass({
 					<input type="text" ref="artist" placeholder="Enter Artist Name" />
 					<button type="submit" className="btn btn-xs btn-primary">Submit</button>
 				</form>
+				<button onClick={this.handleClick} type="submit" className="btn btn-sm btn-primary">Use Current Location</button>
 			</div>
 		);
 	},
@@ -39,6 +60,17 @@ var SearchForm = React.createClass({
 		};
 		AppActions.searchArtist(artistSearch);
 		ReactDOM.findDOMNode(this.refs.artist).value = ""
+	},
+	handleClick: function(e){
+		e.preventDefault();
+		console.log(this.state.position);
+
+		var geoSearch = {
+			lat: this.state.position[0].coords.latitude,
+			lng: this.state.position[0].coords.longitude
+		};
+		console.log(geoSearch);
+		AppActions.searchGeo(geoSearch);
 	}
 });
 

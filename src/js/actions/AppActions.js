@@ -31,6 +31,20 @@ var AppActions = {
 		});
 	},
 
+	searchGeo: function(geoSearch){
+		AppDispatcher.handleViewAction({
+			actionType: AppConstants.SEARCH_GEO,
+			geoSearch: geoSearch
+		})
+	},
+
+	receiveGeoResults: function(geoResults){
+		AppDispatcher.handleViewAction({
+			actionType: AppConstants.RECEIVE_GEO_RESULTS,
+			geoResults: geoResults
+		})
+	},
+
 	searchId: function(idSearch){
 		AppDispatcher.handleViewAction({
 			actionType: AppConstants.SEARCH_ID,
