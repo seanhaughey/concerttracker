@@ -1,12 +1,12 @@
 {
-  "name": "fluxapp",
+  "name": "ConcertTracker",
   "version": "1.0.0",
   "description": "Application built with Flux and React.js",
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "Brad Traversy",
+  "author": "Sean Haughey",
   "license": "ISC",
   "devDependencies": {
     "browserify": "*",
