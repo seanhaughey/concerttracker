@@ -17,6 +17,14 @@ function getAppState(){
 var Calendar = React.createClass({
 
 	render: function(){
+		var pages = [];
+		if(Math.ceil(this.props.resultsPage.totalEntries/50)<2){
+			pages = [];
+		} else{
+			for(i=1; i<=Math.ceil(this.props.resultsPage.totalEntries/50); i++){
+				pages.push(<a href="#" className='page btn btn-xs btn-default text-center' onClick={this.handlePage.bind(this, i)} ref="page" value={i} key={i}>{i} </a>);
+			}
+		};
 		if(this.props.page === Math.ceil(this.props.resultsPage.totalEntries/50)){
 			var buttonClass = 'btn btn-sm btn-default disabled';
 		} else{
@@ -30,13 +38,15 @@ var Calendar = React.createClass({
 		if(this.props.calendars != ''){
 			var table =
 				<div>
-					<div className="row nav-buttons">
-						<div className="col-md-4">
+					<div className="row nav-buttons text-center">
+						<div className="col-md-3">
 							<a href="#" className={prevButtonClass} onClick={this.handleFirst}>&#60;&#60; First Page</a>
 							<a href="#" className={prevButtonClass} onClick={this.handlePrevious}>&#60; Prev Page</a>
 						</div>
-						<div className="col-md-4"></div>
-						<div className="col-md-4">
+						<div className="col-md-6">
+						{pages}
+						</div>
+						<div className="col-md-3">
 							<a href="#" className={buttonClass} onClick={this.handleSubmit}>Next Page &#62;</a>
 							<a href="#" className={buttonClass} onClick={this.handleLast}>Last Page &#62;&#62;</a>
 						</div>
@@ -61,13 +71,15 @@ var Calendar = React.createClass({
 							}
 						</tbody>
 					</table>
-					<div className="row nav-buttons">
-						<div className="col-md-4">
+					<div className="row nav-buttons text-center">
+						<div className="col-md-3">
 							<a href="#" className={prevButtonClass} onClick={this.handleFirst}>&#60;&#60; First Page</a>
 							<a href="#" className={prevButtonClass} onClick={this.handlePrevious}>&#60; Prev Page</a>
 						</div>
-						<div className="col-md-4"></div>
-						<div className="col-md-4">
+						<div className="col-md-6">
+						{pages}
+						</div>
+						<div className="col-md-3">
 							<a href="#" className={buttonClass} onClick={this.handleSubmit}>Next Page &#62;</a>
 							<a href="#" className={buttonClass} onClick={this.handleLast}>Last Page &#62;&#62;</a>
 						</div>
@@ -91,6 +103,16 @@ var Calendar = React.createClass({
 			page: page
 		};
 		console.log(search);
+		AppActions.searchId(search);
+	},
+
+	handlePage: function(e){
+		var page = e;
+		console.log(e);
+		var search = {
+			areaId: this.props.areaId,
+			page: page
+		};
 		AppActions.searchId(search);
 	},
 

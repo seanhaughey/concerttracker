@@ -20387,6 +20387,14 @@ function getAppState(){
 var Calendar = React.createClass({displayName: "Calendar",
 
 	render: function(){
+		var pages = [];
+		if(Math.ceil(this.props.resultsPage.totalEntries/50)<2){
+			pages = [];
+		} else{
+			for(i=1; i<=Math.ceil(this.props.resultsPage.totalEntries/50); i++){
+				pages.push(React.createElement("a", {href: "#", className: "page btn btn-xs btn-default text-center", onClick: this.handlePage.bind(this, i), ref: "page", value: i, key: i}, i, " "));
+			}
+		};
 		if(this.props.page === Math.ceil(this.props.resultsPage.totalEntries/50)){
 			var buttonClass = 'btn btn-sm btn-default disabled';
 		} else{
@@ -20400,13 +20408,15 @@ var Calendar = React.createClass({displayName: "Calendar",
 		if(this.props.calendars != ''){
 			var table =
 				React.createElement("div", null, 
-					React.createElement("div", {className: "row nav-buttons"}, 
-						React.createElement("div", {className: "col-md-4"}, 
+					React.createElement("div", {className: "row nav-buttons text-center"}, 
+						React.createElement("div", {className: "col-md-3"}, 
 							React.createElement("a", {href: "#", className: prevButtonClass, onClick: this.handleFirst}, "<< First Page"), 
 							React.createElement("a", {href: "#", className: prevButtonClass, onClick: this.handlePrevious}, "< Prev Page")
 						), 
-						React.createElement("div", {className: "col-md-4"}), 
-						React.createElement("div", {className: "col-md-4"}, 
+						React.createElement("div", {className: "col-md-6"}, 
+						pages
+						), 
+						React.createElement("div", {className: "col-md-3"}, 
 							React.createElement("a", {href: "#", className: buttonClass, onClick: this.handleSubmit}, "Next Page >"), 
 							React.createElement("a", {href: "#", className: buttonClass, onClick: this.handleLast}, "Last Page >>")
 						)
@@ -20431,13 +20441,15 @@ var Calendar = React.createClass({displayName: "Calendar",
 							
 						)
 					), 
-					React.createElement("div", {className: "row nav-buttons"}, 
-						React.createElement("div", {className: "col-md-4"}, 
+					React.createElement("div", {className: "row nav-buttons text-center"}, 
+						React.createElement("div", {className: "col-md-3"}, 
 							React.createElement("a", {href: "#", className: prevButtonClass, onClick: this.handleFirst}, "<< First Page"), 
 							React.createElement("a", {href: "#", className: prevButtonClass, onClick: this.handlePrevious}, "< Prev Page")
 						), 
-						React.createElement("div", {className: "col-md-4"}), 
-						React.createElement("div", {className: "col-md-4"}, 
+						React.createElement("div", {className: "col-md-6"}, 
+						pages
+						), 
+						React.createElement("div", {className: "col-md-3"}, 
 							React.createElement("a", {href: "#", className: buttonClass, onClick: this.handleSubmit}, "Next Page >"), 
 							React.createElement("a", {href: "#", className: buttonClass, onClick: this.handleLast}, "Last Page >>")
 						)
@@ -20461,6 +20473,16 @@ var Calendar = React.createClass({displayName: "Calendar",
 			page: page
 		};
 		console.log(search);
+		AppActions.searchId(search);
+	},
+
+	handlePage: function(e){
+		var page = e;
+		console.log(e);
+		var search = {
+			areaId: this.props.areaId,
+			page: page
+		};
 		AppActions.searchId(search);
 	},
 
