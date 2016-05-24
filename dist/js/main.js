@@ -20121,6 +20121,19 @@ function getAppState(){
 
 var ArtistCalendar = React.createClass({displayName: "ArtistCalendar",
 	render: function(){
+		var pages = [];
+		if(Math.ceil(this.props.artistResultsPage.totalEntries/50)<2){
+			pages = [];
+		} else{
+			for(i=1; i<=Math.ceil(this.props.artistResultsPage.totalEntries/50); i++){
+				if(this.props.artistPage === i){
+					var btnStatus = "page btn btn-xs btn-primary text-center active"
+				} else {
+					var btnStatus = "page btn btn-xs btn-default text-center"
+				}
+				pages.push(React.createElement("a", {href: "#", className: btnStatus, onClick: this.handlePage.bind(this, i), value: i, key: i}, i));
+			}
+		};
 		if(this.props.artistPage === Math.ceil((this.props.artistResultsPage.totalEntries)/50)){
 			var buttonClass = 'btn btn-sm btn-default disabled';
 		} else{
@@ -20136,12 +20149,14 @@ var ArtistCalendar = React.createClass({displayName: "ArtistCalendar",
 			var artistTable =
 				React.createElement("div", null, 
 					React.createElement("div", {className: "row nav-buttons"}, 
-						React.createElement("div", {className: "col-md-4"}, 
+						React.createElement("div", {className: "col-md-3"}, 
 							React.createElement("a", {href: "#", className: prevButtonClass, onClick: this.handleFirst}, "<< First Page"), 
 							React.createElement("a", {href: "#", className: prevButtonClass, onClick: this.handlePrevious}, "< Prev Page")
 						), 
-						React.createElement("div", {className: "col-md-4"}), 
-						React.createElement("div", {className: "col-md-4"}, 
+						React.createElement("div", {className: "col-md-6 text-center"}, 
+							pages
+						), 
+						React.createElement("div", {className: "col-md-3"}, 
 							React.createElement("a", {href: "#", className: buttonClass, onClick: this.handleSubmit}, "Next Page >"), 
 							React.createElement("a", {href: "#", className: buttonClass, onClick: this.handleLast}, "Last Page >>")
 						)
@@ -20167,12 +20182,14 @@ var ArtistCalendar = React.createClass({displayName: "ArtistCalendar",
 						)
 					), 
 					React.createElement("div", {className: "row nav-buttons"}, 
-						React.createElement("div", {className: "col-md-4"}, 
+						React.createElement("div", {className: "col-md-3"}, 
 							React.createElement("a", {href: "#", className: prevButtonClass, onClick: this.handleFirst}, "<< First Page"), 
 							React.createElement("a", {href: "#", className: prevButtonClass, onClick: this.handlePrevious}, "< Prev Page")
 						), 
-						React.createElement("div", {className: "col-md-4"}), 
-						React.createElement("div", {className: "col-md-4"}, 
+						React.createElement("div", {className: "col-md-6 text-center"}, 
+							pages
+						), 
+						React.createElement("div", {className: "col-md-3"}, 
 							React.createElement("a", {href: "#", className: buttonClass, onClick: this.handleSubmit}, "Next Page >"), 
 							React.createElement("a", {href: "#", className: buttonClass, onClick: this.handleLast}, "Last Page >>")
 						)
@@ -20196,6 +20213,16 @@ var ArtistCalendar = React.createClass({displayName: "ArtistCalendar",
 			page: page
 		};
 		console.log(search);
+		AppActions.searchArtistId(search);
+	},
+
+	handlePage: function(e){
+		var page = e;
+		console.log(e);
+		var search = {
+			artistId: this.props.artistId,
+			page: page
+		};
 		AppActions.searchArtistId(search);
 	},
 
@@ -20392,7 +20419,12 @@ var Calendar = React.createClass({displayName: "Calendar",
 			pages = [];
 		} else{
 			for(i=1; i<=Math.ceil(this.props.resultsPage.totalEntries/50); i++){
-				pages.push(React.createElement("a", {href: "#", className: "page btn btn-xs btn-default text-center", onClick: this.handlePage.bind(this, i), value: i, key: i}, i));
+				if(this.props.page === i){
+					var btnStatus = "page btn btn-xs btn-primary text-center active"
+				} else {
+					var btnStatus = "page btn btn-xs btn-default text-center"
+				}
+				pages.push(React.createElement("a", {href: "#", className: btnStatus, onClick: this.handlePage.bind(this, i), value: i, key: i}, i));
 			}
 		};
 		if(this.props.page === Math.ceil(this.props.resultsPage.totalEntries/50)){
@@ -20447,7 +20479,7 @@ var Calendar = React.createClass({displayName: "Calendar",
 							React.createElement("a", {href: "#", className: prevButtonClass, onClick: this.handlePrevious}, "< Prev Page")
 						), 
 						React.createElement("div", {className: "col-md-6"}, 
-						pages
+							pages
 						), 
 						React.createElement("div", {className: "col-md-3"}, 
 							React.createElement("a", {href: "#", className: buttonClass, onClick: this.handleSubmit}, "Next Page >"), 
