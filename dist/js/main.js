@@ -20392,7 +20392,7 @@ var Calendar = React.createClass({displayName: "Calendar",
 			pages = [];
 		} else{
 			for(i=1; i<=Math.ceil(this.props.resultsPage.totalEntries/50); i++){
-				pages.push(React.createElement("a", {href: "#", className: "page btn btn-xs btn-default text-center", onClick: this.handlePage.bind(this, i), ref: "page", value: i, key: i}, i, " "));
+				pages.push(React.createElement("a", {href: "#", className: "page btn btn-xs btn-default text-center", onClick: this.handlePage.bind(this, i), value: i, key: i}, i));
 			}
 		};
 		if(this.props.page === Math.ceil(this.props.resultsPage.totalEntries/50)){
