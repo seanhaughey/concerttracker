@@ -22,7 +22,12 @@ var Calendar = React.createClass({
 			pages = [];
 		} else{
 			for(i=1; i<=Math.ceil(this.props.resultsPage.totalEntries/50); i++){
-				pages.push(<a href="#" className='page btn btn-xs btn-default text-center' onClick={this.handlePage.bind(this, i)} value={i} key={i}>{i}</a>);
+				if(this.props.page === i){
+					var btnStatus = "page btn btn-xs btn-primary text-center active"
+				} else {
+					var btnStatus = "page btn btn-xs btn-default text-center"
+				}
+				pages.push(<a href="#" className={btnStatus} onClick={this.handlePage.bind(this, i)} value={i} key={i}>{i}</a>);
 			}
 		};
 		if(this.props.page === Math.ceil(this.props.resultsPage.totalEntries/50)){
@@ -77,7 +82,7 @@ var Calendar = React.createClass({
 							<a href="#" className={prevButtonClass} onClick={this.handlePrevious}>&#60; Prev Page</a>
 						</div>
 						<div className="col-md-6">
-						{pages}
+							{pages}
 						</div>
 						<div className="col-md-3">
 							<a href="#" className={buttonClass} onClick={this.handleSubmit}>Next Page &#62;</a>
