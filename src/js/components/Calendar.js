@@ -22,7 +22,7 @@ var Calendar = React.createClass({
 			pages = [];
 		} else{
 			for(i=1; i<=Math.ceil(this.props.resultsPage.totalEntries/50); i++){
-				pages.push(<a href="#" className='page btn btn-xs btn-default text-center' onClick={this.handlePage.bind(this, i)} ref="page" value={i} key={i}>{i} </a>);
+				pages.push(<a href="#" className='page btn btn-xs btn-default text-center' onClick={this.handlePage.bind(this, i)} value={i} key={i}>{i}</a>);
 			}
 		};
 		if(this.props.page === Math.ceil(this.props.resultsPage.totalEntries/50)){
