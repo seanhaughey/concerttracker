@@ -50,6 +50,7 @@ body {
 
 .artist {
 	width: 300px;
+	padding-right: 10px;
 }
 
 .venue-header {

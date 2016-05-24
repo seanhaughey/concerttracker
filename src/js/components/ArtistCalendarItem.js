@@ -6,13 +6,27 @@ var ArtistCalendarItem = React.createClass({
 
 	render: function(){
 		var results = '';
-		var artist = '';
+		var artist = [];
 		var venue = '';
 		var location= '';
 		if(this.props.artistCalendar.performance[0] === undefined){
 			var artist = "Unknown";
+		} else if(this.props.artistCalendar.performance.length>5) {
+			for(i=0; i<5; i++){
+				if(i===4) {
+					artist.push(this.props.artistCalendar.performance[i].artist.displayName);
+				} else {
+					artist.push(this.props.artistCalendar.performance[i].artist.displayName + ' | ');
+				}
+			}
 		} else{
-			var artist = this.props.artistCalendar.performance[0].artist.displayName;
+			for(i=0; i<this.props.artistCalendar.performance.length; i++){
+				if(i===this.props.artistCalendar.performance.length-1) {
+					artist.push(this.props.artistCalendar.performance[i].artist.displayName);
+				} else {
+					artist.push(this.props.artistCalendar.performance[i].artist.displayName + ' | ');
+				}
+			}
 		};
 		if(this.props.artistCalendar.venue === undefined){
 			var venue = 'Unknown venue';
