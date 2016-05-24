@@ -21228,7 +21228,7 @@ var AppActions = require('../actions/AppActions');
 module.exports = {
 	searchCity: function(search){
 		$.ajax({
-			url: 'http://api.songkick.com/api/3.0/search/locations.json?query='+search.city+'&apikey=fQN7zyRe4VM5w73a&jsoncallback=?',
+			url: 'https://api.songkick.com/api/3.0/search/locations.json?query='+search.city+'&apikey=fQN7zyRe4VM5w73a&jsoncallback=?',
 			dataType: 'jsonp',
 			cache: false,
 			success: function(data){
@@ -21242,7 +21242,7 @@ module.exports = {
 
 	searchArtist: function(artistSearch){
 		$.ajax({
-			url: 'http://api.songkick.com/api/3.0/search/artists.json?query='+artistSearch.artist+'&apikey=fQN7zyRe4VM5w73a&jsoncallback=?',
+			url: 'https://api.songkick.com/api/3.0/search/artists.json?query='+artistSearch.artist+'&apikey=fQN7zyRe4VM5w73a&jsoncallback=?',
 			dataType: 'jsonp',
 			cache: false,
 			success: function(data){
@@ -21256,7 +21256,7 @@ module.exports = {
 
 	searchGeo: function(geoSearch){
 		$.ajax({
-			url:'http://api.songkick.com/api/3.0/search/locations.json?location=geo:'+geoSearch.lat+','+geoSearch.lng+'&apikey=fQN7zyRe4VM5w73a&per_page=1&jsoncallback=?',
+			url:'https://api.songkick.com/api/3.0/search/locations.json?location=geo:'+geoSearch.lat+','+geoSearch.lng+'&apikey=fQN7zyRe4VM5w73a&per_page=1&jsoncallback=?',
 			dataType: 'jsonp',
 			cache: false,
 			success: function(data){
@@ -21271,7 +21271,7 @@ module.exports = {
 
 	searchId: function(idSearch){
 		$.ajax({
-			url: 'http://api.songkick.com/api/3.0/metro_areas/'+idSearch.areaId+'/calendar.json?apikey=fQN7zyRe4VM5w73a&page='+idSearch.page+'&jsoncallback=?',
+			url: 'https://api.songkick.com/api/3.0/metro_areas/'+idSearch.areaId+'/calendar.json?apikey=fQN7zyRe4VM5w73a&page='+idSearch.page+'&jsoncallback=?',
 			dataType: 'jsonp',
 			cache: false,
 			success: function(data){
@@ -21292,7 +21292,7 @@ module.exports = {
 
 	searchArtistId: function(artistIdSearch){
 		$.ajax({
-			url: 'http://api.songkick.com/api/3.0/artists/'+artistIdSearch.artistId+'/calendar.json?apikey=fQN7zyRe4VM5w73a&page='+artistIdSearch.page+'&jsoncallback=?',
+			url: 'https://api.songkick.com/api/3.0/artists/'+artistIdSearch.artistId+'/calendar.json?apikey=fQN7zyRe4VM5w73a&page='+artistIdSearch.page+'&jsoncallback=?',
 			dataType: 'jsonp',
 			cache: false,
 			success: function(data){
@@ -21381,7 +21381,7 @@ var AppActions = require('../actions/AppActions');
 module.exports = {
 	searchCity: function(search){
 		$.ajax({
-			url: 'http://api.songkick.com/api/3.0/search/locations.json?query='+search.city+'&apikey=fQN7zyRe4VM5w73a&jsoncallback=?',
+			url: 'https://api.songkick.com/api/3.0/search/locations.json?query='+search.city+'&apikey=fQN7zyRe4VM5w73a&jsoncallback=?',
 			dataType: 'jsonp',
 			cache: false,
 			success: function(data){
@@ -21395,7 +21395,7 @@ module.exports = {
 
 	searchArtist: function(artistSearch){
 		$.ajax({
-			url: 'http://api.songkick.com/api/3.0/search/artists.json?query='+artistSearch.artist+'&apikey=fQN7zyRe4VM5w73a&jsoncallback=?',
+			url: 'https://api.songkick.com/api/3.0/search/artists.json?query='+artistSearch.artist+'&apikey=fQN7zyRe4VM5w73a&jsoncallback=?',
 			dataType: 'jsonp',
 			cache: false,
 			success: function(data){
@@ -21409,7 +21409,7 @@ module.exports = {
 
 	searchGeo: function(geoSearch){
 		$.ajax({
-			url:'http://api.songkick.com/api/3.0/search/locations.json?location=geo:'+geoSearch.lat+','+geoSearch.lng+'&apikey=fQN7zyRe4VM5w73a&per_page=1&jsoncallback=?',
+			url:'https://api.songkick.com/api/3.0/search/locations.json?location=geo:'+geoSearch.lat+','+geoSearch.lng+'&apikey=fQN7zyRe4VM5w73a&per_page=1&jsoncallback=?',
 			dataType: 'jsonp',
 			cache: false,
 			success: function(data){
@@ -21424,7 +21424,7 @@ module.exports = {
 
 	searchId: function(idSearch){
 		$.ajax({
-			url: 'http://api.songkick.com/api/3.0/metro_areas/'+idSearch.areaId+'/calendar.json?apikey=fQN7zyRe4VM5w73a&page='+idSearch.page+'&jsoncallback=?',
+			url: 'https://api.songkick.com/api/3.0/metro_areas/'+idSearch.areaId+'/calendar.json?apikey=fQN7zyRe4VM5w73a&page='+idSearch.page+'&jsoncallback=?',
 			dataType: 'jsonp',
 			cache: false,
 			success: function(data){
@@ -21445,7 +21445,7 @@ module.exports = {
 
 	searchArtistId: function(artistIdSearch){
 		$.ajax({
-			url: 'http://api.songkick.com/api/3.0/artists/'+artistIdSearch.artistId+'/calendar.json?apikey=fQN7zyRe4VM5w73a&page='+artistIdSearch.page+'&jsoncallback=?',
+			url: 'https://api.songkick.com/api/3.0/artists/'+artistIdSearch.artistId+'/calendar.json?apikey=fQN7zyRe4VM5w73a&page='+artistIdSearch.page+'&jsoncallback=?',
 			dataType: 'jsonp',
 			cache: false,
 			success: function(data){
