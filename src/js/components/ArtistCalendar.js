@@ -9,13 +9,14 @@ function getAppState(){
 		artistCalendars: AppStore.getArtistCalendars(),
 		artistResultsPage: AppStore.getArtistResultsPage(),
 		artistId: AppStore.getArtistId(),
-		artistPage: AppStore.getArtistPage()
+		artistPage: AppStore.getArtistPage(),
 	}
 };
 
 
 var ArtistCalendar = React.createClass({
 	render: function(){
+		console.log(this.props.searchArtist);
 		var pages = [];
 		if(Math.ceil(this.props.artistResultsPage.totalEntries/50)<2){
 			pages = [];
@@ -60,7 +61,7 @@ var ArtistCalendar = React.createClass({
 					<thead>
 						<tr>
 							<th className="date-header">Date</th>
-							<th className="artist-header">Headliner</th>
+							<th className="artist-header">Lineup</th>
 							<th className="venue-header">Venue</th>
 							<th className="location-header">Location</th>
 							<th className="sk-link-header">Songkick Event Page</th>
@@ -113,7 +114,6 @@ var ArtistCalendar = React.createClass({
 
 	handlePage: function(e){
 		var page = e;
-		console.log(e);
 		var search = {
 			artistId: this.props.artistId,
 			page: page

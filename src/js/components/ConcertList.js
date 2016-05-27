@@ -12,7 +12,7 @@ var ConcertList = React.createClass({
 					<thead>
 						<tr>
 							<th className="date-header">Date</th>
-							<th className="artist-header">Headliner</th>
+							<th className="artist-header">Lineup</th>
 							<th className="venue-header">Venue</th>
 							<th className="location-header">Location</th>
 							<th className="sk-link-header">Songkick Event Page</th>
