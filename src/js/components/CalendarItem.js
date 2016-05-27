@@ -46,9 +46,27 @@ var CalendarItem = React.createClass({
 	},
 
 	handleSubmit: function(){
+		var artist = [];
+		if(this.props.calendar.performance.length>5) {
+			for(i=0; i<5; i++){
+				if(i===4) {
+					artist.push(this.props.calendar.performance[i].artist.displayName);
+				} else {
+					artist.push(this.props.calendar.performance[i].artist.displayName + ' | ');
+				}
+			}
+		} else{
+			for(i=0; i<this.props.calendar.performance.length; i++){
+				if(i===this.props.calendar.performance.length-1) {
+					artist.push(this.props.calendar.performance[i].artist.displayName);
+				} else {
+					artist.push(this.props.calendar.performance[i].artist.displayName + ' | ');
+				}
+			}
+		};
 		var concert = {
 			date: this.props.calendar.start.date,
-			artist: this.props.calendar.performance[0].artist.displayName,
+			artist: artist,
 			venue: this.props.calendar.venue.displayName,
 			location: this.props.calendar.location.city,
 			link: this.props.calendar.uri

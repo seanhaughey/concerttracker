@@ -11,10 +11,10 @@ var VaultConcertList = React.createClass({
 				<table className="table table-striped">
 					<thead>
 						<tr>
-							<th>Date</th>
-							<th>Headliner</th>
-							<th>Venue</th>
-							<th>Location</th>
+							<th className="date-header">Date</th>
+							<th className="artist-header">Lineup</th>
+							<th className="venue-header">Venue</th>
+							<th className="location-header">Location</th>
 						</tr>
 					</thead>
 					<tbody>

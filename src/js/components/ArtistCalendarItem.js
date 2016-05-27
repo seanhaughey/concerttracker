@@ -5,6 +5,7 @@ var AppStore = require('../stores/AppStore');
 var ArtistCalendarItem = React.createClass({
 
 	render: function(){
+		console.log(this.props.searchArtist);
 		var results = '';
 		var artist = [];
 		var venue = '';
@@ -46,9 +47,27 @@ var ArtistCalendarItem = React.createClass({
 	},
 
 	handleSubmit: function(){
+		var artist = [];
+		if(this.props.artistCalendar.performance.length>5) {
+			for(i=0; i<5; i++){
+				if(i===4) {
+					artist.push(this.props.artistCalendar.performance[i].artist.displayName);
+				} else {
+					artist.push(this.props.artistCalendar.performance[i].artist.displayName + ' | ');
+				}
+			}
+		} else{
+			for(i=0; i<this.props.artistCalendar.performance.length; i++){
+				if(i===this.props.artistCalendar.performance.length-1) {
+					artist.push(this.props.artistCalendar.performance[i].artist.displayName);
+				} else {
+					artist.push(this.props.artistCalendar.performance[i].artist.displayName + ' | ');
+				}
+			}
+		};
 		var concert = {
 			date: this.props.artistCalendar.start.date,
-			artist: this.props.artistCalendar.performance[0].artist.displayName,
+			artist: artist,
 			venue: this.props.artistCalendar.venue.displayName,
 			location: this.props.artistCalendar.location.city,
 			link: this.props.artistCalendar.uri

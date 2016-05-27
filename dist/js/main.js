@@ -20114,13 +20114,14 @@ function getAppState(){
 		artistCalendars: AppStore.getArtistCalendars(),
 		artistResultsPage: AppStore.getArtistResultsPage(),
 		artistId: AppStore.getArtistId(),
-		artistPage: AppStore.getArtistPage()
+		artistPage: AppStore.getArtistPage(),
 	}
 };
 
 
 var ArtistCalendar = React.createClass({displayName: "ArtistCalendar",
 	render: function(){
+		console.log(this.props.searchArtist);
 		var pages = [];
 		if(Math.ceil(this.props.artistResultsPage.totalEntries/50)<2){
 			pages = [];
@@ -20165,7 +20166,7 @@ var ArtistCalendar = React.createClass({displayName: "ArtistCalendar",
 					React.createElement("thead", null, 
 						React.createElement("tr", null, 
 							React.createElement("th", {className: "date-header"}, "Date"), 
-							React.createElement("th", {className: "artist-header"}, "Headliner"), 
+							React.createElement("th", {className: "artist-header"}, "Lineup"), 
 							React.createElement("th", {className: "venue-header"}, "Venue"), 
 							React.createElement("th", {className: "location-header"}, "Location"), 
 							React.createElement("th", {className: "sk-link-header"}, "Songkick Event Page")
@@ -20218,7 +20219,6 @@ var ArtistCalendar = React.createClass({displayName: "ArtistCalendar",
 
 	handlePage: function(e){
 		var page = e;
-		console.log(e);
 		var search = {
 			artistId: this.props.artistId,
 			page: page
@@ -20266,6 +20266,7 @@ var AppStore = require('../stores/AppStore');
 var ArtistCalendarItem = React.createClass({displayName: "ArtistCalendarItem",
 
 	render: function(){
+		console.log(this.props.searchArtist);
 		var results = '';
 		var artist = [];
 		var venue = '';
@@ -20307,9 +20308,27 @@ var ArtistCalendarItem = React.createClass({displayName: "ArtistCalendarItem",
 	},
 
 	handleSubmit: function(){
+		var artist = [];
+		if(this.props.artistCalendar.performance.length>5) {
+			for(i=0; i<5; i++){
+				if(i===4) {
+					artist.push(this.props.artistCalendar.performance[i].artist.displayName);
+				} else {
+					artist.push(this.props.artistCalendar.performance[i].artist.displayName + ' | ');
+				}
+			}
+		} else{
+			for(i=0; i<this.props.artistCalendar.performance.length; i++){
+				if(i===this.props.artistCalendar.performance.length-1) {
+					artist.push(this.props.artistCalendar.performance[i].artist.displayName);
+				} else {
+					artist.push(this.props.artistCalendar.performance[i].artist.displayName + ' | ');
+				}
+			}
+		};
 		var concert = {
 			date: this.props.artistCalendar.start.date,
-			artist: this.props.artistCalendar.performance[0].artist.displayName,
+			artist: artist,
 			venue: this.props.artistCalendar.venue.displayName,
 			location: this.props.artistCalendar.location.city,
 			link: this.props.artistCalendar.uri
@@ -20471,7 +20490,7 @@ var Calendar = React.createClass({displayName: "Calendar",
 						React.createElement("thead", null, 
 							React.createElement("tr", null, 
 								React.createElement("th", {className: "date-header"}, "Date"), 
-								React.createElement("th", {className: "artist-header"}, "Headliner"), 
+								React.createElement("th", {className: "artist-header"}, "Lineup"), 
 								React.createElement("th", {className: "venue-header"}, "Venue"), 
 								React.createElement("th", {className: "location-header"}, "Location"), 
 								React.createElement("th", {className: "sk-link-header"}, "Songkick Event Page")
@@ -20613,9 +20632,27 @@ var CalendarItem = React.createClass({displayName: "CalendarItem",
 	},
 
 	handleSubmit: function(){
+		var artist = [];
+		if(this.props.calendar.performance.length>5) {
+			for(i=0; i<5; i++){
+				if(i===4) {
+					artist.push(this.props.calendar.performance[i].artist.displayName);
+				} else {
+					artist.push(this.props.calendar.performance[i].artist.displayName + ' | ');
+				}
+			}
+		} else{
+			for(i=0; i<this.props.calendar.performance.length; i++){
+				if(i===this.props.calendar.performance.length-1) {
+					artist.push(this.props.calendar.performance[i].artist.displayName);
+				} else {
+					artist.push(this.props.calendar.performance[i].artist.displayName + ' | ');
+				}
+			}
+		};
 		var concert = {
 			date: this.props.calendar.start.date,
-			artist: this.props.calendar.performance[0].artist.displayName,
+			artist: artist,
 			venue: this.props.calendar.venue.displayName,
 			location: this.props.calendar.location.city,
 			link: this.props.calendar.uri
@@ -20724,7 +20761,7 @@ var Concert = React.createClass({displayName: "Concert",
 				React.createElement("td", {className: "venue"}, this.props.concert.venue), 
 				React.createElement("td", {className: "location"}, this.props.concert.location), 
 				React.createElement("td", {className: "songkick-link"}, React.createElement("a", {href: this.props.concert.link, target: "_blank"}, React.createElement("img", {className: "sk-link", src: "./images/sk-link.jpg"}))), 
-				React.createElement("td", {className: "buttons"}, React.createElement("a", {href: "#", className: "btn btn-sm btn-default", onClick: this.handleSubmit.bind(this, this.props.concert, this.props.concert.id)}, "Saw it!"), " ", React.createElement("a", {href: "#", className: "btn btn-sm btn-danger", onClick: this.handleRemove.bind(this, this.props.concert.id)}, "Missed it!"))
+				React.createElement("td", {className: "buttons"}, React.createElement("a", {href: "#", className: "btn btn-sm btn-default", onClick: this.handleSubmit.bind(this, this.props.concert, this.props.concert.id)}, "Saw it!"), " ", React.createElement("a", {href: "#", className: "btn btn-sm btn-danger", onClick: this.handleRemove.bind(this, this.props.concert.id)}, "Delete"))
 			)
 		);
 	},
@@ -20757,7 +20794,7 @@ var ConcertList = React.createClass({displayName: "ConcertList",
 					React.createElement("thead", null, 
 						React.createElement("tr", null, 
 							React.createElement("th", {className: "date-header"}, "Date"), 
-							React.createElement("th", {className: "artist-header"}, "Headliner"), 
+							React.createElement("th", {className: "artist-header"}, "Lineup"), 
 							React.createElement("th", {className: "venue-header"}, "Venue"), 
 							React.createElement("th", {className: "location-header"}, "Location"), 
 							React.createElement("th", {className: "sk-link-header"}, "Songkick Event Page")
@@ -20876,10 +20913,10 @@ var VaultConcert = React.createClass({displayName: "VaultConcert",
 	render: function(){
 		return (
 			React.createElement("tr", null, 
-				React.createElement("td", null, this.props.vaultConcert.date), 
-				React.createElement("td", null, this.props.vaultConcert.artist), 
-				React.createElement("td", null, this.props.vaultConcert.venue), 
-				React.createElement("td", null, this.props.vaultConcert.location), 
+				React.createElement("td", {className: "date"}, this.props.vaultConcert.date), 
+				React.createElement("td", {className: "artist"}, this.props.vaultConcert.artist), 
+				React.createElement("td", {className: "venue"}, this.props.vaultConcert.venue), 
+				React.createElement("td", {className: "location"}, this.props.vaultConcert.location), 
 				React.createElement("td", null, React.createElement("a", {href: "#", className: "btn btn-danger", onClick: this.handleRemove.bind(this, this.props.vaultConcert.id)}, "Remove"))
 			)
 		);
@@ -20907,10 +20944,10 @@ var VaultConcertList = React.createClass({displayName: "VaultConcertList",
 				React.createElement("table", {className: "table table-striped"}, 
 					React.createElement("thead", null, 
 						React.createElement("tr", null, 
-							React.createElement("th", null, "Date"), 
-							React.createElement("th", null, "Headliner"), 
-							React.createElement("th", null, "Venue"), 
-							React.createElement("th", null, "Location")
+							React.createElement("th", {className: "date-header"}, "Date"), 
+							React.createElement("th", {className: "artist-header"}, "Lineup"), 
+							React.createElement("th", {className: "venue-header"}, "Venue"), 
+							React.createElement("th", {className: "location-header"}, "Location")
 						)
 					), 
 					React.createElement("tbody", null, 
