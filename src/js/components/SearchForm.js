@@ -32,7 +32,7 @@ var SearchForm = React.createClass({
 					<input type="text" ref="city" placeholder="Enter City Name" />
 					<button type="submit" className="btn btn-xs btn-primary">Submit</button>
 				</form>
-				<h3>Search Artist</h3>
+				<h3>Search By Artist</h3>
 				<form onSubmit={this.handleArtistSubmit}>
 					<input type="text" ref="artist" placeholder="Enter Artist Name" />
 					<button type="submit" className="btn btn-xs btn-primary">Submit</button>
