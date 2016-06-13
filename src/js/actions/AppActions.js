@@ -108,6 +108,13 @@ var AppActions = {
 		})
 	},
 
+	receiveArtist: function(artist){
+		AppDispatcher.handleViewAction({
+			actionType: AppConstants.RECEIVE_ARTIST,
+			artist: artist
+		})
+	},
+
 	receiveArtistCalendars: function(artistCalendars){
 		AppDispatcher.handleViewAction({
 			actionType: AppConstants.RECEIVE_ARTIST_CALENDARS,

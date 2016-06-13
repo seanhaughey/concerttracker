@@ -10,13 +10,14 @@ function getAppState(){
 		artistResultsPage: AppStore.getArtistResultsPage(),
 		artistId: AppStore.getArtistId(),
 		artistPage: AppStore.getArtistPage(),
+		artist: AppStore.getArtist()
 	}
 };
 
 
 var ArtistCalendar = React.createClass({
 	render: function(){
-		console.log(this.props.searchArtist);
+		var artist = this.props.artist;
 		var pages = [];
 		if(Math.ceil(this.props.artistResultsPage.totalEntries/50)<2){
 			pages = [];
@@ -71,7 +72,7 @@ var ArtistCalendar = React.createClass({
 						{
 							this.props.artistCalendars.map(function(artistCalendar, i){
 							return (
-								<ArtistCalendarItem artistCalendar={artistCalendar} key={i} />
+								<ArtistCalendarItem artist={artist} artistCalendar={artistCalendar} key={i} />
 							)
 							})
 						}

@@ -79,6 +79,7 @@ module.exports = {
 					AppActions.receiveArtistResultsPage(data.resultsPage);
 					AppActions.receiveArtistId(artistIdSearch.artistId);
 					AppActions.receiveArtistPage(artistIdSearch.page);
+					AppActions.receiveArtist(artistIdSearch.artist);
 				}
 			}.bind(this),
 			error: function(xhr, status, err){
