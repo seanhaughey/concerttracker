@@ -37,7 +37,9 @@ var ArtistResult = React.createClass({
 
 	handleSubmit: function(e){
 		e.preventDefault();
+		console.log(this.props.artistResult.displayName);
 		var artistIdSearch = {
+			artist: this.props.artistResult.displayName,
 			artistId: this.refs.artistId.value,
 			page: 1
 		};

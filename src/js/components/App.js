@@ -22,7 +22,8 @@ function getAppState(){
 		artistResults: AppStore.getArtistResults(),
 		artistCalendars: AppStore.getArtistCalendars(),
 		concerts: AppStore.getConcerts(),
-		vaultConcerts: AppStore.getVaultConcerts()
+		vaultConcerts: AppStore.getVaultConcerts(),
+		artist: AppStore.getArtist()
 	}
 };
 
@@ -46,7 +47,7 @@ var App = React.createClass({
 				<CitySearchResults searchText={this.state.searchCity} results={this.state.results} />
 				<ArtistSearchResults artistSearch={this.state.searchArtist} artistResults={this.state.artistResults} />
 				<Calendar calendars={this.state.calendars} areaId={this.state.areaId} page={this.state.page} resultsPage={this.state.resultsPage} />
-				<ArtistCalendar artistCalendars={this.state.artistCalendars} artistId={this.state.artistId} artistPage={this.state.artistPage} artistResultsPage={this.state.artistResultsPage} />
+				<ArtistCalendar artist={this.state.artist} artistCalendars={this.state.artistCalendars} artistId={this.state.artistId} artistPage={this.state.artistPage} artistResultsPage={this.state.artistResultsPage} />
 				<ConcertList concerts={this.state.concerts} />
 				<VaultConcertList vaultConcerts={this.state.vaultConcerts} />
 			</div>

@@ -19984,6 +19984,13 @@ var AppActions = {
 		})
 	},
 
+	receiveArtist: function(artist){
+		AppDispatcher.handleViewAction({
+			actionType: AppConstants.RECEIVE_ARTIST,
+			artist: artist
+		})
+	},
+
 	receiveArtistCalendars: function(artistCalendars){
 		AppDispatcher.handleViewAction({
 			actionType: AppConstants.RECEIVE_ARTIST_CALENDARS,
@@ -20063,7 +20070,8 @@ function getAppState(){
 		artistResults: AppStore.getArtistResults(),
 		artistCalendars: AppStore.getArtistCalendars(),
 		concerts: AppStore.getConcerts(),
-		vaultConcerts: AppStore.getVaultConcerts()
+		vaultConcerts: AppStore.getVaultConcerts(),
+		artist: AppStore.getArtist()
 	}
 };
 
@@ -20087,7 +20095,7 @@ var App = React.createClass({displayName: "App",
 				React.createElement(CitySearchResults, {searchText: this.state.searchCity, results: this.state.results}), 
 				React.createElement(ArtistSearchResults, {artistSearch: this.state.searchArtist, artistResults: this.state.artistResults}), 
 				React.createElement(Calendar, {calendars: this.state.calendars, areaId: this.state.areaId, page: this.state.page, resultsPage: this.state.resultsPage}), 
-				React.createElement(ArtistCalendar, {artistCalendars: this.state.artistCalendars, artistId: this.state.artistId, artistPage: this.state.artistPage, artistResultsPage: this.state.artistResultsPage}), 
+				React.createElement(ArtistCalendar, {artist: this.state.artist, artistCalendars: this.state.artistCalendars, artistId: this.state.artistId, artistPage: this.state.artistPage, artistResultsPage: this.state.artistResultsPage}), 
 				React.createElement(ConcertList, {concerts: this.state.concerts}), 
 				React.createElement(VaultConcertList, {vaultConcerts: this.state.vaultConcerts})
 			)
@@ -20115,13 +20123,14 @@ function getAppState(){
 		artistResultsPage: AppStore.getArtistResultsPage(),
 		artistId: AppStore.getArtistId(),
 		artistPage: AppStore.getArtistPage(),
+		artist: AppStore.getArtist()
 	}
 };
 
 
 var ArtistCalendar = React.createClass({displayName: "ArtistCalendar",
 	render: function(){
-		console.log(this.props.searchArtist);
+		var artist = this.props.artist;
 		var pages = [];
 		if(Math.ceil(this.props.artistResultsPage.totalEntries/50)<2){
 			pages = [];
@@ -20176,7 +20185,7 @@ var ArtistCalendar = React.createClass({displayName: "ArtistCalendar",
 						
 							this.props.artistCalendars.map(function(artistCalendar, i){
 							return (
-								React.createElement(ArtistCalendarItem, {artistCalendar: artistCalendar, key: i})
+								React.createElement(ArtistCalendarItem, {artist: artist, artistCalendar: artistCalendar, key: i})
 							)
 							})
 						
@@ -20266,7 +20275,7 @@ var AppStore = require('../stores/AppStore');
 var ArtistCalendarItem = React.createClass({displayName: "ArtistCalendarItem",
 
 	render: function(){
-		console.log(this.props.searchArtist);
+		var searchArtist = this.props.artist;
 		var results = '';
 		var artist = [];
 		var venue = '';
@@ -20275,12 +20284,16 @@ var ArtistCalendarItem = React.createClass({displayName: "ArtistCalendarItem",
 			var artist = "Unknown";
 		} else if(this.props.artistCalendar.performance.length>5) {
 			for(i=0; i<5; i++){
-				if(i===4) {
+				if(i===4 && artist.indexOf(searchArtist)>-1) {
 					artist.push(this.props.artistCalendar.performance[i].artist.displayName);
-				} else {
+				} else if(i===4 && artist.indexOf(searchArtist)===-1) {
+					artist.push(searchArtist);
+				} 
+				else {
 					artist.push(this.props.artistCalendar.performance[i].artist.displayName + ' | ');
 				}
 			}
+
 		} else{
 			for(i=0; i<this.props.artistCalendar.performance.length; i++){
 				if(i===this.props.artistCalendar.performance.length-1) {
@@ -20309,11 +20322,16 @@ var ArtistCalendarItem = React.createClass({displayName: "ArtistCalendarItem",
 
 	handleSubmit: function(){
 		var artist = [];
+		var searchArtist = this.props.artist;
+		console.log(searchArtist);
 		if(this.props.artistCalendar.performance.length>5) {
 			for(i=0; i<5; i++){
-				if(i===4) {
+				if(i===4 && artist.indexOf(searchArtist)>-1) {
 					artist.push(this.props.artistCalendar.performance[i].artist.displayName);
-				} else {
+				} else if(i===4 && artist.indexOf(searchArtist)===-1) {
+					artist.push(searchArtist);
+				}
+				else {
 					artist.push(this.props.artistCalendar.performance[i].artist.displayName + ' | ');
 				}
 			}
@@ -20378,7 +20396,9 @@ var ArtistResult = React.createClass({displayName: "ArtistResult",
 
 	handleSubmit: function(e){
 		e.preventDefault();
+		console.log(this.props.artistResult.displayName);
 		var artistIdSearch = {
+			artist: this.props.artistResult.displayName,
 			artistId: this.refs.artistId.value,
 			page: 1
 		};
@@ -20860,7 +20880,7 @@ var SearchForm = React.createClass({displayName: "SearchForm",
 					React.createElement("input", {type: "text", ref: "city", placeholder: "Enter City Name"}), 
 					React.createElement("button", {type: "submit", className: "btn btn-xs btn-primary"}, "Submit")
 				), 
-				React.createElement("h3", null, "Search Artist"), 
+				React.createElement("h3", null, "Search By Artist"), 
 				React.createElement("form", {onSubmit: this.handleArtistSubmit}, 
 					React.createElement("input", {type: "text", ref: "artist", placeholder: "Enter Artist Name"}), 
 					React.createElement("button", {type: "submit", className: "btn btn-xs btn-primary"}, "Submit")
@@ -20990,6 +21010,7 @@ module.exports = {
 	RECEIVE_ARTIST_RESULTS_PAGE: 'RECEIVE_ARTIST_RESULTS_PAGE',
 	RECEIVE_AREA_ID: 'RECEIVE_AREA_ID',
 	RECEIVE_ARTIST_ID: 'RECEIVE_ARTIST_ID',
+	RECEIVE_ARTIST: 'RECEIVE_ARTIST',
 	RECEIVE_PAGE: 'RECEIVE_PAGE',
 	RECEIVE_ARTIST_PAGE: 'RECEIVE_ARTIST_PAGE',
 	RECEIVE_ARTIST_CALENDARS: 'RECEIVE_ARTIST_CALENDARS',
@@ -21055,6 +21076,7 @@ var _artistPage = '';
 var _artistCalendars = [];
 var _concerts = [];
 var _vaultConcerts = [];
+var _artist = '';
 
 
 var AppStore = assign({}, EventEmitter.prototype, {
@@ -21105,6 +21127,12 @@ var AppStore = assign({}, EventEmitter.prototype, {
 	},
 	getArtistResults: function(){
 		return _artistResults;
+	},
+	setArtist: function(artist){
+		_artist = artist;
+	},
+	getArtist: function(){
+		return _artist;
 	},
 	setCalendars: function(calendars){
 		_calendars = calendars;
@@ -21234,6 +21262,11 @@ AppDispatcher.register(function(payload){
 		case AppConstants.SEARCH_ARTIST_ID:
 			AppAPI.searchArtistId(action.artistIdSearch);
 			AppStore.setArtistSearchId(action.artistIdSearch);
+			AppStore.emit(CHANGE_EVENT);
+			break;
+
+		case AppConstants.RECEIVE_ARTIST:
+			AppStore.setArtist(action.artist);
 			AppStore.emit(CHANGE_EVENT);
 			break;
 
@@ -21400,6 +21433,7 @@ module.exports = {
 					AppActions.receiveArtistResultsPage(data.resultsPage);
 					AppActions.receiveArtistId(artistIdSearch.artistId);
 					AppActions.receiveArtistPage(artistIdSearch.page);
+					AppActions.receiveArtist(artistIdSearch.artist);
 				}
 			}.bind(this),
 			error: function(xhr, status, err){
@@ -21553,6 +21587,7 @@ module.exports = {
 					AppActions.receiveArtistResultsPage(data.resultsPage);
 					AppActions.receiveArtistId(artistIdSearch.artistId);
 					AppActions.receiveArtistPage(artistIdSearch.page);
+					AppActions.receiveArtist(artistIdSearch.artist);
 				}
 			}.bind(this),
 			error: function(xhr, status, err){

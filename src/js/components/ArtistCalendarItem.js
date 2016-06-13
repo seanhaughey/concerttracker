@@ -5,7 +5,7 @@ var AppStore = require('../stores/AppStore');
 var ArtistCalendarItem = React.createClass({
 
 	render: function(){
-		console.log(this.props.searchArtist);
+		var searchArtist = this.props.artist;
 		var results = '';
 		var artist = [];
 		var venue = '';
@@ -14,12 +14,16 @@ var ArtistCalendarItem = React.createClass({
 			var artist = "Unknown";
 		} else if(this.props.artistCalendar.performance.length>5) {
 			for(i=0; i<5; i++){
-				if(i===4) {
+				if(i===4 && artist.indexOf(searchArtist)>-1) {
 					artist.push(this.props.artistCalendar.performance[i].artist.displayName);
-				} else {
+				} else if(i===4 && artist.indexOf(searchArtist)===-1) {
+					artist.push(searchArtist);
+				} 
+				else {
 					artist.push(this.props.artistCalendar.performance[i].artist.displayName + ' | ');
 				}
 			}
+
 		} else{
 			for(i=0; i<this.props.artistCalendar.performance.length; i++){
 				if(i===this.props.artistCalendar.performance.length-1) {
@@ -48,11 +52,16 @@ var ArtistCalendarItem = React.createClass({
 
 	handleSubmit: function(){
 		var artist = [];
+		var searchArtist = this.props.artist;
+		console.log(searchArtist);
 		if(this.props.artistCalendar.performance.length>5) {
 			for(i=0; i<5; i++){
-				if(i===4) {
+				if(i===4 && artist.indexOf(searchArtist)>-1) {
 					artist.push(this.props.artistCalendar.performance[i].artist.displayName);
-				} else {
+				} else if(i===4 && artist.indexOf(searchArtist)===-1) {
+					artist.push(searchArtist);
+				}
+				else {
 					artist.push(this.props.artistCalendar.performance[i].artist.displayName + ' | ');
 				}
 			}
