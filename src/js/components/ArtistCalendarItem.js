@@ -14,9 +14,9 @@ var ArtistCalendarItem = React.createClass({
 			var artist = "Unknown";
 		} else if(this.props.artistCalendar.performance.length>5) {
 			for(i=0; i<5; i++){
-				if(i===4 && artist.indexOf(searchArtist)>-1) {
+				if((i===4 && artist.indexOf(searchArtist)>-1) || (i===4 && artist.indexOf(searchArtist + ' | ')>-1)){
 					artist.push(this.props.artistCalendar.performance[i].artist.displayName);
-				} else if(i===4 && artist.indexOf(searchArtist)===-1) {
+				} else if((i===4 && artist.indexOf(searchArtist)<0) || (i===4 && artist.indexOf(searchArtist + ' | ')<0)) {
 					artist.push(searchArtist);
 				} 
 				else {
@@ -56,9 +56,9 @@ var ArtistCalendarItem = React.createClass({
 		console.log(searchArtist);
 		if(this.props.artistCalendar.performance.length>5) {
 			for(i=0; i<5; i++){
-				if(i===4 && artist.indexOf(searchArtist)>-1) {
+				if((i===4 && artist.indexOf(searchArtist)>-1) || (i===4 && artist.indexOf(searchArtist + ' | ')>-1)) {
 					artist.push(this.props.artistCalendar.performance[i].artist.displayName);
-				} else if(i===4 && artist.indexOf(searchArtist)===-1) {
+				} else if((i===4 && artist.indexOf(searchArtist)<0) || (i===4 && artist.indexOf(searchArtist + ' | ')<0)) {
 					artist.push(searchArtist);
 				}
 				else {
