@@ -20080,6 +20080,11 @@ var App = React.createClass({displayName: "App",
 		return getAppState();
 	},
 
+	componentWillMount: function() {
+		this.lock = new Auth0Lock('DygnI5tYY4dDWknL8nlO9u0cs0UJQqXP', 'haughey-react-auth.auth0.com');
+		this.setState({idToken: this.getIdToken()})
+	},
+
 	componentDidMount: function(){
 		AppStore.addChangeListener(this._onChange);
 	},
@@ -20088,16 +20093,42 @@ var App = React.createClass({displayName: "App",
 		AppStore.removeChangeListener(this._onChange);
 	},
 
+	getIdToken: function() {
+    	var idToken = localStorage.getItem('userToken');
+    	var authHash = this.lock.parseHash(window.location.hash);
+    	if (!idToken && authHash) {
+      		if (authHash.id_token) {
+        		idToken = authHash.id_token
+        		localStorage.setItem('userToken', authHash.id_token);
+      		}
+      		if (authHash.error) {
+        		console.log("Error signing in", authHash);
+        		return null;
+      		}
+    	}
+    	return idToken;
+	},
+
 	render: function(){
+		if (this.state.idToken) {
+			var searchForm = React.createElement(SearchForm, {lock: this.lock, idToken: this.state.idToken})
+			var concertList = React.createElement(ConcertList, {concerts: this.state.concerts})
+			var vaultConcertList = React.createElement(VaultConcertList, {vaultConcerts: this.state.vaultConcerts})
+    	} else {
+			var searchForm = React.createElement(SearchForm, {lock: this.lock})
+			var concertList = '';
+			var vaultConcertList = '';
+    	}
 		return(
 			React.createElement("div", null, 
-				React.createElement(SearchForm, null), 
+				searchForm, 
 				React.createElement(CitySearchResults, {searchText: this.state.searchCity, results: this.state.results}), 
 				React.createElement(ArtistSearchResults, {artistSearch: this.state.searchArtist, artistResults: this.state.artistResults}), 
 				React.createElement(Calendar, {calendars: this.state.calendars, areaId: this.state.areaId, page: this.state.page, resultsPage: this.state.resultsPage}), 
 				React.createElement(ArtistCalendar, {artist: this.state.artist, artistCalendars: this.state.artistCalendars, artistId: this.state.artistId, artistPage: this.state.artistPage, artistResultsPage: this.state.artistResultsPage}), 
-				React.createElement(ConcertList, {concerts: this.state.concerts}), 
-				React.createElement(VaultConcertList, {vaultConcerts: this.state.vaultConcerts})
+				concertList, 
+				vaultConcertList
+				
 			)
 		);
 	},
@@ -20853,6 +20884,12 @@ var AppStore = require('../stores/AppStore');
 
 var SearchForm = React.createClass({displayName: "SearchForm",
 
+	showLock: function() {
+    // We receive lock from the parent component in this case
+    // If you instantiate it in this component, just do this.lock.show()
+		this.props.lock.show();
+	},
+
 	getInitialState: function(){
 		var geo = [];
 		function getLocation() {
@@ -20868,12 +20905,40 @@ var SearchForm = React.createClass({displayName: "SearchForm",
 		};
 		getLocation();
 		return {
+			profile: null,
 			position: geo
 		}
 	},
 
+	componentDidMount: function() {
+    // In this case, the lock and token are retrieved from the parent component
+    // If these are available locally, use `this.lock` and `this.idToken`
+    	this.props.lock.getProfile(this.props.idToken, function (err, profile) {
+			if (err) {
+        	console.log("Error loading the Profile", err);
+        	return;
+		}
+		this.setState({profile: profile});
+		}.bind(this));
+	},
+
 	render: function(){
+		if (this.state.profile) {
+			var welcome = React.createElement("div", null, 
+							React.createElement("h2", null, "Welcome ", this.state.profile.nickname), 
+								React.createElement("button", {onClick: this.handleLogout}, "Logout")
+						)
+			var login = '';
+		} else {
+			var welcome = '';
+			var login = React.createElement("div", {className: "login-box"}, 
+      						React.createElement("a", {onClick: this.showLock}, "Sign In")
+    					)
+		}
 		return(
+			React.createElement("div", null, 
+				login, 
+    			welcome, 
 			React.createElement("div", {className: "row"}, 
 				React.createElement("h3", null, "Search By City"), 
 				React.createElement("form", {onSubmit: this.handleSubmit}, 
@@ -20886,6 +20951,7 @@ var SearchForm = React.createClass({displayName: "SearchForm",
 					React.createElement("button", {type: "submit", className: "btn btn-xs btn-primary"}, "Submit")
 				), 
 				React.createElement("button", {onClick: this.handleClick, type: "submit", className: "btn btn-sm btn-primary"}, "Use Current Location")
+			)
 			)
 		);
 	},
@@ -20911,14 +20977,16 @@ var SearchForm = React.createClass({displayName: "SearchForm",
 	},
 	handleClick: function(e){
 		e.preventDefault();
-		console.log(this.state.position);
-
 		var geoSearch = {
 			lat: this.state.position[0].coords.latitude,
 			lng: this.state.position[0].coords.longitude
 		};
-		console.log(geoSearch);
 		AppActions.searchGeo(geoSearch);
+	},
+	handleLogout: function(e){
+		e.preventDefault();
+		localStorage.removeItem('userToken');
+		this.setState({profile: null});
 	}
 });
 

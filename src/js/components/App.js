@@ -32,6 +32,11 @@ var App = React.createClass({
 		return getAppState();
 	},
 
+	componentWillMount: function() {
+		this.lock = new Auth0Lock('DygnI5tYY4dDWknL8nlO9u0cs0UJQqXP', 'haughey-react-auth.auth0.com');
+		this.setState({idToken: this.getIdToken()})
+	},
+
 	componentDidMount: function(){
 		AppStore.addChangeListener(this._onChange);
 	},
@@ -40,16 +45,42 @@ var App = React.createClass({
 		AppStore.removeChangeListener(this._onChange);
 	},
 
+	getIdToken: function() {
+    	var idToken = localStorage.getItem('userToken');
+    	var authHash = this.lock.parseHash(window.location.hash);
+    	if (!idToken && authHash) {
+      		if (authHash.id_token) {
+        		idToken = authHash.id_token
+        		localStorage.setItem('userToken', authHash.id_token);
+      		}
+      		if (authHash.error) {
+        		console.log("Error signing in", authHash);
+        		return null;
+      		}
+    	}
+    	return idToken;
+	},
+
 	render: function(){
+		if (this.state.idToken) {
+			var searchForm = <SearchForm lock={this.lock} idToken={this.state.idToken} />
+			var concertList = <ConcertList concerts={this.state.concerts} />
+			var vaultConcertList = <VaultConcertList vaultConcerts={this.state.vaultConcerts} />
+    	} else {
+			var searchForm = <SearchForm lock={this.lock} />
+			var concertList = '';
+			var vaultConcertList = '';
+    	}
 		return(
 			<div>
-				<SearchForm />
+				{searchForm}
 				<CitySearchResults searchText={this.state.searchCity} results={this.state.results} />
 				<ArtistSearchResults artistSearch={this.state.searchArtist} artistResults={this.state.artistResults} />
 				<Calendar calendars={this.state.calendars} areaId={this.state.areaId} page={this.state.page} resultsPage={this.state.resultsPage} />
 				<ArtistCalendar artist={this.state.artist} artistCalendars={this.state.artistCalendars} artistId={this.state.artistId} artistPage={this.state.artistPage} artistResultsPage={this.state.artistResultsPage} />
-				<ConcertList concerts={this.state.concerts} />
-				<VaultConcertList vaultConcerts={this.state.vaultConcerts} />
+				{concertList}
+				{vaultConcertList}
+				
 			</div>
 		);
 	},

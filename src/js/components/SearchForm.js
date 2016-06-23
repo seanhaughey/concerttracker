@@ -5,6 +5,12 @@ var AppStore = require('../stores/AppStore');
 
 var SearchForm = React.createClass({
 
+	showLock: function() {
+    // We receive lock from the parent component in this case
+    // If you instantiate it in this component, just do this.lock.show()
+		this.props.lock.show();
+	},
+
 	getInitialState: function(){
 		var geo = [];
 		function getLocation() {
@@ -20,12 +26,40 @@ var SearchForm = React.createClass({
 		};
 		getLocation();
 		return {
+			profile: null,
 			position: geo
 		}
 	},
 
+	componentDidMount: function() {
+    // In this case, the lock and token are retrieved from the parent component
+    // If these are available locally, use `this.lock` and `this.idToken`
+    	this.props.lock.getProfile(this.props.idToken, function (err, profile) {
+			if (err) {
+        	console.log("Error loading the Profile", err);
+        	return;
+		}
+		this.setState({profile: profile});
+		}.bind(this));
+	},
+
 	render: function(){
+		if (this.state.profile) {
+			var welcome = <div>
+							<h2>Welcome {this.state.profile.nickname}</h2>
+								<button onClick={this.handleLogout}>Logout</button>
+						</div>
+			var login = '';
+		} else {
+			var welcome = '';
+			var login = <div className="login-box">
+      						<a onClick={this.showLock}>Sign In</a>
+    					</div>
+		}
 		return(
+			<div>
+				{login}
+    			{welcome}
 			<div className="row">
 				<h3>Search By City</h3>
 				<form onSubmit={this.handleSubmit}>
@@ -38,6 +72,7 @@ var SearchForm = React.createClass({
 					<button type="submit" className="btn btn-xs btn-primary">Submit</button>
 				</form>
 				<button onClick={this.handleClick} type="submit" className="btn btn-sm btn-primary">Use Current Location</button>
+			</div>
 			</div>
 		);
 	},
@@ -63,14 +98,16 @@ var SearchForm = React.createClass({
 	},
 	handleClick: function(e){
 		e.preventDefault();
-		console.log(this.state.position);
-
 		var geoSearch = {
 			lat: this.state.position[0].coords.latitude,
 			lng: this.state.position[0].coords.longitude
 		};
-		console.log(geoSearch);
 		AppActions.searchGeo(geoSearch);
+	},
+	handleLogout: function(e){
+		e.preventDefault();
+		localStorage.removeItem('userToken');
+		this.setState({profile: null});
 	}
 });
 
