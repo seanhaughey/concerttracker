@@ -20112,8 +20112,8 @@ var App = React.createClass({displayName: "App",
 	render: function(){
 		if (this.state.idToken) {
 			var searchForm = React.createElement(SearchForm, {lock: this.lock, idToken: this.state.idToken})
-			var concertList = React.createElement(ConcertList, {concerts: this.state.concerts})
-			var vaultConcertList = React.createElement(VaultConcertList, {vaultConcerts: this.state.vaultConcerts})
+			var concertList = React.createElement(ConcertList, {concerts: this.state.concerts, lock: this.lock, idToken: this.state.idToken})
+			var vaultConcertList = React.createElement(VaultConcertList, {vaultConcerts: this.state.vaultConcerts, lock: this.lock, idToken: this.state.idToken})
     	} else {
 			var searchForm = React.createElement(SearchForm, {lock: this.lock})
 			var concertList = '';
@@ -20836,8 +20836,34 @@ var AppActions = require('../actions/AppActions');
 var AppStore = require('../stores/AppStore');
 var Concert = require('./Concert.js')
 
+var initProfile = {user_id: 1};
+
 var ConcertList = React.createClass({displayName: "ConcertList",
+
+	showLock: function() {
+    // We receive lock from the parent component in this case
+    // If you instantiate it in this component, just do this.lock.show()
+		this.props.lock.show();
+	},
+
+	getInitialState: function(){
+		return {profile: initProfile};
+	},
+
+	componentWillMount: function() {
+    // In this case, the lock and token are retrieved from the parent component
+    // If these are available locally, use `this.lock` and `this.idToken`
+    	this.props.lock.getProfile(this.props.idToken, function (err, profile) {
+			if (err) {
+        	console.log("Error loading the Profile", err);
+        	return;
+		}
+		this.setState({profile: profile});
+		}.bind(this));
+	},
+
 	render: function(){
+		var userId = this.state.profile.user_id;
 		return (
 			React.createElement("div", null, 
 				React.createElement("h3", null, "My Upcoming Shows"), 
@@ -20854,9 +20880,11 @@ var ConcertList = React.createClass({displayName: "ConcertList",
 					React.createElement("tbody", null, 
 						
 							this.props.concerts.map(function(concert, index){
-								return(
-									React.createElement(Concert, {concert: concert, key: index})
-								)
+								if(userId === concert.uid){
+									return(
+										React.createElement(Concert, {concert: concert, key: index})
+									)
+								}
 							}).sort(function(a, b){
 								if(a.props.concert.date > b.props.concert.date){
 									return 1;
@@ -20987,6 +21015,7 @@ var SearchForm = React.createClass({displayName: "SearchForm",
 		e.preventDefault();
 		localStorage.removeItem('userToken');
 		this.setState({profile: null});
+		window.location.assign("https://haughey-react-auth.auth0.com/v2/logout?returnTo=https://concerttracker.firebaseapp.com/")
 	}
 });
 
@@ -21024,8 +21053,34 @@ var AppActions = require('../actions/AppActions');
 var AppStore = require('../stores/AppStore');
 var VaultConcert = require('./VaultConcert.js')
 
+var initProfile = {user_id: 1};
+
 var VaultConcertList = React.createClass({displayName: "VaultConcertList",
+
+	showLock: function() {
+    // We receive lock from the parent component in this case
+    // If you instantiate it in this component, just do this.lock.show()
+		this.props.lock.show();
+	},
+
+	getInitialState: function(){
+		return {profile: initProfile};
+	},
+
+	componentWillMount: function() {
+    // In this case, the lock and token are retrieved from the parent component
+    // If these are available locally, use `this.lock` and `this.idToken`
+    	this.props.lock.getProfile(this.props.idToken, function (err, profile) {
+			if (err) {
+        	console.log("Error loading the Profile", err);
+        	return;
+		}
+		this.setState({profile: profile});
+		}.bind(this));
+	},
+
 	render: function(){
+		var userId = this.state.profile.user_id;
 		return (
 			React.createElement("div", null, 
 				React.createElement("h3", null, "My Vault"), 
@@ -21041,9 +21096,12 @@ var VaultConcertList = React.createClass({displayName: "VaultConcertList",
 					React.createElement("tbody", null, 
 						
 							this.props.vaultConcerts.map(function(vaultConcert, index){
-								return(
-									React.createElement(VaultConcert, {vaultConcert: vaultConcert, key: index})
-								)
+								console.log(vaultConcert);
+								if(userId === vaultConcert.uid){
+									return(
+										React.createElement(VaultConcert, {vaultConcert: vaultConcert, key: index})
+									)
+								}
 							}).sort(function(a, b){
 								if(a.props.vaultConcert.date > b.props.vaultConcert.date){
 									return 1;
@@ -21529,6 +21587,7 @@ module.exports = {
 					venue: childSnapshot.val().concert.venue,
 					location: childSnapshot.val().concert.location,
 					link: childSnapshot.val().concert.link,
+					uid: childSnapshot.val().concert.uid
 				}
 				concerts.push(concert);
 				AppActions.receiveConcerts(concerts);
@@ -21559,6 +21618,7 @@ module.exports = {
 					artist: childSnapshot.val().vaultConcert.artist,
 					venue: childSnapshot.val().vaultConcert.venue,
 					location: childSnapshot.val().vaultConcert.location,
+					uid: childSnapshot.val().vaultConcert.uid
 				}
 				vaultConcerts.push(vaultConcert);
 				AppActions.receiveVaultConcerts(vaultConcerts);
@@ -21683,6 +21743,7 @@ module.exports = {
 					venue: childSnapshot.val().concert.venue,
 					location: childSnapshot.val().concert.location,
 					link: childSnapshot.val().concert.link,
+					uid: childSnapshot.val().concert.uid
 				}
 				concerts.push(concert);
 				AppActions.receiveConcerts(concerts);
@@ -21713,6 +21774,7 @@ module.exports = {
 					artist: childSnapshot.val().vaultConcert.artist,
 					venue: childSnapshot.val().vaultConcert.venue,
 					location: childSnapshot.val().vaultConcert.location,
+					uid: childSnapshot.val().vaultConcert.uid
 				}
 				vaultConcerts.push(vaultConcert);
 				AppActions.receiveVaultConcerts(vaultConcerts);

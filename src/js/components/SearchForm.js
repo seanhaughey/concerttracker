@@ -108,6 +108,7 @@ var SearchForm = React.createClass({
 		e.preventDefault();
 		localStorage.removeItem('userToken');
 		this.setState({profile: null});
+		window.location.assign("https://haughey-react-auth.auth0.com/v2/logout?returnTo=https://concerttracker.firebaseapp.com/")
 	}
 });
 

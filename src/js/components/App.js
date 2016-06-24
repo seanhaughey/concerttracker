@@ -64,8 +64,8 @@ var App = React.createClass({
 	render: function(){
 		if (this.state.idToken) {
 			var searchForm = <SearchForm lock={this.lock} idToken={this.state.idToken} />
-			var concertList = <ConcertList concerts={this.state.concerts} />
-			var vaultConcertList = <VaultConcertList vaultConcerts={this.state.vaultConcerts} />
+			var concertList = <ConcertList concerts={this.state.concerts} lock={this.lock} idToken={this.state.idToken}/>
+			var vaultConcertList = <VaultConcertList vaultConcerts={this.state.vaultConcerts} lock={this.lock} idToken={this.state.idToken} />
     	} else {
 			var searchForm = <SearchForm lock={this.lock} />
 			var concertList = '';
