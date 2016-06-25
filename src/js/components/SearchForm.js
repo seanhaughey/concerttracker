@@ -48,8 +48,21 @@ var SearchForm = React.createClass({
 			var welcome = <div>
 							<h2>Welcome {this.state.profile.nickname}</h2>
 								<button onClick={this.handleLogout}>Logout</button>
-						</div>
+						  </div>
 			var login = '';
+			var form = 	<div className="row">
+							<h3>Search By City</h3>
+							<form onSubmit={this.handleSubmit}>
+								<input type="text" ref="city" placeholder="Enter City Name" />
+								<button type="submit" className="btn btn-xs btn-primary">Submit</button>
+							</form>
+							<h3>Search By Artist</h3>
+							<form onSubmit={this.handleArtistSubmit}>
+								<input type="text" ref="artist" placeholder="Enter Artist Name" />
+								<button type="submit" className="btn btn-xs btn-primary">Submit</button>
+							</form>
+							<button onClick={this.handleClick} type="submit" className="btn btn-sm btn-primary">Use Current Location</button>
+						</div>
 		} else {
 			var welcome = '';
 			var login = <div className="login-box">
@@ -60,19 +73,7 @@ var SearchForm = React.createClass({
 			<div>
 				{login}
     			{welcome}
-			<div className="row">
-				<h3>Search By City</h3>
-				<form onSubmit={this.handleSubmit}>
-					<input type="text" ref="city" placeholder="Enter City Name" />
-					<button type="submit" className="btn btn-xs btn-primary">Submit</button>
-				</form>
-				<h3>Search By Artist</h3>
-				<form onSubmit={this.handleArtistSubmit}>
-					<input type="text" ref="artist" placeholder="Enter Artist Name" />
-					<button type="submit" className="btn btn-xs btn-primary">Submit</button>
-				</form>
-				<button onClick={this.handleClick} type="submit" className="btn btn-sm btn-primary">Use Current Location</button>
-			</div>
+				{form}
 			</div>
 		);
 	},
@@ -81,7 +82,8 @@ var SearchForm = React.createClass({
 		e.preventDefault();
 
 		var search = {
-			city: this.refs.city.value.trim()
+			city: this.refs.city.value.trim(),
+			uid: this.state.profile.user_id
 		};
 		AppActions.searchCity(search);
 		ReactDOM.findDOMNode(this.refs.city).value = "";
@@ -91,7 +93,8 @@ var SearchForm = React.createClass({
 		e.preventDefault();
 		
 		var artistSearch = {
-			artist: this.refs.artist.value.trim()
+			artist: this.refs.artist.value.trim(),
+			uid: this.state.profile.user_id
 		};
 		AppActions.searchArtist(artistSearch);
 		ReactDOM.findDOMNode(this.refs.artist).value = ""
@@ -100,7 +103,8 @@ var SearchForm = React.createClass({
 		e.preventDefault();
 		var geoSearch = {
 			lat: this.state.position[0].coords.latitude,
-			lng: this.state.position[0].coords.longitude
+			lng: this.state.position[0].coords.longitude,
+			uid: this.state.profile.user_id
 		};
 		AppActions.searchGeo(geoSearch);
 	},

@@ -22,6 +22,7 @@ var _artistCalendars = [];
 var _concerts = [];
 var _vaultConcerts = [];
 var _artist = '';
+var _uid = '';
 
 
 var AppStore = assign({}, EventEmitter.prototype, {
@@ -64,6 +65,12 @@ var AppStore = assign({}, EventEmitter.prototype, {
 	},
 	getResults: function(){
 		return _results;
+	},
+	setUid: function(uid){
+		_uid = uid;
+	},
+	getUid: function(){
+		return _uid;
 	},
 	setArtistResults: function(artistResults){
 		_artistResults = artistResults;
@@ -178,6 +185,11 @@ AppDispatcher.register(function(payload){
 
 		case AppConstants.RECEIVE_RESULTS:
 			AppStore.setResults(action.results.location);
+			AppStore.emit(CHANGE_EVENT);
+			break;
+
+		case AppConstants.RECEIVE_UID:
+			AppStore.setUid(action.uid);
 			AppStore.emit(CHANGE_EVENT);
 			break;
 

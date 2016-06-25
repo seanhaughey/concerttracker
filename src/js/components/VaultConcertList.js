@@ -46,7 +46,6 @@ var VaultConcertList = React.createClass({
 					<tbody>
 						{
 							this.props.vaultConcerts.map(function(vaultConcert, index){
-								console.log(vaultConcert);
 								if(userId === vaultConcert.uid){
 									return(
 										<VaultConcert vaultConcert={vaultConcert} key={index} />

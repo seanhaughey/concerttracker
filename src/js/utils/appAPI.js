@@ -9,6 +9,7 @@ module.exports = {
 			cache: false,
 			success: function(data){
 				AppActions.receiveResults(data.resultsPage.results);
+				AppActions.receiveUid(search.uid);
 			}.bind(this),
 			error: function(xhr, status, err){
 				console.log(err);
@@ -23,6 +24,7 @@ module.exports = {
 			cache: false,
 			success: function(data){
 				AppActions.receiveArtistResults(data.resultsPage.results);
+				AppActions.receiveUid(artistSearch.uid);
 			}.bind(this),
 			error: function(xhr, status, err){
 				console.log(err);
@@ -36,8 +38,8 @@ module.exports = {
 			dataType: 'jsonp',
 			cache: false,
 			success: function(data){
-				console.log(data);
 				AppActions.receiveResults(data.resultsPage.results);
+				AppActions.receiveUid(geoSearch.uid);
 			}.bind(this),
 			error: function(xhr, status, err){
 				console.log(err);

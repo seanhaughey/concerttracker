@@ -19893,6 +19893,13 @@ var AppActions = {
 		});
 	},
 
+	receiveUid: function(uid){
+		AppDispatcher.handleViewAction({
+			actionType: AppConstants.RECEIVE_UID,
+			uid: uid
+		})
+	},
+
 	searchArtist: function(artistSearch){
 		AppDispatcher.handleViewAction({
 			actionType: AppConstants.SEARCH_ARTIST,
@@ -20071,7 +20078,8 @@ function getAppState(){
 		artistCalendars: AppStore.getArtistCalendars(),
 		concerts: AppStore.getConcerts(),
 		vaultConcerts: AppStore.getVaultConcerts(),
-		artist: AppStore.getArtist()
+		artist: AppStore.getArtist(),
+		uid: AppStore.getUid()
 	}
 };
 
@@ -20124,8 +20132,8 @@ var App = React.createClass({displayName: "App",
 				searchForm, 
 				React.createElement(CitySearchResults, {searchText: this.state.searchCity, results: this.state.results}), 
 				React.createElement(ArtistSearchResults, {artistSearch: this.state.searchArtist, artistResults: this.state.artistResults}), 
-				React.createElement(Calendar, {calendars: this.state.calendars, areaId: this.state.areaId, page: this.state.page, resultsPage: this.state.resultsPage}), 
-				React.createElement(ArtistCalendar, {artist: this.state.artist, artistCalendars: this.state.artistCalendars, artistId: this.state.artistId, artistPage: this.state.artistPage, artistResultsPage: this.state.artistResultsPage}), 
+				React.createElement(Calendar, {calendars: this.state.calendars, areaId: this.state.areaId, page: this.state.page, resultsPage: this.state.resultsPage, lock: this.lock, idToken: this.state.idToken}), 
+				React.createElement(ArtistCalendar, {artist: this.state.artist, artistCalendars: this.state.artistCalendars, artistId: this.state.artistId, artistPage: this.state.artistPage, artistResultsPage: this.state.artistResultsPage, lock: this.lock, idToken: this.state.idToken}), 
 				concertList, 
 				vaultConcertList
 				
@@ -20305,6 +20313,12 @@ var AppStore = require('../stores/AppStore');
 
 var ArtistCalendarItem = React.createClass({displayName: "ArtistCalendarItem",
 
+	getInitialState: function(){
+		return {
+		uid: AppStore.getUid()
+		}
+	},
+
 	render: function(){
 		var searchArtist = this.props.artist;
 		var results = '';
@@ -20354,7 +20368,6 @@ var ArtistCalendarItem = React.createClass({displayName: "ArtistCalendarItem",
 	handleSubmit: function(){
 		var artist = [];
 		var searchArtist = this.props.artist;
-		console.log(searchArtist);
 		if(this.props.artistCalendar.performance.length>5) {
 			for(i=0; i<5; i++){
 				if((i===4 && artist.indexOf(searchArtist)>-1) || (i===4 && artist.indexOf(searchArtist + ' | ')>-1)) {
@@ -20380,7 +20393,8 @@ var ArtistCalendarItem = React.createClass({displayName: "ArtistCalendarItem",
 			artist: artist,
 			venue: this.props.artistCalendar.venue.displayName,
 			location: this.props.artistCalendar.location.city,
-			link: this.props.artistCalendar.uri
+			link: this.props.artistCalendar.uri,
+			uid: this.state.uid
 		};
 		AppActions.saveConcertToCalendar(concert);
 	}});
@@ -20484,6 +20498,8 @@ var AppActions = require('../actions/AppActions');
 var AppStore = require('../stores/AppStore');
 var CalendarItem = require('./CalendarItem.js');
 
+var initProfile = {user_id: 1};
+
 function getAppState(){
 	return {
 		results: AppStore.getResults(),
@@ -20498,6 +20514,8 @@ function getAppState(){
 var Calendar = React.createClass({displayName: "Calendar",
 
 	render: function(){
+		var idToken = this.props.idToken;
+		var lock = this.props.lock;
 		var pages = [];
 		if(Math.ceil(this.props.resultsPage.totalEntries/50)<2){
 			pages = [];
@@ -20588,13 +20606,11 @@ var Calendar = React.createClass({displayName: "Calendar",
 			areaId: this.props.areaId,
 			page: page
 		};
-		console.log(search);
 		AppActions.searchId(search);
 	},
 
 	handlePage: function(e){
 		var page = e;
-		console.log(e);
 		var search = {
 			areaId: this.props.areaId,
 			page: page
@@ -20627,7 +20643,6 @@ var Calendar = React.createClass({displayName: "Calendar",
 			areaId: this.props.areaId,
 			page: page
 		};
-		console.log(search);
 		AppActions.searchId(search);
 	}
 });
@@ -20641,11 +20656,16 @@ var AppStore = require('../stores/AppStore');
 
 var CalendarItem = React.createClass({displayName: "CalendarItem",
 
+	getInitialState: function(){
+		return {
+		uid: AppStore.getUid()
+		}
+	},
+
 	render: function(){
 		var results = '';
 		var artist = [];
 		var venue = '';
-
 		if(this.props.calendar.performance[0] === undefined){
 			var artist = "Unknown";
 		} else if(this.props.calendar.performance.length>5) {
@@ -20706,7 +20726,8 @@ var CalendarItem = React.createClass({displayName: "CalendarItem",
 			artist: artist,
 			venue: this.props.calendar.venue.displayName,
 			location: this.props.calendar.location.city,
-			link: this.props.calendar.uri
+			link: this.props.calendar.uri,
+			uid: this.state.uid
 		};
 		AppActions.saveConcertToCalendar(concert);
 	}
@@ -20955,8 +20976,21 @@ var SearchForm = React.createClass({displayName: "SearchForm",
 			var welcome = React.createElement("div", null, 
 							React.createElement("h2", null, "Welcome ", this.state.profile.nickname), 
 								React.createElement("button", {onClick: this.handleLogout}, "Logout")
-						)
+						  )
 			var login = '';
+			var form = 	React.createElement("div", {className: "row"}, 
+							React.createElement("h3", null, "Search By City"), 
+							React.createElement("form", {onSubmit: this.handleSubmit}, 
+								React.createElement("input", {type: "text", ref: "city", placeholder: "Enter City Name"}), 
+								React.createElement("button", {type: "submit", className: "btn btn-xs btn-primary"}, "Submit")
+							), 
+							React.createElement("h3", null, "Search By Artist"), 
+							React.createElement("form", {onSubmit: this.handleArtistSubmit}, 
+								React.createElement("input", {type: "text", ref: "artist", placeholder: "Enter Artist Name"}), 
+								React.createElement("button", {type: "submit", className: "btn btn-xs btn-primary"}, "Submit")
+							), 
+							React.createElement("button", {onClick: this.handleClick, type: "submit", className: "btn btn-sm btn-primary"}, "Use Current Location")
+						)
 		} else {
 			var welcome = '';
 			var login = React.createElement("div", {className: "login-box"}, 
@@ -20967,19 +21001,7 @@ var SearchForm = React.createClass({displayName: "SearchForm",
 			React.createElement("div", null, 
 				login, 
     			welcome, 
-			React.createElement("div", {className: "row"}, 
-				React.createElement("h3", null, "Search By City"), 
-				React.createElement("form", {onSubmit: this.handleSubmit}, 
-					React.createElement("input", {type: "text", ref: "city", placeholder: "Enter City Name"}), 
-					React.createElement("button", {type: "submit", className: "btn btn-xs btn-primary"}, "Submit")
-				), 
-				React.createElement("h3", null, "Search By Artist"), 
-				React.createElement("form", {onSubmit: this.handleArtistSubmit}, 
-					React.createElement("input", {type: "text", ref: "artist", placeholder: "Enter Artist Name"}), 
-					React.createElement("button", {type: "submit", className: "btn btn-xs btn-primary"}, "Submit")
-				), 
-				React.createElement("button", {onClick: this.handleClick, type: "submit", className: "btn btn-sm btn-primary"}, "Use Current Location")
-			)
+				form
 			)
 		);
 	},
@@ -20988,7 +21010,8 @@ var SearchForm = React.createClass({displayName: "SearchForm",
 		e.preventDefault();
 
 		var search = {
-			city: this.refs.city.value.trim()
+			city: this.refs.city.value.trim(),
+			uid: this.state.profile.user_id
 		};
 		AppActions.searchCity(search);
 		ReactDOM.findDOMNode(this.refs.city).value = "";
@@ -20998,7 +21021,8 @@ var SearchForm = React.createClass({displayName: "SearchForm",
 		e.preventDefault();
 		
 		var artistSearch = {
-			artist: this.refs.artist.value.trim()
+			artist: this.refs.artist.value.trim(),
+			uid: this.state.profile.user_id
 		};
 		AppActions.searchArtist(artistSearch);
 		ReactDOM.findDOMNode(this.refs.artist).value = ""
@@ -21007,7 +21031,8 @@ var SearchForm = React.createClass({displayName: "SearchForm",
 		e.preventDefault();
 		var geoSearch = {
 			lat: this.state.position[0].coords.latitude,
-			lng: this.state.position[0].coords.longitude
+			lng: this.state.position[0].coords.longitude,
+			uid: this.state.profile.user_id
 		};
 		AppActions.searchGeo(geoSearch);
 	},
@@ -21096,7 +21121,6 @@ var VaultConcertList = React.createClass({displayName: "VaultConcertList",
 					React.createElement("tbody", null, 
 						
 							this.props.vaultConcerts.map(function(vaultConcert, index){
-								console.log(vaultConcert);
 								if(userId === vaultConcert.uid){
 									return(
 										React.createElement(VaultConcert, {vaultConcert: vaultConcert, key: index})
@@ -21145,7 +21169,8 @@ module.exports = {
 	REMOVE_CONCERT: 'REMOVE_CONCERT',
 	SAVE_CONCERT_TO_VAULT: 'SAVE_CONCERT_TO_VAULT',
 	RECEIVE_VAULT_CONCERTS: 'RECEIVE_VAULT_CONCERTS',
-	REMOVE_VAULT_CONCERT: 'REMOVE_VAULT_CONCERT'
+	REMOVE_VAULT_CONCERT: 'REMOVE_VAULT_CONCERT',
+	RECEIVE_UID: 'RECEIVE_UID'
 }
 
 },{}],181:[function(require,module,exports){
@@ -21203,6 +21228,7 @@ var _artistCalendars = [];
 var _concerts = [];
 var _vaultConcerts = [];
 var _artist = '';
+var _uid = '';
 
 
 var AppStore = assign({}, EventEmitter.prototype, {
@@ -21245,6 +21271,12 @@ var AppStore = assign({}, EventEmitter.prototype, {
 	},
 	getResults: function(){
 		return _results;
+	},
+	setUid: function(uid){
+		_uid = uid;
+	},
+	getUid: function(){
+		return _uid;
 	},
 	setArtistResults: function(artistResults){
 		_artistResults = artistResults;
@@ -21359,6 +21391,11 @@ AppDispatcher.register(function(payload){
 
 		case AppConstants.RECEIVE_RESULTS:
 			AppStore.setResults(action.results.location);
+			AppStore.emit(CHANGE_EVENT);
+			break;
+
+		case AppConstants.RECEIVE_UID:
+			AppStore.setUid(action.uid);
 			AppStore.emit(CHANGE_EVENT);
 			break;
 
@@ -21489,6 +21526,7 @@ module.exports = {
 			cache: false,
 			success: function(data){
 				AppActions.receiveResults(data.resultsPage.results);
+				AppActions.receiveUid(search.uid);
 			}.bind(this),
 			error: function(xhr, status, err){
 				console.log(err);
@@ -21503,6 +21541,7 @@ module.exports = {
 			cache: false,
 			success: function(data){
 				AppActions.receiveArtistResults(data.resultsPage.results);
+				AppActions.receiveUid(artistSearch.uid);
 			}.bind(this),
 			error: function(xhr, status, err){
 				console.log(err);
@@ -21516,8 +21555,8 @@ module.exports = {
 			dataType: 'jsonp',
 			cache: false,
 			success: function(data){
-				console.log(data);
 				AppActions.receiveResults(data.resultsPage.results);
+				AppActions.receiveUid(geoSearch.uid);
 			}.bind(this),
 			error: function(xhr, status, err){
 				console.log(err);
@@ -21645,6 +21684,7 @@ module.exports = {
 			cache: false,
 			success: function(data){
 				AppActions.receiveResults(data.resultsPage.results);
+				AppActions.receiveUid(search.uid);
 			}.bind(this),
 			error: function(xhr, status, err){
 				console.log(err);
@@ -21659,6 +21699,7 @@ module.exports = {
 			cache: false,
 			success: function(data){
 				AppActions.receiveArtistResults(data.resultsPage.results);
+				AppActions.receiveUid(artistSearch.uid);
 			}.bind(this),
 			error: function(xhr, status, err){
 				console.log(err);
@@ -21672,8 +21713,8 @@ module.exports = {
 			dataType: 'jsonp',
 			cache: false,
 			success: function(data){
-				console.log(data);
 				AppActions.receiveResults(data.resultsPage.results);
+				AppActions.receiveUid(geoSearch.uid);
 			}.bind(this),
 			error: function(xhr, status, err){
 				console.log(err);

@@ -4,6 +4,12 @@ var AppStore = require('../stores/AppStore');
 
 var ArtistCalendarItem = React.createClass({
 
+	getInitialState: function(){
+		return {
+		uid: AppStore.getUid()
+		}
+	},
+
 	render: function(){
 		var searchArtist = this.props.artist;
 		var results = '';
@@ -53,7 +59,6 @@ var ArtistCalendarItem = React.createClass({
 	handleSubmit: function(){
 		var artist = [];
 		var searchArtist = this.props.artist;
-		console.log(searchArtist);
 		if(this.props.artistCalendar.performance.length>5) {
 			for(i=0; i<5; i++){
 				if((i===4 && artist.indexOf(searchArtist)>-1) || (i===4 && artist.indexOf(searchArtist + ' | ')>-1)) {
@@ -79,7 +84,8 @@ var ArtistCalendarItem = React.createClass({
 			artist: artist,
 			venue: this.props.artistCalendar.venue.displayName,
 			location: this.props.artistCalendar.location.city,
-			link: this.props.artistCalendar.uri
+			link: this.props.artistCalendar.uri,
+			uid: this.state.uid
 		};
 		AppActions.saveConcertToCalendar(concert);
 	}});

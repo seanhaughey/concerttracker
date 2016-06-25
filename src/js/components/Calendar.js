@@ -3,6 +3,8 @@ var AppActions = require('../actions/AppActions');
 var AppStore = require('../stores/AppStore');
 var CalendarItem = require('./CalendarItem.js');
 
+var initProfile = {user_id: 1};
+
 function getAppState(){
 	return {
 		results: AppStore.getResults(),
@@ -17,6 +19,8 @@ function getAppState(){
 var Calendar = React.createClass({
 
 	render: function(){
+		var idToken = this.props.idToken;
+		var lock = this.props.lock;
 		var pages = [];
 		if(Math.ceil(this.props.resultsPage.totalEntries/50)<2){
 			pages = [];
@@ -107,13 +111,11 @@ var Calendar = React.createClass({
 			areaId: this.props.areaId,
 			page: page
 		};
-		console.log(search);
 		AppActions.searchId(search);
 	},
 
 	handlePage: function(e){
 		var page = e;
-		console.log(e);
 		var search = {
 			areaId: this.props.areaId,
 			page: page
@@ -146,7 +148,6 @@ var Calendar = React.createClass({
 			areaId: this.props.areaId,
 			page: page
 		};
-		console.log(search);
 		AppActions.searchId(search);
 	}
 });
