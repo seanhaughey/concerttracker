@@ -161,14 +161,14 @@ var AppStore = assign({}, EventEmitter.prototype, {
 		_concerts.push(concert);
 	},
 	removeConcert: function(concertId){
-		var index = _concerts.findIndex(x => x.id === concertId);
+		var index = _concerts.findIndex(function(x){x.id === concertId});
 		_concerts.splice(index, 1);
 	},
 	saveConcertToVault: function(vaultConcert){
 		_vaultConcerts.push(vaultConcert);
 	},
 	removeVaultConcert: function(vaultConcertId){
-		var index = _vaultConcerts.findIndex(x => x.id === vaultConcertId);
+		var index = _vaultConcerts.findIndex(function(x){x.id === vaultConcertId});
 		_vaultConcerts.splice(index, 1);
 	}
 });
