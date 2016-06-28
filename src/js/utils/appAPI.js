@@ -9,6 +9,7 @@ module.exports = {
 			cache: false,
 			success: function(data){
 				AppActions.receiveResults(data.resultsPage.results);
+				AppActions.receiveUid(search.uid);
 			}.bind(this),
 			error: function(xhr, status, err){
 				console.log(err);
@@ -23,6 +24,7 @@ module.exports = {
 			cache: false,
 			success: function(data){
 				AppActions.receiveArtistResults(data.resultsPage.results);
+				AppActions.receiveUid(artistSearch.uid);
 			}.bind(this),
 			error: function(xhr, status, err){
 				console.log(err);
@@ -36,8 +38,8 @@ module.exports = {
 			dataType: 'jsonp',
 			cache: false,
 			success: function(data){
-				console.log(data);
 				AppActions.receiveResults(data.resultsPage.results);
+				AppActions.receiveUid(geoSearch.uid);
 			}.bind(this),
 			error: function(xhr, status, err){
 				console.log(err);
@@ -107,6 +109,7 @@ module.exports = {
 					venue: childSnapshot.val().concert.venue,
 					location: childSnapshot.val().concert.location,
 					link: childSnapshot.val().concert.link,
+					uid: childSnapshot.val().concert.uid
 				}
 				concerts.push(concert);
 				AppActions.receiveConcerts(concerts);
@@ -137,6 +140,7 @@ module.exports = {
 					artist: childSnapshot.val().vaultConcert.artist,
 					venue: childSnapshot.val().vaultConcert.venue,
 					location: childSnapshot.val().vaultConcert.location,
+					uid: childSnapshot.val().vaultConcert.uid
 				}
 				vaultConcerts.push(vaultConcert);
 				AppActions.receiveVaultConcerts(vaultConcerts);

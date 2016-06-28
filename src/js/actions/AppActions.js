@@ -17,6 +17,13 @@ var AppActions = {
 		});
 	},
 
+	receiveUid: function(uid){
+		AppDispatcher.handleViewAction({
+			actionType: AppConstants.RECEIVE_UID,
+			uid: uid
+		})
+	},
+
 	searchArtist: function(artistSearch){
 		AppDispatcher.handleViewAction({
 			actionType: AppConstants.SEARCH_ARTIST,

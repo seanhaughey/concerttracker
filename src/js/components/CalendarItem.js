@@ -4,11 +4,16 @@ var AppStore = require('../stores/AppStore');
 
 var CalendarItem = React.createClass({
 
+	getInitialState: function(){
+		return {
+		uid: AppStore.getUid()
+		}
+	},
+
 	render: function(){
 		var results = '';
 		var artist = [];
 		var venue = '';
-
 		if(this.props.calendar.performance[0] === undefined){
 			var artist = "Unknown";
 		} else if(this.props.calendar.performance.length>5) {
@@ -69,7 +74,8 @@ var CalendarItem = React.createClass({
 			artist: artist,
 			venue: this.props.calendar.venue.displayName,
 			location: this.props.calendar.location.city,
-			link: this.props.calendar.uri
+			link: this.props.calendar.uri,
+			uid: this.state.uid
 		};
 		AppActions.saveConcertToCalendar(concert);
 	}
