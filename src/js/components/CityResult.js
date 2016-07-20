@@ -40,6 +40,7 @@ var CityResult = React.createClass({
 
 	handleSubmit: function(e){
 		e.preventDefault();
+		this.props.cityCalendarCounter();
 		var search = {
 			areaId: this.refs.areaId.value,
 			page: 1

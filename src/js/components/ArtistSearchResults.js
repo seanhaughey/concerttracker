@@ -5,6 +5,7 @@ var ArtistResult = require('./ArtistResult.js')
 
 var ArtistSearchResults = React.createClass({
 	render: function(){
+		var action = this.props.artistCalendarCounter;
 		if (this.props.artistResults === undefined){
 			alert('No results!');
 		} else if (this.props.artistResults != ''){
@@ -26,7 +27,7 @@ var ArtistSearchResults = React.createClass({
 				{
 					this.props.artistResults.map(function(artistResult, i){
 					return (
-						<ArtistResult artistResult={artistResult} key={i} />
+						<ArtistResult artistResult={artistResult} key={i} artistCalendarCounter={action} />
 					)
 					})
 				}
