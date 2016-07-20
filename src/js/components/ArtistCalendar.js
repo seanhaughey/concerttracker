@@ -109,7 +109,6 @@ var ArtistCalendar = React.createClass({
 			artistId: this.props.artistId,
 			page: page
 		};
-		console.log(search);
 		AppActions.searchArtistId(search);
 	},
 
@@ -147,7 +146,6 @@ var ArtistCalendar = React.createClass({
 			artistId: this.props.artistId,
 			page: page
 		};
-		console.log(search);
 		AppActions.searchArtistId(search);
 	}
 });

@@ -20084,13 +20084,20 @@ function getAppState(){
 };
 
 var App = React.createClass({displayName: "App",
+
 	getInitialState: function(){
 		return getAppState();
 	},
 
 	componentWillMount: function() {
 		this.lock = new Auth0Lock('DygnI5tYY4dDWknL8nlO9u0cs0UJQqXP', 'haughey-react-auth.auth0.com');
-		this.setState({idToken: this.getIdToken()})
+		this.setState({
+			idToken: this.getIdToken(),
+			calendarCounter: 1,
+			vaultCounter: 0,
+			cityCalenderCounter: 0,
+			artistCalendarCounter: 0
+		})
 	},
 
 	componentDidMount: function(){
@@ -20099,6 +20106,83 @@ var App = React.createClass({displayName: "App",
 
 	componentUnmount: function(){
 		AppStore.removeChangeListener(this._onChange);
+	},
+
+	handleZeroCounter: function() {
+		this.setState({
+			calendarCounter: 0,
+			vaultCounter: 0,
+			cityCalenderCounter: 0,
+			artistCalendarCounter: 0,
+			artistSearchCounter: 0,
+			citySearchCounter: 0
+		});
+	},
+
+	handleCalendarCounter: function(){
+		this.setState({
+			calendarCounter: 1,
+			vaultCounter: 0,
+			cityCalendarCounter: 0,
+			artistCalendarCounter: 0,
+			artistSearchCounter: 0,
+			citySearchCounter: 0
+		});
+	},
+
+	handleVaultCounter: function(){
+		this.setState({
+			vaultCounter: 1,
+			calendarCounter: 0,
+			cityCalendarCounter: 0,
+			artistCalendarCounter: 0,
+			artistSearchCounter: 0,
+			citySearchCounter: 0
+		});
+	},
+
+	handleCityCalendarCounter: function(){
+		this.setState({
+			vaultCounter: 0,
+			calendarCounter: 0,
+			cityCalendarCounter: 1,
+			artistCalendarCounter: 0,
+			artistSearchCounter: 0,
+			citySearchCounter: 0
+		})
+	},
+
+	handleArtistCalendarCounter: function(){
+		this.setState({
+			vaultCounter: 0,
+			calendarCounter: 0,
+			cityCalendarCounter: 0,
+			artistCalendarCounter: 1,
+			artistSearchCounter: 0,
+			citySearchCounter: 0
+		})
+	},
+
+	handleCitySearchCounter: function(){
+		this.setState({
+			vaultCounter: 0,
+			calendarCounter: 0,
+			cityCalendarCounter: 0,
+			artistCalendarCounter: 0,
+			artistSearchCounter: 0,
+			citySearchCounter: 1
+		})
+	},
+
+	handleArtistSearchCounter: function(){
+		this.setState({
+			vaultCounter: 0,
+			calendarCounter: 0,
+			cityCalendarCounter: 0,
+			artistCalendarCounter: 0,
+			artistSearchCounter: 1,
+			citySearchCounter: 0
+		})
 	},
 
 	getIdToken: function() {
@@ -20119,21 +20203,47 @@ var App = React.createClass({displayName: "App",
 
 	render: function(){
 		if (this.state.idToken) {
-			var searchForm = React.createElement(SearchForm, {lock: this.lock, idToken: this.state.idToken})
-			var concertList = React.createElement(ConcertList, {concerts: this.state.concerts, lock: this.lock, idToken: this.state.idToken})
-			var vaultConcertList = React.createElement(VaultConcertList, {vaultConcerts: this.state.vaultConcerts, lock: this.lock, idToken: this.state.idToken})
+			var searchForm = React.createElement(SearchForm, {lock: this.lock, idToken: this.state.idToken, onClick: this.handleZeroCounter, calendarCounter: this.handleCalendarCounter, vaultCounter: this.handleVaultCounter, citySearchCounter: this.handleCitySearchCounter, artistSearchCounter: this.handleArtistSearchCounter})
     	} else {
 			var searchForm = React.createElement(SearchForm, {lock: this.lock})
-			var concertList = '';
-			var vaultConcertList = '';
+    	}
+    	if(this.state.calendarCounter === 0){
+    		var concertList = '';
+    	} else{
+    		var concertList = React.createElement(ConcertList, {concerts: this.state.concerts, lock: this.lock, idToken: this.state.idToken})
+    	}
+    	if(this.state.vaultCounter === 0){
+    		var vaultConcertList = '';
+    	} else {
+    		var vaultConcertList = React.createElement(VaultConcertList, {vaultConcerts: this.state.vaultConcerts, lock: this.lock, idToken: this.state.idToken})
+    	}
+    	if(this.state.cityCalendarCounter === 0){
+    		var cityCalendar = '';
+    	} else {
+    		var cityCalendar = React.createElement(Calendar, {calendars: this.state.calendars, areaId: this.state.areaId, page: this.state.page, resultsPage: this.state.resultsPage, lock: this.lock, idToken: this.state.idToken, onClick: this.handleZeroCounter})
+    	}
+    	if(this.state.artistCalendarCounter === 0){
+    		var artistCalendar = '';
+    	} else {
+    		var artistCalendar = React.createElement(ArtistCalendar, {artist: this.state.artist, artistCalendars: this.state.artistCalendars, artistId: this.state.artistId, artistPage: this.state.artistPage, artistResultsPage: this.state.artistResultsPage, lock: this.lock, idToken: this.state.idToken, onClick: this.handleZeroCounter})
+    	}
+    	if(this.state.artistSearchCounter === 0){
+    		var artistSearchResults = '';
+    	} else {
+    		var artistSearchResults = React.createElement(ArtistSearchResults, {artistSearch: this.state.searchArtist, artistResults: this.state.artistResults, artistCalendarCounter: this.handleArtistCalendarCounter})
+    	}
+    	if(this.state.citySearchCounter === 0){
+    		var citySearchResults = '';
+    	} else {
+    		var citySearchResults = React.createElement(CitySearchResults, {searchText: this.state.searchCity, results: this.state.results, cityCalendarCounter: this.handleCityCalendarCounter})
     	}
 		return(
 			React.createElement("div", null, 
 				searchForm, 
-				React.createElement(CitySearchResults, {searchText: this.state.searchCity, results: this.state.results}), 
-				React.createElement(ArtistSearchResults, {artistSearch: this.state.searchArtist, artistResults: this.state.artistResults}), 
-				React.createElement(Calendar, {calendars: this.state.calendars, areaId: this.state.areaId, page: this.state.page, resultsPage: this.state.resultsPage, lock: this.lock, idToken: this.state.idToken}), 
-				React.createElement(ArtistCalendar, {artist: this.state.artist, artistCalendars: this.state.artistCalendars, artistId: this.state.artistId, artistPage: this.state.artistPage, artistResultsPage: this.state.artistResultsPage, lock: this.lock, idToken: this.state.idToken}), 
+				citySearchResults, 
+				artistSearchResults, 
+				cityCalendar, 
+				artistCalendar, 
 				concertList, 
 				vaultConcertList
 				
@@ -20261,7 +20371,6 @@ var ArtistCalendar = React.createClass({displayName: "ArtistCalendar",
 			artistId: this.props.artistId,
 			page: page
 		};
-		console.log(search);
 		AppActions.searchArtistId(search);
 	},
 
@@ -20299,7 +20408,6 @@ var ArtistCalendar = React.createClass({displayName: "ArtistCalendar",
 			artistId: this.props.artistId,
 			page: page
 		};
-		console.log(search);
 		AppActions.searchArtistId(search);
 	}
 });
@@ -20441,7 +20549,7 @@ var ArtistResult = React.createClass({displayName: "ArtistResult",
 
 	handleSubmit: function(e){
 		e.preventDefault();
-		console.log(this.props.artistResult.displayName);
+		this.props.artistCalendarCounter();
 		var artistIdSearch = {
 			artist: this.props.artistResult.displayName,
 			artistId: this.refs.artistId.value,
@@ -20461,6 +20569,7 @@ var ArtistResult = require('./ArtistResult.js')
 
 var ArtistSearchResults = React.createClass({displayName: "ArtistSearchResults",
 	render: function(){
+		var action = this.props.artistCalendarCounter;
 		if (this.props.artistResults === undefined){
 			alert('No results!');
 		} else if (this.props.artistResults != ''){
@@ -20482,7 +20591,7 @@ var ArtistSearchResults = React.createClass({displayName: "ArtistSearchResults",
 				
 					this.props.artistResults.map(function(artistResult, i){
 					return (
-						React.createElement(ArtistResult, {artistResult: artistResult, key: i})
+						React.createElement(ArtistResult, {artistResult: artistResult, key: i, artistCalendarCounter: action})
 					)
 					})
 				
@@ -20778,6 +20887,7 @@ var CityResult = React.createClass({displayName: "CityResult",
 
 	handleSubmit: function(e){
 		e.preventDefault();
+		this.props.cityCalendarCounter();
 		var search = {
 			areaId: this.refs.areaId.value,
 			page: 1
@@ -20796,20 +20906,16 @@ var CityResult = require('./CityResult.js')
 
 var CitySearchResults = React.createClass({displayName: "CitySearchResults",
 	render: function(){
+		var action = this.props.cityCalendarCounter;
 		if (this.props.results === undefined){
 			alert('No results!');
-		} else if (this.props.results != ''){
-			var results = React.createElement("h5", {className: "page-header"}, React.createElement("strong", null, "Results:"))
-		} else {
-			var results = '';
-		}
+		} 
 		return(
 			React.createElement("div", null, 
-				results, 
 				
 					this.props.results.map(function(result, i){
 					return (
-						React.createElement(CityResult, {result: result, key: i})
+						React.createElement(CityResult, {result: result, key: i, cityCalendarCounter: action})
 					)
 					})
 				
@@ -20974,41 +21080,65 @@ var SearchForm = React.createClass({displayName: "SearchForm",
 	render: function(){
 		if (this.state.profile) {
 			var welcome = React.createElement("div", null, 
-							React.createElement("h2", null, "Welcome ", this.state.profile.nickname), 
+							React.createElement("div", {className: "welcome"}, 
+								React.createElement("h4", null, "Welcome ", this.state.profile.nickname)
+							), 
+							React.createElement("div", {className: "welcome"}, 
 								React.createElement("button", {onClick: this.handleLogout}, "Logout")
+							)
 						  )
 			var login = '';
-			var form = 	React.createElement("div", {className: "row"}, 
-							React.createElement("h3", null, "Search By City"), 
-							React.createElement("form", {onSubmit: this.handleSubmit}, 
-								React.createElement("input", {type: "text", ref: "city", placeholder: "Enter City Name"}), 
-								React.createElement("button", {type: "submit", className: "btn btn-xs btn-primary"}, "Submit")
+			var form = 	React.createElement("div", {className: "row form-div"}, 
+							React.createElement("div", {className: "col-md-3 entry"}, 
+								React.createElement("form", {onSubmit: this.handleSubmit}, 
+									React.createElement("input", {type: "text", ref: "city", placeholder: "Search By City"}), 
+									React.createElement("button", {type: "submit", className: "btn btn-xs btn-primary"}, "Submit")
+								), 
+								React.createElement("button", {onClick: this.handleClick, type: "submit", className: "btn btn-xs btn-primary"}, "Current Location")
 							), 
-							React.createElement("h3", null, "Search By Artist"), 
-							React.createElement("form", {onSubmit: this.handleArtistSubmit}, 
-								React.createElement("input", {type: "text", ref: "artist", placeholder: "Enter Artist Name"}), 
-								React.createElement("button", {type: "submit", className: "btn btn-xs btn-primary"}, "Submit")
-							), 
-							React.createElement("button", {onClick: this.handleClick, type: "submit", className: "btn btn-sm btn-primary"}, "Use Current Location")
+							React.createElement("div", {className: "col-md-3 entry"}, 
+								React.createElement("form", {onSubmit: this.handleArtistSubmit}, 
+									React.createElement("input", {type: "text", ref: "artist", placeholder: "Search By Artist"}), 
+									React.createElement("button", {type: "submit", className: "btn btn-xs btn-primary"}, "Submit")
+								)
+							)
 						)
 		} else {
 			var welcome = '';
 			var login = React.createElement("div", {className: "login-box"}, 
-      						React.createElement("a", {onClick: this.showLock}, "Sign In")
+      						React.createElement("a", {onClick: this.showLock}, React.createElement("h4", null, "Sign In"))
     					)
 		}
 		return(
 			React.createElement("div", null, 
-				login, 
-    			welcome, 
-				form
+				React.createElement("nav", {className: "navbar"}, 
+					React.createElement("div", {className: "row"}, 
+						React.createElement("div", {className: "col-md-8"}, 
+							form
+						), 
+						React.createElement("div", {className: "col-md-1"}, 
+							React.createElement("button", {className: "btn btn-default", onClick: this.props.calendarCounter}, "My Calendar")
+						), 
+						React.createElement("div", {className: "col-md-1"}, 
+							React.createElement("button", {className: "btn btn-default", onClick: this.props.vaultCounter}, "My Vault")
+						), 
+						React.createElement("div", {className: "col-md-2"}, 
+							login
+						), 
+						React.createElement("div", {className: "col-md-2"}, 
+							welcome
+						)
+					)
+				)
+				
 			)
 		);
 	},
 
 	handleSubmit: function(e){
 		e.preventDefault();
-
+		this.props.onClick();
+		this.props.citySearchCounter();
 		var search = {
 			city: this.refs.city.value.trim(),
 			uid: this.state.profile.user_id
@@ -21019,7 +21149,8 @@ var SearchForm = React.createClass({displayName: "SearchForm",
 
 	handleArtistSubmit: function(e){
 		e.preventDefault();
-		
+		this.props.onClick();
+		this.props.artistSearchCounter();
 		var artistSearch = {
 			artist: this.refs.artist.value.trim(),
 			uid: this.state.profile.user_id
@@ -21029,6 +21160,8 @@ var SearchForm = React.createClass({displayName: "SearchForm",
 	},
 	handleClick: function(e){
 		e.preventDefault();
+		this.props.onClick();
+		this.props.citySearchCounter();
 		var geoSearch = {
 			lat: this.state.position[0].coords.latitude,
 			lng: this.state.position[0].coords.longitude,

@@ -37,7 +37,7 @@ var ArtistResult = React.createClass({
 
 	handleSubmit: function(e){
 		e.preventDefault();
-		console.log(this.props.artistResult.displayName);
+		this.props.artistCalendarCounter();
 		var artistIdSearch = {
 			artist: this.props.artistResult.displayName,
 			artistId: this.refs.artistId.value,

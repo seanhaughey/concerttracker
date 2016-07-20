@@ -46,41 +46,65 @@ var SearchForm = React.createClass({
 	render: function(){
 		if (this.state.profile) {
 			var welcome = <div>
-							<h2>Welcome {this.state.profile.nickname}</h2>
+							<div className="welcome">
+								<h4>Welcome {this.state.profile.nickname}</h4>
+							</div>
+							<div className="welcome">
 								<button onClick={this.handleLogout}>Logout</button>
+							</div>
 						  </div>
 			var login = '';
-			var form = 	<div className="row">
-							<h3>Search By City</h3>
-							<form onSubmit={this.handleSubmit}>
-								<input type="text" ref="city" placeholder="Enter City Name" />
-								<button type="submit" className="btn btn-xs btn-primary">Submit</button>
-							</form>
-							<h3>Search By Artist</h3>
-							<form onSubmit={this.handleArtistSubmit}>
-								<input type="text" ref="artist" placeholder="Enter Artist Name" />
-								<button type="submit" className="btn btn-xs btn-primary">Submit</button>
-							</form>
-							<button onClick={this.handleClick} type="submit" className="btn btn-sm btn-primary">Use Current Location</button>
+			var form = 	<div className="row form-div">
+							<div className="col-md-3 entry">
+								<form onSubmit={this.handleSubmit}>
+									<input type="text" ref="city" placeholder="Search By City" />
+									<button type="submit" className="btn btn-xs btn-primary">Submit</button>
+								</form>
+								<button onClick={this.handleClick} type="submit" className="btn btn-xs btn-primary">Current Location</button>
+							</div>
+							<div className="col-md-3 entry">
+								<form onSubmit={this.handleArtistSubmit}>
+									<input type="text" ref="artist" placeholder="Search By Artist" />
+									<button type="submit" className="btn btn-xs btn-primary">Submit</button>
+								</form>
+							</div>
 						</div>
 		} else {
 			var welcome = '';
 			var login = <div className="login-box">
-      						<a onClick={this.showLock}>Sign In</a>
+      						<a onClick={this.showLock}><h4>Sign In</h4></a>
     					</div>
 		}
 		return(
 			<div>
-				{login}
-    			{welcome}
-				{form}
+				<nav className="navbar">
+					<div className="row">
+						<div className="col-md-8">
+							{form}
+						</div>
+						<div className="col-md-1">
+							<button className="btn btn-default" onClick={this.props.calendarCounter}>My Calendar</button>
+						</div>
+						<div className="col-md-1">
+							<button className="btn btn-default" onClick={this.props.vaultCounter}>My Vault</button>
+						</div>
+						<div className="col-md-2">
+							{login}
+						</div>
+						<div className="col-md-2">
+							{welcome}
+						</div>
+					</div>
+				</nav>
+				
 			</div>
 		);
 	},
 
 	handleSubmit: function(e){
 		e.preventDefault();
-
+		this.props.onClick();
+		this.props.citySearchCounter();
 		var search = {
 			city: this.refs.city.value.trim(),
 			uid: this.state.profile.user_id
@@ -91,7 +115,8 @@ var SearchForm = React.createClass({
 
 	handleArtistSubmit: function(e){
 		e.preventDefault();
-		
+		this.props.onClick();
+		this.props.artistSearchCounter();
 		var artistSearch = {
 			artist: this.refs.artist.value.trim(),
 			uid: this.state.profile.user_id
@@ -101,6 +126,8 @@ var SearchForm = React.createClass({
 	},
 	handleClick: function(e){
 		e.preventDefault();
+		this.props.onClick();
+		this.props.citySearchCounter();
 		var geoSearch = {
 			lat: this.state.position[0].coords.latitude,
 			lng: this.state.position[0].coords.longitude,

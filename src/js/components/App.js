@@ -29,13 +29,20 @@ function getAppState(){
 };
 
 var App = React.createClass({
+
 	getInitialState: function(){
 		return getAppState();
 	},
 
 	componentWillMount: function() {
 		this.lock = new Auth0Lock('DygnI5tYY4dDWknL8nlO9u0cs0UJQqXP', 'haughey-react-auth.auth0.com');
-		this.setState({idToken: this.getIdToken()})
+		this.setState({
+			idToken: this.getIdToken(),
+			calendarCounter: 1,
+			vaultCounter: 0,
+			cityCalenderCounter: 0,
+			artistCalendarCounter: 0
+		})
 	},
 
 	componentDidMount: function(){
@@ -44,6 +51,83 @@ var App = React.createClass({
 
 	componentUnmount: function(){
 		AppStore.removeChangeListener(this._onChange);
+	},
+
+	handleZeroCounter: function() {
+		this.setState({
+			calendarCounter: 0,
+			vaultCounter: 0,
+			cityCalenderCounter: 0,
+			artistCalendarCounter: 0,
+			artistSearchCounter: 0,
+			citySearchCounter: 0
+		});
+	},
+
+	handleCalendarCounter: function(){
+		this.setState({
+			calendarCounter: 1,
+			vaultCounter: 0,
+			cityCalendarCounter: 0,
+			artistCalendarCounter: 0,
+			artistSearchCounter: 0,
+			citySearchCounter: 0
+		});
+	},
+
+	handleVaultCounter: function(){
+		this.setState({
+			vaultCounter: 1,
+			calendarCounter: 0,
+			cityCalendarCounter: 0,
+			artistCalendarCounter: 0,
+			artistSearchCounter: 0,
+			citySearchCounter: 0
+		});
+	},
+
+	handleCityCalendarCounter: function(){
+		this.setState({
+			vaultCounter: 0,
+			calendarCounter: 0,
+			cityCalendarCounter: 1,
+			artistCalendarCounter: 0,
+			artistSearchCounter: 0,
+			citySearchCounter: 0
+		})
+	},
+
+	handleArtistCalendarCounter: function(){
+		this.setState({
+			vaultCounter: 0,
+			calendarCounter: 0,
+			cityCalendarCounter: 0,
+			artistCalendarCounter: 1,
+			artistSearchCounter: 0,
+			citySearchCounter: 0
+		})
+	},
+
+	handleCitySearchCounter: function(){
+		this.setState({
+			vaultCounter: 0,
+			calendarCounter: 0,
+			cityCalendarCounter: 0,
+			artistCalendarCounter: 0,
+			artistSearchCounter: 0,
+			citySearchCounter: 1
+		})
+	},
+
+	handleArtistSearchCounter: function(){
+		this.setState({
+			vaultCounter: 0,
+			calendarCounter: 0,
+			cityCalendarCounter: 0,
+			artistCalendarCounter: 0,
+			artistSearchCounter: 1,
+			citySearchCounter: 0
+		})
 	},
 
 	getIdToken: function() {
@@ -64,21 +148,47 @@ var App = React.createClass({
 
 	render: function(){
 		if (this.state.idToken) {
-			var searchForm = <SearchForm lock={this.lock} idToken={this.state.idToken} />
-			var concertList = <ConcertList concerts={this.state.concerts} lock={this.lock} idToken={this.state.idToken}/>
-			var vaultConcertList = <VaultConcertList vaultConcerts={this.state.vaultConcerts} lock={this.lock} idToken={this.state.idToken} />
+			var searchForm = <SearchForm lock={this.lock} idToken={this.state.idToken} onClick={this.handleZeroCounter} calendarCounter={this.handleCalendarCounter} vaultCounter={this.handleVaultCounter} citySearchCounter={this.handleCitySearchCounter} artistSearchCounter={this.handleArtistSearchCounter} />
     	} else {
 			var searchForm = <SearchForm lock={this.lock} />
-			var concertList = '';
-			var vaultConcertList = '';
+    	}
+    	if(this.state.calendarCounter === 0){
+    		var concertList = '';
+    	} else{
+    		var concertList = <ConcertList concerts={this.state.concerts} lock={this.lock} idToken={this.state.idToken}/>
+    	}
+    	if(this.state.vaultCounter === 0){
+    		var vaultConcertList = '';
+    	} else {
+    		var vaultConcertList = <VaultConcertList vaultConcerts={this.state.vaultConcerts} lock={this.lock} idToken={this.state.idToken} />
+    	}
+    	if(this.state.cityCalendarCounter === 0){
+    		var cityCalendar = '';
+    	} else {
+    		var cityCalendar = <Calendar calendars={this.state.calendars} areaId={this.state.areaId} page={this.state.page} resultsPage={this.state.resultsPage} lock={this.lock} idToken={this.state.idToken} onClick={this.handleZeroCounter} />
+    	}
+    	if(this.state.artistCalendarCounter === 0){
+    		var artistCalendar = '';
+    	} else {
+    		var artistCalendar = <ArtistCalendar artist={this.state.artist} artistCalendars={this.state.artistCalendars} artistId={this.state.artistId} artistPage={this.state.artistPage} artistResultsPage={this.state.artistResultsPage} lock={this.lock} idToken={this.state.idToken} onClick={this.handleZeroCounter} />
+    	}
+    	if(this.state.artistSearchCounter === 0){
+    		var artistSearchResults = '';
+    	} else {
+    		var artistSearchResults = <ArtistSearchResults artistSearch={this.state.searchArtist} artistResults={this.state.artistResults} artistCalendarCounter={this.handleArtistCalendarCounter} />
+    	}
+    	if(this.state.citySearchCounter === 0){
+    		var citySearchResults = '';
+    	} else {
+    		var citySearchResults = <CitySearchResults searchText={this.state.searchCity} results={this.state.results} cityCalendarCounter={this.handleCityCalendarCounter} />
     	}
 		return(
 			<div>
 				{searchForm}
-				<CitySearchResults searchText={this.state.searchCity} results={this.state.results} />
-				<ArtistSearchResults artistSearch={this.state.searchArtist} artistResults={this.state.artistResults} />
-				<Calendar calendars={this.state.calendars} areaId={this.state.areaId} page={this.state.page} resultsPage={this.state.resultsPage} lock={this.lock} idToken={this.state.idToken} />
-				<ArtistCalendar artist={this.state.artist} artistCalendars={this.state.artistCalendars} artistId={this.state.artistId} artistPage={this.state.artistPage} artistResultsPage={this.state.artistResultsPage} lock={this.lock} idToken={this.state.idToken} />
+				{citySearchResults}
+				{artistSearchResults}
+				{cityCalendar}
+				{artistCalendar}
 				{concertList}
 				{vaultConcertList}
 				

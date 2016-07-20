@@ -5,20 +5,16 @@ var CityResult = require('./CityResult.js')
 
 var CitySearchResults = React.createClass({
 	render: function(){
+		var action = this.props.cityCalendarCounter;
 		if (this.props.results === undefined){
 			alert('No results!');
-		} else if (this.props.results != ''){
-			var results = <h5 className="page-header"><strong>Results:</strong></h5>
-		} else {
-			var results = '';
-		}
+		} 
 		return(
 			<div>
-				{results}
 				{
 					this.props.results.map(function(result, i){
 					return (
-						<CityResult result={result} key={i} />
+						<CityResult result={result} key={i} cityCalendarCounter={action} />
 					)
 					})
 				}
